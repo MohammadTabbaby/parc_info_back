@@ -21,3 +21,8 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
+
+Route::get('/admin/fiche_de_vie/',function()
+{
+        return view('fiche_de_vie');
+});
