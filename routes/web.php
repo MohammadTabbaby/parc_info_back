@@ -26,3 +26,9 @@ Route::get('/admin/fiche_de_vie/',function()
 {
         return view('fiche_de_vie');
 });
+
+Route::get('/admin/fiche_sortie/',function()
+{
+        return view('fiche_sortie');
+});
+
