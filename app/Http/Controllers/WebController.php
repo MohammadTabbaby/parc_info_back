@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ReparationsExterne;
+use App\Devi;
 use App\Equipement;
 use Exception;
 
@@ -116,7 +117,7 @@ class WebController extends Controller
     {
         try
         {
-            $r = Equipement::where('reference', $request->reference)->first();
+            $r = Devis::where('reference', $request->reference)->first();
             if(isset($r))
             {
                 return response()->json
@@ -193,6 +194,6 @@ class WebController extends Controller
             );
         }
     }
-
+    
     
 }

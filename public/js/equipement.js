@@ -6,9 +6,8 @@ $(document).ready
         (
 			function(e)
 			{
-                //id_equipement
-                var id_equipement = $('select[name="id_equipement"]').val();
-                //var id_equipement = $('input[name="id_equipement"]').val();
+                //reference
+                var reference = $('input[name="reference"]').val();
                 
                 //ajax
                 $.ajax
@@ -16,10 +15,10 @@ $(document).ready
 					{
 						async: false, //if you want to change a global variable you should add this instruction
                         type: 'POST',
-						url: "/api/verifReferenceReparationExterne",
+						url: "/api/verifReferenceEquipements",
 						data:
 						{
-							'id_equipement' : id_equipement
+							'reference' : reference
 						},
 						success: 
 						function(result)
@@ -32,7 +31,7 @@ $(document).ready
                 if(res.code == 0)
                 {
                     toastr.error(res.message, 'Error');
-                    $('select[name="id_equipement"]').focus();
+                    $('input[name="reference"]').focus();
                     e.preventDefault();
                 }
             }
