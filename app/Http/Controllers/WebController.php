@@ -117,7 +117,7 @@ class WebController extends Controller
     {
         try
         {
-            $r = Devis::where('reference', $request->reference)->first();
+            $r = BondeLivraison::where('reference', $request->reference)->first();
             if(isset($r))
             {
                 return response()->json
@@ -158,7 +158,7 @@ class WebController extends Controller
     {
         try
         {
-            $r = Equipement::where('reference', $request->reference)->first();
+            $r = Devi::where('reference', $request->reference)->first();
             if(isset($r))
             {
                 return response()->json
@@ -166,7 +166,7 @@ class WebController extends Controller
                     [
                         "code" => 0,
                         "status" => "error",
-                        "message" => "Equipement existe"
+                        "message" => "reference devis existe"
                     ]
                 );
             }

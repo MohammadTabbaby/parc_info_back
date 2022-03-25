@@ -251,6 +251,7 @@
                                                 @endif
                                             </td>
                                         @endforeach
+                                         
                                         <td> <a href="{{URL::asset('/admin/fiche_de_vie/')}}"> Lien </a> </td>
                                         <td class="no-sort no-click bread-actions">
                                             @foreach($actions as $action)
