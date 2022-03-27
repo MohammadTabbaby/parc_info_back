@@ -33,33 +33,53 @@
                                 <br><br><br><br>
                             </div>
 
-                            <h4 id="date"> Date : .........../.........../.............</h4>
+                            <h4 id="date" > Date : {{$array['date']}}</h4>
                             <br><br><br>
                             <h4> Je Déclare, Alarabia informatique, avoir reçu l'/les équipement(s) suivant(s) pour devis / réparation :</h4>
 
                             <div class='card-body'>
                                 <div class=' table-responsive'>
+                                    
                                     <table class='table' border='4'>
                                         <thead>
                                             <tr>
-                                                <th>Type</th>
-                                                <th>Marque </th>
-                                                <th>Modèle</th>
                                                 <th>Référence</th>
+                                                <th>Modèle </th>
+                                                <th>Categorie</th>
+                                                <th>Service</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Ecran</td>
-                                                <td>Dell</td>
-                                                <td>E15</td>
-                                                <td>XD15654DQFE</td>
-                                            </tr>
+                                            @foreach($array['equipements'] as $v)
+                                                <tr>
+                                                    @if(isset($v['reference']))
+                                                        <td> {{$v['reference']}} </td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
+                                                    @if(isset($v['modele']->nom_modele))
+                                                        <td> {{$v['modele']->nom_modele	}} </td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
+                                                    @if(isset($v['categorie']->nom_categorie))
+                                                        <td> {{$v['categorie']->nom_categorie}}</td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
+                                                    @if(isset($v['service']->nom_service))
+                                                        <td> {{$v['service']->nom_service}}</td>
+                                                    @else
+                                                        <td></td>
+                                                    @endif
+                                                </tr>
+                                            @endforeach
+                                            
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <h6> Nombre total des équipements : .......
+                            <h6> Nombre total des équipements :@if(isset($array['total'])) {{$array['total']}} @else 0 @endif
                                 <h6 />
                                 <h6 style='float: right; margin-right: 50px; margin-top: -20px;'> Signature :
                                     <h6 />

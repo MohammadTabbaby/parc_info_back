@@ -23,3 +23,6 @@ Route::post('/verifReferenceReparationExterne','WebController@verifReferenceRepa
 Route::post('/verifReferenceEquipements','WebController@verifReferenceEquipements');
 Route::post('/verifReferenceBondeLivraison','WebController@verifReferenceBondeLivraison');
 Route::post('/verifReferenceDevis','WebController@verifReferenceDevis');
+
+//api test
+Route::get('/testApi/{id}','WebController@testApi');

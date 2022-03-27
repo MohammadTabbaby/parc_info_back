@@ -251,13 +251,20 @@
                                                 @endif
                                             </td>
                                         @endforeach
-                                        <td> <a href="{{URL::asset('/admin/fiche_sortie/')}}"> Lien </a> </td>
+                                        <?php
+                                            $id =$data->id;
+                                            $lien ='/admin/fiche_sortie/'.$id;
+                                            $url = URL::asset($lien);
+
+                                        ?>
+                                        <td> <a href="{{ $url }}"> Lien </a> </td>
                                         <td class="no-sort no-click bread-actions">
                                             @foreach($actions as $action)
                                                 @if (!method_exists($action, 'massAction'))
                                                     @include('voyager::bread.partials.actions', ['action' => $action])
                                                 @endif
                                             @endforeach
+                                        
                                         </td>
                                         
                                     </tr>
