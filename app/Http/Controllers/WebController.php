@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\ReparationsExterne;
 use App\Devi;
 use App\Equipement;
+use App\BondeCommande;
+use App\BondeLivraison;
 use Exception;
 use App\FicheSorty;
 use App\EquipementFicheSorty;
@@ -13,6 +15,8 @@ use Carbon\Carbon;
 use App\Modele;
 use App\Category;
 use App\Service;
+use App\Fournisseur;
+
 
 class WebController extends Controller
 {
@@ -36,6 +40,7 @@ class WebController extends Controller
         }
         return array_unique($tab);
     }
+//verifReferenceReparationExterne
 
     public function verifReferenceReparationExterne(Request $request)
     {
@@ -78,6 +83,8 @@ class WebController extends Controller
         }
     }
 
+//verifReferenceEquipements
+
     public function verifReferenceEquipements(Request $request)
     {
         try
@@ -119,6 +126,52 @@ class WebController extends Controller
         }
     }
 
+//verifReferenceBondeCommande
+
+    public function verifReferenceBondeCommande(Request $request)
+    {
+        try
+        {
+            $r = BondeCommande::where('reference', $request->reference)->first();
+            if(isset($r))
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 0,
+                        "status" => "error",
+                        "message" => "reference BondeCommande existe"
+                    ]
+                );
+            }
+            else
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "BondeCommande non existe"
+                    ]
+                );
+            }
+        }
+        catch(Exception $e)
+        {
+            return response()->json
+            (
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
+
+
+    //verifReferenceBondeLivraison
+
     public function verifReferenceBondeLivraison(Request $request)
     {
         try
@@ -131,7 +184,7 @@ class WebController extends Controller
                     [
                         "code" => 0,
                         "status" => "error",
-                        "message" => "Equipement existe"
+                        "message" => "BondeLivraison existe"
                     ]
                 );
             }
@@ -142,7 +195,7 @@ class WebController extends Controller
                     [
                         "code" => 1,
                         "status" => "sucess",
-                        "message" => "Equipement non existe"
+                        "message" => "BondeLivraison non existe"
                     ]
                 );
             }
@@ -159,6 +212,8 @@ class WebController extends Controller
             );
         }
     }
+
+    //verifReferenceDevis
 
     public function verifReferenceDevis(Request $request)
     {
@@ -205,9 +260,12 @@ class WebController extends Controller
     public function FicheSortie ($id)
     {   
         $fiche_sortie=FicheSorty::find($id);
-        $date=Carbon::parse($fiche_sortie->created_at)->format("Y / m / d");
+        //$reparation_externe=ReparationsExterne::find($id);
+        $date=Carbon::parse($fiche_sortie->created_at)->format("d/m/Y");
         $equipement_fichesorties=EquipementFicheSorty::where('fiche_sorty_id',$id)->get();
         //recherche fournisseur w ili tal9ah t7otou fi array
+       //$fournisseur = Fournisseur::find('fournisseurs', $reparation_externe->id_fournisseur);
+       // $fournisseur=[];
         $equipements = [];
         foreach($equipement_fichesorties as $v)
         {
@@ -219,6 +277,12 @@ class WebController extends Controller
                 $equipement->categorie = Category::find($equipement->id_categorie);
                 $equipement->service = Service::find($equipement->id_service);
                 $equipements[] = $equipement;
+
+                //fournisseur
+               //$fournisseur = Fournisseur::find('fournisseurs', $reparation_externe->id_fournisseur);
+                //$fournisseur->fournisseur = Fournisseur::find($fournisseur->nom_fourniseur);
+              //  $fournisseur[] = $fournisseur;
+
             }
         }
         $array=
@@ -226,6 +290,7 @@ class WebController extends Controller
             "date"=>$date,
             "equipement_fichesorties" => $equipement_fichesorties,
             "equipements" => $equipements,
+            //"fournisseur" => $fournisseur,
             "total" => count($equipements)
         ];
         

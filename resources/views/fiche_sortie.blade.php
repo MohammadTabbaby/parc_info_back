@@ -29,13 +29,14 @@
                             <br><br><br><br><br><br><br><br><br><br><br>
                             <div class='row container d-flex justify-content-center'>
                                 <br>
-                                <h2>Fiche de Sortie Equipement Reparation Externe</h2>
-                                <br><br><br><br>
+                                <h2>Fiche de Sortie</h2>
+                                <br><br>
                             </div>
 
                             <h4 id="date" > Date : {{$array['date']}}</h4>
                             <br><br><br>
-                            <h4> Je Déclare, Alarabia informatique, avoir reçu l'/les équipement(s) suivant(s) pour devis / réparation :</h4>
+                            <h4> Je Déclare : 
+                                avoir reçu l'/les équipement(s) suivant(s) pour devis / réparation :</h4>
 
                             <div class='card-body'>
                                 <div class=' table-responsive'>
