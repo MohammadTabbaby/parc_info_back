@@ -35,7 +35,7 @@
 
                             <h4 id="date" > Date : {{$array['date']}}</h4>
                             <br><br><br>
-                            <h4> Je Déclare : 
+                            <h4> Je Déclare : @if(isset($array['fournisseur'])) {{$array['fournisseur']}} @endif
                                 avoir reçu l'/les équipement(s) suivant(s) pour devis / réparation :</h4>
 
                             <div class='card-body'>

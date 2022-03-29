@@ -1,3 +1,4 @@
+
 $(document).ready
 (
 	function()
@@ -6,9 +7,12 @@ $(document).ready
         (
 			function(e)
 			{
+				//alert("hello");
+			
                 //reference
                 var reference = $('input[name="reference"]').val();
-                
+                //alert(reference);
+				//e.preventDefault();
                 //ajax
                 $.ajax
 				(

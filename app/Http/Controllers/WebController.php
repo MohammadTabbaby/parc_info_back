@@ -261,7 +261,7 @@ class WebController extends Controller
     {
         try
         {
-            $r = Devi::where('reference', $request->reference)->first();
+            $r = PieceDeRechange::where('reference', $request->reference)->first();
             if(isset($r))
             {
                 return response()->json
@@ -303,12 +303,11 @@ class WebController extends Controller
     public function FicheSortie ($id)
     {   
         $fiche_sortie=FicheSorty::find($id);
-        //$reparation_externe=ReparationsExterne::find($id);
+
         $date=Carbon::parse($fiche_sortie->created_at)->format("d/m/Y");
         $equipement_fichesorties=EquipementFicheSorty::where('fiche_sorty_id',$id)->get();
         //recherche fournisseur w ili tal9ah t7otou fi array
-       //$fournisseur = Fournisseur::find('fournisseurs', $reparation_externe->id_fournisseur);
-       // $fournisseur=[];
+       $fournisseur = Fournisseur::find( $fiche_sortie->id_fournisseur);
         $equipements = [];
         foreach($equipement_fichesorties as $v)
         {
@@ -321,11 +320,6 @@ class WebController extends Controller
                 $equipement->service = Service::find($equipement->id_service);
                 $equipements[] = $equipement;
 
-                //fournisseur
-               //$fournisseur = Fournisseur::find('fournisseurs', $reparation_externe->id_fournisseur);
-                //$fournisseur->fournisseur = Fournisseur::find($fournisseur->nom_fourniseur);
-              //  $fournisseur[] = $fournisseur;
-
             }
         }
         $array=
@@ -333,7 +327,8 @@ class WebController extends Controller
             "date"=>$date,
             "equipement_fichesorties" => $equipement_fichesorties,
             "equipements" => $equipements,
-            //"fournisseur" => $fournisseur,
+            "fournisseur" => $fournisseur->nom_fourniseur,
+
             "total" => count($equipements)
         ];
         
