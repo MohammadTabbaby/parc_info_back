@@ -24,6 +24,6 @@ Route::post('/verifReferenceEquipements','WebController@verifReferenceEquipement
 Route::post('/verifReferenceBondeLivraison','WebController@verifReferenceBondeLivraison');
 Route::post('/verifReferenceBondeCommande','WebController@verifReferenceBondeCommande');
 Route::post('/verifReferenceDevis','WebController@verifReferenceDevis');
-
+Route::post('/verifReferencePieceDeRechange','WebController@verifReferencePieceDeRechange');
 //api test
 Route::get('/testApi/{id}','WebController@testApi');

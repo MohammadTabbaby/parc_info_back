@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ReparationsExterne;
 use App\Devi;
+use App\PieceDeRechange;
 use App\Equipement;
 use App\BondeCommande;
 use App\BondeLivraison;
@@ -255,6 +256,48 @@ class WebController extends Controller
             );
         }
     }
+
+    public function verifReferencePieceDeRechange(Request $request)
+    {
+        try
+        {
+            $r = Devi::where('reference', $request->reference)->first();
+            if(isset($r))
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 0,
+                        "status" => "error",
+                        "message" => "reference piece de rechange existe"
+                    ]
+                );
+            }
+            else
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "Piece de rechange non existe"
+                    ]
+                );
+            }
+        }
+        catch(Exception $e)
+        {
+            return response()->json
+            (
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
+    
     
 
     public function FicheSortie ($id)

@@ -10,7 +10,7 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 	<script src="https://code.jquery.com/jquery-2.0.3.min.js" ></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-	<script src={{ asset('js/BondeLivraison.js') }}></script>
+	<script src={{ asset('js/bonde-livraisons.js') }}></script>
 @stop
 
 @section('page_title', __('voyager::generic.'.($edit ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular'))
