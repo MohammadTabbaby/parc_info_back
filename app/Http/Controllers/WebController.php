@@ -17,7 +17,7 @@ use App\Modele;
 use App\Category;
 use App\Service;
 use App\Fournisseur;
-
+use  App\EquipementBondecommande;
 
 class WebController extends Controller
 {
@@ -86,9 +86,11 @@ class WebController extends Controller
 
 //verifReferenceEquipements
 
-    public function verifReferenceEquipements(Request $request)
+public function verifReferenceEquipements(Request $request)
+{
+    try
     {
-        try
+        if(!isset($request->id))
         {
             $r = Equipement::where('reference', $request->reference)->first();
             if(isset($r))
@@ -114,18 +116,58 @@ class WebController extends Controller
                 );
             }
         }
-        catch(\Exception $e)
+        else
         {
-            return response()->json
-            (
-                [
-                    "code" => 0,
-                    "status" => "exception",
-                    "message" => "Exception"
-                ]
-            );
+            $r = Equipement::where('reference', $request->reference)->where('id',$request->id)->first();
+            if(isset($r))
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "La mise à jour de cet equipement est effectué avec succès"
+                    ]
+                );
+            }
+            
+            $r = Equipement::where('reference', $request->reference)->first();
+            if(isset($r))
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 0,
+                        "status" => "error",
+                        "message" => "Equipement existe"
+                    ]
+                );
+            }
+            else
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "Equipement non existe"
+                    ]
+                );
+            }
         }
     }
+    catch(\Exception $e)
+    {
+        return response()->json
+        (
+            [
+                "code" => 0,
+                "status" => "exception",
+                "message" => "Exception"
+            ]
+        );
+    }
+}
 
 //verifReferenceBondeCommande
 
@@ -336,5 +378,25 @@ class WebController extends Controller
 
     }
 
+    //03 Avril 2022
+    public function getEquipementByRefBonCommande($ref_breference_BC)
+    {
+        try
+        {
+            $equipementBondecommande = EquipementBondecommande::where('reference_bc',$ref_breference_BC)->get();
+            $tabEquipement = [];
+            foreach($equipementBondecommande as $v)
+            {
+                $re=ReparationsExterne::find($v->id_reparation_externe);
+                $equipement = Equipement::where('reference',$re->id_equipement)->first();
+                $tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
+            }
+            return $tabEquipement;
+        }
+        catch(Exception $e)
+        {
+            return []; // ki ikoun fama exception inraj3ou tableau vide
+        } 
+    }
     
 }
