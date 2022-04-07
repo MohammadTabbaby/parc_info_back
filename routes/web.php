@@ -28,4 +28,4 @@ Route::get('/admin/fiche_de_vie/',function()
 });
 
 Route::get('/admin/fiche_sortie/{id}','WebController@FicheSortie');
-
+Route::get('/admin/DetailBonDeCommande','WebController@DetailBonDeCommande');

@@ -16,7 +16,7 @@ $(document).ready
                 $.ajax
                 (
                     {
-                        async: false, //if you want to change a global variable you should add this instruction
+                        async: false, 
                         type: 'POST',
                         url: "/api/verifReferenceEquipements",
                         data:

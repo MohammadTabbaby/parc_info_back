@@ -27,4 +27,4 @@ Route::post('/verifReferenceDevis','WebController@verifReferenceDevis');
 Route::post('/verifReferencePieceDeRechange','WebController@verifReferencePieceDeRechange');
 //api test
 Route::get('/testApi/{id}','WebController@testApi');
-Route::get('/getEquipementByRefBonCommande/{ref_breference_BC}','WebController@getEquipementByRefBonCommande'); //el postman yé5ou wa9t bech yet7al ? nn nn 
+Route::get('/getEquipementByRefBonCommande/{ref_breference_BC}','WebController@getEquipementByRefBonCommande'); 

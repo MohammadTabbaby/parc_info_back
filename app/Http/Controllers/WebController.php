@@ -18,6 +18,7 @@ use App\Category;
 use App\Service;
 use App\Fournisseur;
 use  App\EquipementBondecommande;
+use Auth;
 
 class WebController extends Controller
 {
@@ -385,18 +386,48 @@ public function verifReferenceEquipements(Request $request)
         {
             $equipementBondecommande = EquipementBondecommande::where('reference_bc',$ref_breference_BC)->get();
             $tabEquipement = [];
+            $total=0;
             foreach($equipementBondecommande as $v)
             {
                 $re=ReparationsExterne::find($v->id_reparation_externe);
                 $equipement = Equipement::where('reference',$re->id_equipement)->first();
-                $tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
+                //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
+                $categorie=Category::find($equipement->id_categorie);
+                $modele=Modele::find($equipement->id_modele);
+                $service=Service::find($equipement->id_service);
+                $tabEquipement[]= 
+                    [
+                        "reference"=>$equipement->reference ,
+                         "categorie"=>$categorie->nom_categorie ,
+                         "modele"=>$modele->nom_modele ,
+                         "service"=>$service->nom_service ,
+                         "cout"=>$v->cout
+                    ];
+                
+                    $total+=$v->cout;
             }
-            return $tabEquipement;
+            return["equipements"=>$tabEquipement,"total"=>$total];
+            //return $tabEquipement;
         }
         catch(Exception $e)
         {
-            return []; // ki ikoun fama exception inraj3ou tableau vide
+            return []; 
         } 
+    }
+
+     public function DetailBonDeCommande ()
+    {   //bech nchouf est ce que user connecter walla !!
+        if (!Auth::check()) {
+            
+            return redirect('/admin/login');
+        }
+        else 
+        {
+          return view('detailBonDeCommande');  
+        }
+       
     }
     
 }
+
+
