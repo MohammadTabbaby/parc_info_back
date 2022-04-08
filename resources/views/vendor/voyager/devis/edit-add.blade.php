@@ -93,7 +93,7 @@
                                     @endif
                                 </div>
                             @endforeach
-
+                            <input type="text" name="id" id="id" value="{{$dataTypeContent->getKey()}}" hidden />
                         </div><!-- panel-body -->
 
                         <div class="panel-footer">

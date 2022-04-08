@@ -85,10 +85,10 @@ class WebController extends Controller
         }
     }
 
-//verifReferenceEquipements
+ //verifReferenceEquipements
 
-public function verifReferenceEquipements(Request $request)
-{
+ public function verifReferenceEquipements(Request $request)
+ {
     try
     {
         if(!isset($request->id))
@@ -168,80 +168,78 @@ public function verifReferenceEquipements(Request $request)
             ]
         );
     }
-}
+ }
 
-//verifReferenceBondeCommande
+   //verifReferenceBondeCommande
 
     public function verifReferenceBondeCommande(Request $request)
     {
         try
         {
-            $r = BondeCommande::where('reference', $request->reference)->first();
-            if(isset($r))
+            if(!isset($request->id))
             {
-                return response()->json
-                (
-                    [
-                        "code" => 0,
-                        "status" => "error",
-                        "message" => "reference BondeCommande existe"
-                    ]
-                );
+                $r = BondeCommande::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Bon de Commande existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
             }
             else
             {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "BondeCommande non existe"
-                    ]
-                );
-            }
-        }
-        catch(Exception $e)
-        {
-            return response()->json
-            (
-                [
-                    "code" => 0,
-                    "status" => "exception",
-                    "message" => "Exception"
-                ]
-            );
-        }
-    }
-
-
-    //verifReferenceBondeLivraison
-
-    public function verifReferenceBondeLivraison(Request $request)
-    {
-        try
-        {
-            $r = BondeLivraison::where('reference', $request->reference)->first();
-            if(isset($r))
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 0,
-                        "status" => "error",
-                        "message" => "BondeLivraison existe"
-                    ]
-                );
-            }
-            else
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "BondeLivraison non existe"
-                    ]
-                );
+                $r = BondeCommande::where('reference', $request->reference)->where('id',$request->id)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cet Bon de Commande est effectué avec succès"
+                        ]
+                    );
+                }
+                
+                $r = BondeCommande::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Bon de Commande existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
             }
         }
         catch(\Exception $e)
@@ -257,37 +255,80 @@ public function verifReferenceEquipements(Request $request)
         }
     }
 
-    //verifReferenceDevis
 
-    public function verifReferenceDevis(Request $request)
+    //verifReferenceBondeLivraison BondeLivraison
+
+    public function verifReferenceBondeLivraison(Request $request)
     {
         try
         {
-            $r = Devi::where('reference', $request->reference)->first();
-            if(isset($r))
+            if(!isset($request->id))
             {
-                return response()->json
-                (
-                    [
-                        "code" => 0,
-                        "status" => "error",
-                        "message" => "reference devis existe"
-                    ]
-                );
+                $r = BondeLivraison::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Bon de Commande existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
             }
             else
             {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "Equipement non existe"
-                    ]
-                );
+                $r = BondeLivraison::where('reference', $request->reference)->where('id',$request->id)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cet Bon de Commande est effectué avec succès"
+                        ]
+                    );
+                }
+                
+                $r = BondeLivraison::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Bon de Commande existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
             }
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
             return response()->json
             (
@@ -300,35 +341,248 @@ public function verifReferenceEquipements(Request $request)
         }
     }
 
+    //verifReferenceDevis Devi
+
+    public function verifReferenceDevis(Request $request)
+    {
+        try
+        {
+            if(!isset($request->id))
+            {
+                $r = Devi::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Bon de Commande existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
+            }
+            else
+            {
+                $r = Devi::where('reference', $request->reference)->where('id',$request->id)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cet Bon de Commande est effectué avec succès"
+                        ]
+                    );
+                }
+                
+                $r = Devi::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Bon de Commande existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
+            }
+        }
+        catch(\Exception $e)
+        {
+            return response()->json
+            (
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
+    //verifReferencePieceDeRechange PieceDeRechange
+
     public function verifReferencePieceDeRechange(Request $request)
     {
         try
         {
-            $r = PieceDeRechange::where('reference', $request->reference)->first();
-            if(isset($r))
+            if(!isset($request->id))
             {
-                return response()->json
-                (
-                    [
-                        "code" => 0,
-                        "status" => "error",
-                        "message" => "reference piece de rechange existe"
-                    ]
-                );
+                $r = PieceDeRechange::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Bon de Commande existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
             }
             else
             {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "Piece de rechange non existe"
-                    ]
-                );
+                $r = PieceDeRechange::where('reference', $request->reference)->where('id',$request->id)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cet Bon de Commande est effectué avec succès"
+                        ]
+                    );
+                }
+                
+                $r = PieceDeRechange::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Bon de Commande existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
             }
         }
-        catch(Exception $e)
+        catch(\Exception $e)
+        {
+            return response()->json
+            (
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
+
+    //verifReferencefacture
+
+    public function verifReferenceFacture(Request $request)
+    {
+        try
+        {
+            if(!isset($request->id))
+            {
+                $r = Facture::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Reference Facture existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Reference Facture non existe"
+                        ]
+                    );
+                }
+            }
+            else
+            {
+                $r = Facture::where('reference', $request->reference)->where('id',$request->id)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de Facture est effectué avec succès"
+                        ]
+                    );
+                }
+                
+                $r = Facture::where('reference', $request->reference)->first();
+                if(isset($r))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Facture existe"
+                        ]
+                    );
+                }
+                else
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Facture non existe"
+                        ]
+                    );
+                }
+            }
+        }
+        catch(\Exception $e)
         {
             return response()->json
             (

@@ -10,7 +10,7 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 	<script src="https://code.jquery.com/jquery-2.0.3.min.js" ></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-	<script src={{ asset('js/reparation_externe.js') }}></script>
+	<script src={{ asset('js/factures.js') }}></script>
 @stop
 
 @section('page_title', __('voyager::generic.'.($edit ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular'))
@@ -93,6 +93,7 @@
                                     @endif
                                 </div>
                             @endforeach
+                            <input type="text" name="id" id="id" value="{{$dataTypeContent->getKey()}}" hidden />
                         </div><!-- panel-body -->
 
                         <div class="panel-footer">

@@ -18,7 +18,7 @@ $(document).ready
                     {
                         async: false, 
                         type: 'POST',
-                        url: "/api/verifReferenceBondeCommande",
+                        url: "/api/verifReferenceFacture",
                         data:
                         {
                             'reference' : reference,
