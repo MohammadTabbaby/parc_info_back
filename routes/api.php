@@ -28,4 +28,6 @@ Route::post('/verifReferencePieceDeRechange','WebController@verifReferencePieceD
 Route::post('/verifReferenceFacture','WebController@verifReferenceFacture');
 //api test
 Route::get('/testApi/{id}','WebController@testApi');
-Route::get('/getEquipementByRefBonCommande/{ref_breference_BC}','WebController@getEquipementByRefBonCommande'); 
+Route::get('/getEquipementByRefBonCommande/{ref_breference_BC}','WebController@getEquipementByRefBonCommande');
+
+Route::get('/getEquipementByRefBonLivraison/{ref_breference_BL}','WebController@getEquipementByRefBonLivraison');

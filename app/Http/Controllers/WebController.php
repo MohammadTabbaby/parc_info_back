@@ -17,7 +17,9 @@ use App\Modele;
 use App\Category;
 use App\Service;
 use App\Fournisseur;
+use App\Facture;
 use  App\EquipementBondecommande;
+use App\DetailBonDeLivraison;
 use Auth;
 
 class WebController extends Controller
@@ -257,7 +259,7 @@ class WebController extends Controller
 
 
     //verifReferenceBondeLivraison BondeLivraison
-
+    
     public function verifReferenceBondeLivraison(Request $request)
     {
         try
@@ -265,6 +267,7 @@ class WebController extends Controller
             if(!isset($request->id))
             {
                 $r = BondeLivraison::where('reference', $request->reference)->first();
+                
                 if(isset($r))
                 {
                     return response()->json
@@ -272,7 +275,7 @@ class WebController extends Controller
                         [
                             "code" => 0,
                             "status" => "error",
-                            "message" => "Bon de Commande existe"
+                            "message" => "Bon de Livraison existe"
                         ]
                     );
                 }
@@ -283,7 +286,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "Bon de Commande non existe"
+                            "message" => "Bon de Livraison non existe"
                         ]
                     );
                 }
@@ -298,7 +301,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "La mise à jour de cet Bon de Commande est effectué avec succès"
+                            "message" => "La mise à jour de cet Bon de Livraison est effectué avec succès"
                         ]
                     );
                 }
@@ -311,7 +314,7 @@ class WebController extends Controller
                         [
                             "code" => 0,
                             "status" => "error",
-                            "message" => "Bon de Commande existe"
+                            "message" => "Bon de Livraison existe"
                         ]
                     );
                 }
@@ -322,7 +325,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "Bon de Commande non existe"
+                            "message" => "Bon de Livraison non existe"
                         ]
                     );
                 }
@@ -357,7 +360,7 @@ class WebController extends Controller
                         [
                             "code" => 0,
                             "status" => "error",
-                            "message" => "Bon de Commande existe"
+                            "message" => "Devi existe"
                         ]
                     );
                 }
@@ -368,7 +371,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "Bon de Commande non existe"
+                            "message" => "Devi non existe"
                         ]
                     );
                 }
@@ -383,7 +386,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "La mise à jour de cet Bon de Commande est effectué avec succès"
+                            "message" => "La mise à jour de cet Devi est effectué avec succès"
                         ]
                     );
                 }
@@ -396,7 +399,7 @@ class WebController extends Controller
                         [
                             "code" => 0,
                             "status" => "error",
-                            "message" => "Bon de Commande existe"
+                            "message" => "Devi existe"
                         ]
                     );
                 }
@@ -407,7 +410,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "Bon de Commande non existe"
+                            "message" => "Devi non existe"
                         ]
                     );
                 }
@@ -526,7 +529,7 @@ class WebController extends Controller
                         [
                             "code" => 0,
                             "status" => "error",
-                            "message" => "Reference Facture existe"
+                            "message" => "La reference de cette facture est existe"
                         ]
                     );
                 }
@@ -537,7 +540,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "Reference Facture non existe"
+                            "message" => "La reference n'exste pas"
                         ]
                     );
                 }
@@ -552,7 +555,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "La mise à jour de Facture est effectué avec succès"
+                            "message" => "La mise à jour de cette facture est effectué avec success"
                         ]
                     );
                 }
@@ -565,7 +568,7 @@ class WebController extends Controller
                         [
                             "code" => 0,
                             "status" => "error",
-                            "message" => "Facture existe"
+                            "message" => "Bon de Commande existe"
                         ]
                     );
                 }
@@ -576,7 +579,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "Facture non existe"
+                            "message" => "Bon de Commande non existe"
                         ]
                     );
                 }
@@ -594,6 +597,7 @@ class WebController extends Controller
             );
         }
     }
+
     
     
 
@@ -669,19 +673,70 @@ class WebController extends Controller
         } 
     }
 
-     public function DetailBonDeCommande ()
+    public function getEquipementByRefBonLivraison($ref_breference_BL)
+    {
+        try
+        {
+            $equipementBondelivraison = DetailBonDeLivraison::where('ref_BL',$ref_breference_BL)->get();
+            $tabEquipement = [];
+            $total=0;
+            foreach($equipementBondecommande as $v)
+            {
+                $re=ReparationsExterne::find($v->id_reparation_externe);
+                $equipement = Equipement::where('reference',$re->id_equipement)->first();
+                //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
+                $categorie=Category::find($equipement->id_categorie);
+                $modele=Modele::find($equipement->id_modele);
+                $service=Service::find($equipement->id_service);
+                $tabEquipement[]= 
+                    [
+                        "reference"=>$equipement->reference ,
+                         "categorie"=>$categorie->nom_categorie ,
+                         "modele"=>$modele->nom_modele ,
+                         "service"=>$service->nom_service ,
+                         "cout"=>$v->cout
+                    ];
+                
+                    $total+=$v->cout;
+            }
+            return["equipements"=>$tabEquipement,"total"=>$total];
+            //return $tabEquipement;
+        }
+        catch(Exception $e)
+        {
+            return []; 
+        } 
+    }
+
+    public function DetailBonDeCommande ($ref_breference_BC)
     {   //bech nchouf est ce que user connecter walla !!
-        if (!Auth::check()) {
-            
+        if (!Auth::check()) 
+        {
             return redirect('/admin/login');
         }
         else 
         {
-          return view('detailBonDeCommande');  
+            $array = $this->getEquipementByRefBonCommande($ref_breference_BC);
+            return View('detailBonDeCommande')->with('array',$array);;  
         }
-       
     }
-    
+
+
+
+    //10/04/2022
+    public function DetailBonDeLivraison ($ref_breference_BL)
+    {   //bech nchouf est ce que user connecter walla !!
+        if (!Auth::check()) 
+        {
+            return redirect('/admin/login');
+        }
+        else 
+        {
+            $array = $this->getEquipementByRefBonLivraison($ref_breference_BL);
+            return View('detailBonDeLivraison')->with('array',$array);;  
+        }
+    }
+   
 }
 
 

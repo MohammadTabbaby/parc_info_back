@@ -106,24 +106,96 @@ p {
     padding: .375rem .5625rem;
     font-weight: normal
 }
-img{
+
+img {
     width: 40%;
     height: 40%;
     min-width: 0;
 }
-.sante{
+
+.sante {
     float: left;
     margin-top: -15px;
 }
 
-.logo{
+.logo {
     width: 25%;
     height: 25%;
-    min-width: 0;
     float: right;
-    margin-top: 0px;
+}
+
+hr {
+    height: 15px;
+}
+
+#header {
+    display: flex;
+    flex-direction: row;
+    flex-basis: auto;
+    justify-content: space-around;
+}
+
+#frenchtxt,
+#arabictxt {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', sans-serif;
+}
+
+#frenchtxt p,
+#arabictxt p {
+    font-size: 13pt;
+}
+
+#title {
+    text-align: center;
+}
+
+thead {
+    background-color: lightgrey;
+    text-align: center;
+}
+
+table {
+    text-align: center;
+    border-color: rgb(0, 0, 0);
+}
+
+.date {
+    position: relative;
+    float: right;
+    margin-right: 20px;
+}
+
+#title {
+    font-weight: bolder;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#midsec {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+#botsec {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+#signa {
+    margin-right: -45%;
+}
+
+#signa p {
+    font-family: Brush Script MT, Brush Script Std, cursive;
+    font-size: large;
 
 }
-#date{
-    float: right;
+
+#footer {
+    text-align: center;
 }

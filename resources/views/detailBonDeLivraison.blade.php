@@ -3,7 +3,7 @@
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
-            Detail bon de commande
+            Detail bon de Livraison
         </h1>
         <div class="table-responsive">
             <table id="dataTable" class="table table-hover">
