@@ -253,7 +253,7 @@
                                         @endforeach
                                         <?php
                                             $reference =$data->reference;
-                                            $lien ='/admin/DetailBonDeLivraison/'.$reference;
+                                            $lien ='/admin/facture/'.$reference;
                                             $url = URL::asset($lien);
                                         ?>
                                         <td> <a href="{{ $url }}">Detail </a> </td>

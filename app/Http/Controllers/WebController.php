@@ -20,6 +20,8 @@ use App\Fournisseur;
 use App\Facture;
 use  App\EquipementBondecommande;
 use App\DetailBonDeLivraison;
+use App\DetailFacture;
+use App\Panne;
 use Auth;
 
 class WebController extends Controller
@@ -50,6 +52,8 @@ class WebController extends Controller
     {
         try
         {
+            if(!isset($request->id))
+        {
             $r = ReparationsExterne::where('id_equipement', $request->id_equipement)->first();
             if(isset($r))
             {
@@ -74,18 +78,58 @@ class WebController extends Controller
                 );
             }
         }
-        catch(\Exception $e)
+        else
         {
-            return response()->json
-            (
-                [
-                    "code" => 0,
-                    "status" => "exception",
-                    "message" => "Exception"
-                ]
-            );
+            $r = Equipement::where('reference', $request->reference)->where('id',$request->id)->first();
+            if(isset($r))
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "La mise à jour de cet equipement est effectué avec succès"
+                    ]
+                );
+            }
+            
+            $r = Equipement::where('reference', $request->reference)->first();
+            if(isset($r))
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 0,
+                        "status" => "error",
+                        "message" => "Equipement existe"
+                    ]
+                );
+            }
+            else
+            {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "Equipement non existe"
+                    ]
+                );
+            }
         }
     }
+    catch(\Exception $e)
+    {
+        return response()->json
+        (
+            [
+                "code" => 0,
+                "status" => "exception",
+                "message" => "Exception"
+            ]
+        );
+    }
+ }
 
  //verifReferenceEquipements
 
@@ -598,9 +642,6 @@ class WebController extends Controller
         }
     }
 
-    
-    
-
     public function FicheSortie ($id)
     {   
         $fiche_sortie=FicheSorty::find($id);
@@ -677,12 +718,13 @@ class WebController extends Controller
     {
         try
         {
-            $equipementBondelivraison = DetailBonDeLivraison::where('ref_BL',$ref_breference_BL)->get();
+            $equipementBondelivraison = DetailBonDeLivraison::where('ref_bl',$ref_breference_BL)->get();
+           //return $equipementBondelivraison;
             $tabEquipement = [];
             $total=0;
-            foreach($equipementBondecommande as $v)
+            foreach($equipementBondelivraison as $v)
             {
-                $re=ReparationsExterne::find($v->id_reparation_externe);
+                $re=ReparationsExterne::find($v->equipement);
                 $equipement = Equipement::where('reference',$re->id_equipement)->first();
                 //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
                 $categorie=Category::find($equipement->id_categorie);
@@ -736,7 +778,51 @@ class WebController extends Controller
             return View('detailBonDeLivraison')->with('array',$array);;  
         }
     }
-   
+
+   // 11/04/2022
+
+    public function getDetailFacture ($reference_facture)
+    {
+        try 
+        {
+            //code...
+            $detailFacture=DetailFacture::where('reference_facture',$reference_facture)->get();
+           // return($detailFacture);
+           $equipements=[];
+           $total=0;
+           foreach ($detailFacture as $value) {
+               # code...
+             $equipement= Equipement::where('reference',$value->reference)->first();
+             $panne = Panne::find($value->panne);
+             $equipement->panne=$value->panne;
+             $equipement->montant_TTC = $value->prix_HT+($value->prix_HT * $value->tva);
+             $equipement->tva = $value->tva;
+             $equipement->prix_HT = $value->prix_HT;
+             $equipements[]=$equipement;
+             $total+=$equipement->montant_TTC ;
+           }
+           //return($equipements);
+           return['equipements'=>$equipements, 'total'=>$total+600];
+        } 
+        catch (Exception $e) 
+        {
+            return [];
+        }
+    }
+    
+    public function Facture($reference_facture)
+    {
+        //bech nchouf est ce que user connecter walla !!
+        if (!Auth::check()) 
+        {
+            return redirect('/admin/login');
+        }
+        else 
+        {
+            $array = $this->getDetailFacture($reference_facture);
+            return View('facture')->with('array',$array);;  
+        }
+    }
 }
 
 
