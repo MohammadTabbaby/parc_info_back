@@ -31,4 +31,5 @@ Route::get('/testApi/{id}','WebController@testApi');
 Route::get('/getEquipementByRefBonCommande/{ref_breference_BC}','WebController@getEquipementByRefBonCommande');
 Route::get('/getEquipementByRefBonLivraison/{ref_BL}','WebController@getEquipementByRefBonLivraison');
 Route::get('/getDetailFacture/{reference_facture}','WebController@getDetailFacture');
+Route::post('/VerifDetailBondecommande','WebController@VerifDetailBondecommande');
 

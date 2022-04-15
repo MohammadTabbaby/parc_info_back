@@ -2,7 +2,7 @@
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
-            Detail bon de Livraison
+            Detail Facture
         </h1>
         <div class="table-responsive">
             <table id="dataTable" class="table table-hover">
@@ -32,10 +32,10 @@
                         <tr>
                             <td><b>Timbre Fiscal</b> </td>
                             <td></td>
-                            <td></td>            
+                            <td>600</td>            
                         </tr>
                     <tr>
-                        <td><u>Total</u></td>
+                        <td><u>Total TTC</u></td>
                         <td> </td>
                         <td>{{ $array['total'] }}</td>
                     </tr>

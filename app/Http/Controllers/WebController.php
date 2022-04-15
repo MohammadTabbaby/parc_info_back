@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ReparationsExterne;
-use App\Devi;
 use App\PieceDeRechange;
 use App\Equipement;
 use App\BondeCommande;
@@ -22,6 +21,8 @@ use  App\EquipementBondecommande;
 use App\DetailBonDeLivraison;
 use App\DetailFacture;
 use App\Panne;
+use App\Devi;
+use App\DetailDevi;
 use Auth;
 
 class WebController extends Controller
@@ -117,19 +118,19 @@ class WebController extends Controller
                 );
             }
         }
+        }
+        catch(\Exception $e)
+        {
+            return response()->json
+            (
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
     }
-    catch(\Exception $e)
-    {
-        return response()->json
-        (
-            [
-                "code" => 0,
-                "status" => "exception",
-                "message" => "Exception"
-            ]
-        );
-    }
- }
 
  //verifReferenceEquipements
 
@@ -612,7 +613,7 @@ class WebController extends Controller
                         [
                             "code" => 0,
                             "status" => "error",
-                            "message" => "Bon de Commande existe"
+                            "message" => "Facture existe"
                         ]
                     );
                 }
@@ -623,7 +624,7 @@ class WebController extends Controller
                         [
                             "code" => 1,
                             "status" => "sucess",
-                            "message" => "Bon de Commande non existe"
+                            "message" => "Facture non existe"
                         ]
                     );
                 }
@@ -823,6 +824,99 @@ class WebController extends Controller
             return View('facture')->with('array',$array);;  
         }
     }
+
+    //15/04/2022 controle sur ref equipmenrnt et ref BC 
+
+    public function VerifDetailBondecommande(Request $request)
+    {       
+        try 
+        {
+           if (!isset($request->id) ) 
+           {
+                //insert
+                $equipementBondecommande=EquipementBondecommande::where('id_reparation_externe',$request-> id_reparation_externe)->where('reference_BC',$request->reference_BC)->first();
+                // return $equipementBondecommande;
+                if (isset($equipementBondecommande))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Cette bon de commende est existe"
+                        ]
+                    );
+                } 
+                else 
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Commande non existe"
+                        ]
+                    );
+                }
+           } 
+           else 
+           {
+               //update
+               $equipementBondecommande=EquipementBondecommande::where('id_reparation_externe',$request->id_reparation_externe)
+                    ->where('reference_BC',$request->reference_BC)
+                    ->where('id',$request->id)
+                    ->first();
+               if (isset($equipementBondecommande)) 
+               {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "La mise à jour de cette bon de commande est effectué avec success"
+                    ]
+                );
+               }
+               else 
+               {
+                    $equipementBondecommande=EquipementBondecommande::where('id_reparation_externe',$request-> id_reparation_externe)->where('reference_BC',$request->reference_BC)->first();
+                    // return $equipementBondecommande;
+                    if (isset($equipementBondecommande)) 
+                    {
+                        return response()->json
+                        (
+                            [
+                                "code" => 0,
+                                "status" => "error",
+                                "message" => "Cette bon de commende est existe"
+                            ]
+                        );
+                    } 
+                    else 
+                    {
+                        return response()->json
+                        (
+                            [
+                                "code" => 1,
+                                "status" => "sucess",
+                                "message" => "Bon de Commande non existe"
+                            ]
+                        );
+                    }
+                }
+           }
+        }
+        catch (Exception $e)  
+        {
+            
+            return response()->json
+            (
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
 }
-
-
