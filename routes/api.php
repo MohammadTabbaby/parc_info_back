@@ -26,10 +26,11 @@ Route::post('/verifReferenceBondeCommande','WebController@verifReferenceBondeCom
 Route::post('/verifReferenceDevis','WebController@verifReferenceDevis');
 Route::post('/verifReferencePieceDeRechange','WebController@verifReferencePieceDeRechange');
 Route::post('/verifReferenceFacture','WebController@verifReferenceFacture');
+Route::post('/VerifDetailBondecommande','WebController@VerifDetailBondecommande');
 //api test
 Route::get('/testApi/{id}','WebController@testApi');
 Route::get('/getEquipementByRefBonCommande/{ref_breference_BC}','WebController@getEquipementByRefBonCommande');
 Route::get('/getEquipementByRefBonLivraison/{ref_BL}','WebController@getEquipementByRefBonLivraison');
 Route::get('/getDetailFacture/{reference_facture}','WebController@getDetailFacture');
-Route::post('/VerifDetailBondecommande','WebController@VerifDetailBondecommande');
+Route::get('/getEquipmentService/{id_service}','WebController@getEquipmentService');
 

@@ -23,6 +23,7 @@ use App\DetailFacture;
 use App\Panne;
 use App\Devi;
 use App\DetailDevi;
+use App\Inventaire;
 use Auth;
 
 class WebController extends Controller
@@ -919,4 +920,25 @@ class WebController extends Controller
             );
         }
     }
+
+    public function getEquipmentService($id_service)
+    { 
+        try {
+            //code...
+         $equipement=Equipement::where('id_service',$id_service)->get();
+         //return($equipement);
+         $equipement=[];
+         foreach ($detailInventaire as $value) {
+             # code...
+             $equipement
+         }
+
+        } 
+        catch (Exception $e) {
+            return;
+        }
+        
+        
+    }
+    
 }
