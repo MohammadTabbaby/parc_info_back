@@ -40,3 +40,4 @@ Route::get('/admin/fiche_sortie/{id}','WebController@FicheSortie');
 Route::get('/admin/DetailBonDeCommande/{ref_breference_BC}','WebController@DetailBonDeCommande');
 Route::get('/admin/DetailBonDeLivraison/{ref_BL}','WebController@DetailBonDeLivraison');
 Route::get('/admin/facture/{reference_facture}','WebController@Facture');
+Route::get('/admin/inventaire/{id_service}','WebController@inventaire');

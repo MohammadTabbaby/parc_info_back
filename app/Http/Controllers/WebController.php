@@ -822,7 +822,7 @@ class WebController extends Controller
         else 
         {
             $array = $this->getDetailFacture($reference_facture);
-            return View('facture')->with('array',$array);;  
+            return View('facture')->with('array',$array);
         }
     }
 
@@ -926,19 +926,80 @@ class WebController extends Controller
         try {
             //code...
          $equipement=Equipement::where('id_service',$id_service)->get();
+         $nb_equipements=$equipement->count();
+         $total_VCN=0;
+         $total_tauxAmort=0;
+         //return $nb_equipements;
          //return($equipement);
-         $equipement=[];
-         foreach ($detailInventaire as $value) {
+        $equipements=[];
+         foreach ($equipement as $value) {
              # code...
-             $equipement
+                $equipement= Equipement::where('id_service',$value->id_service)->first();
+                //return($equipement);
+                $categorie=Category::find($equipement->id_categorie);
+                $modele=Modele::find($equipement->id_modele);
+                $equipement->cout_initiale=$value->cout_initiale;
+                //return($equipement->cout_initiale);
+                $equipement->date_premier_utilisation=$value->date_premier_utilisation;
+                //return($value->date_premier_utilisation);
+                $equipement->amortie_sur=$value->amortie_sur;
+                //return $equipement->amortie_sur;
+                $taux_dammortissement = 1/$value->amortie_sur;
+                //return($taux_dammortissement);
+                $date=date("Y/m/d");
+                $date1 =strtotime($date);
+                $date2 =strtotime($value->date_premier_utilisation);
+                //return $date;
+                $nb_jours_utilisation =($date1- $date2)/86400;
+                //return($nb_jours_utilisation);
+                $mountant_a_amortir = $value->cout_initiale*$taux_dammortissement ; //kol 3am 9adeh yon9es VCN
+                //return $mountant_a_amortir;
+                $X =((( $mountant_a_amortir * $nb_jours_utilisation)/360) /1000);
+                // return $X;
+                $VCN_Equipement =( $value->cout_initiale - ($value->cout_initiale * $X));//VCN de chaque equipement
+               // return  $VCN_Equipement;
+                $Y=round((1-$X),2);
+                //return $Y;
+                //$equipements[]=$equipement;
+               // return[];
+               $equipements[]= 
+                    [
+                        "reference"=>$equipement->reference ,
+                         "categorie"=>$categorie->nom_categorie ,
+                         "modele"=>$modele->nom_modele ,
+                         'VCN'=>$VCN_Equipement,
+                         'taux_amortissement'=>$Y
+                    ];
+                    
+              // return['equipements'=>$equipements, 'VCN'=>$VCN_Equipement , 'Taux Amortissement'=>$Y];
+             $total_VCN+=$VCN_Equipement;
+             $total_tauxAmort+=$Y;
+             
          }
+             $total_tauxAmort=$total_tauxAmort/$nb_equipements;
+             $total_VCN=$total_VCN/$nb_equipements;
+             return['equipements'=>$equipements, 'total_VCN'=>$total_VCN , 'taux_amortissement'=>round($total_tauxAmort,2)];
 
         } 
         catch (Exception $e) {
-            return;
-        }
+            return[];
+       }
         
         
     }
     
+    public function inventaire($id_service)
+    {
+        //bech nchouf est ce que user connecter walla !!
+        if (!Auth::check()) 
+        {
+            return redirect('/admin/login');
+        }
+        else 
+        {
+            $array = $this->getEquipmentService($id_service);
+            return View('inventaire')->with('array',$array);;  
+        }
+    }
+
 }
