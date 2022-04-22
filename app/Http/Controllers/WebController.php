@@ -921,6 +921,193 @@ class WebController extends Controller
         }
     }
 
+    public function VerifDetailBondeLivraison(Request $request)
+    {       
+        try 
+        {
+           if (!isset($request->id) ) 
+           {
+                //insert
+                $equipementBondelivraison=DetailBonDeLivraison::where('equipement',$request->equipement)->where('ref_bl',$request->ref_bl)->first();
+                // return $equipementBondecommande;
+                if (isset($equipementBondelivraison))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Cette Bon de Livraison est existe"
+                        ]
+                    );
+                } 
+                else 
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Bon de Livraison non existe"
+                        ]
+                    );
+                }
+           } 
+           else 
+           {
+               //update
+               $equipementBondelivraison=DetailBonDeLivraison::where('equipement',$request->equipement)
+                    ->where('ref_bl',$request->ref_bl)
+                    ->where('id',$request->id)
+                    ->first();
+               if (isset($equipementBondelivraison)) 
+               {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "La mise à jour de cette Bon de Livraison est effectué avec success"
+                    ]
+                );
+               }
+               else 
+               {
+                $equipementBondelivraison=DetailBonDeLivraison::where('equipement',$request-> equipement)->where('ref_bl',$request->ref_bl)->first();
+                    // return $equipementBondecommande;
+                    if (isset($equipementBondelivraison)) 
+                    {
+                        return response()->json
+                        (
+                            [
+                                "code" => 0,
+                                "status" => "error",
+                                "message" => "Cette Bon de Livraisonest existe"
+                            ]
+                        );
+                    } 
+                    else 
+                    {
+                        return response()->json
+                        (
+                            [
+                                "code" => 1,
+                                "status" => "sucess",
+                                "message" => "Bon de Livraison non existe"
+                            ]
+                        );
+                    }
+                }
+           }
+        }
+        catch (Exception $e)  
+        {
+            
+            return response()->json
+            (
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
+
+    public function VerifDetailFacture(Request $request)
+    {       
+        try 
+        {
+           if (!isset($request->id) ) 
+           {
+                //insert
+                $equipementFacture=DetailFacture::where('reference',$request->reference)->where('reference_facture',$request->reference_facture)->first();
+                // return $equipementFacture;
+                if (isset($equipementFacture))
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Facture est existe"
+                        ]
+                    );
+                } 
+                else 
+                {
+                    return response()->json
+                    (
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Facture non existe"
+                        ]
+                    );
+                }
+           } 
+           else 
+           {
+               //update
+               $equipementFacture=DetailFacture::where('reference',$request->reference)
+                    ->where('reference_facture',$request->reference_facture)
+                    ->where('id',$request->id)
+                    ->first();
+               if (isset($equipementFacture)) 
+               {
+                return response()->json
+                (
+                    [
+                        "code" => 1,
+                        "status" => "sucess",
+                        "message" => "La mise à jour de cette Facture est effectué avec success"
+                    ]
+                );
+               }
+               else 
+               {
+                $equipementFacture=DetailFacture::where('reference',$request-> reference)->where('reference_facture',$request->reference_facture)->first();
+                    // return $equipementBondecommande;
+                    if (isset($equipementFacture)) 
+                    {
+                        return response()->json
+                        (
+                            [
+                                "code" => 0,
+                                "status" => "error",
+                                "message" => "Cette Facture existe"
+                            ]
+                        );
+                    } 
+                    else 
+                    {
+                        return response()->json
+                        (
+                            [
+                                "code" => 1,
+                                "status" => "sucess",
+                                "message" => "Facture non existe"
+                            ]
+                        );
+                    }
+                }
+           }
+        }
+        catch (Exception $e)  
+        {
+            
+            return response()->json
+            (
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
+
+
     public function getEquipmentService($id_service)
     { 
         try {
@@ -930,14 +1117,13 @@ class WebController extends Controller
          $total_VCN=0;
          $total_tauxAmort=0;
          //return $nb_equipements;
-         //return($equipement);
+        // return($equipement);
         $equipements=[];
          foreach ($equipement as $value) {
              # code...
-                $equipement= Equipement::where('id_service',$value->id_service)->first();
                 //return($equipement);
-                $categorie=Category::find($equipement->id_categorie);
-                $modele=Modele::find($equipement->id_modele);
+                $categorie=Category::find($value->id_categorie);
+                $modele=Modele::find($value->id_modele);
                 $equipement->cout_initiale=$value->cout_initiale;
                 //return($equipement->cout_initiale);
                 $equipement->date_premier_utilisation=$value->date_premier_utilisation;
@@ -964,7 +1150,7 @@ class WebController extends Controller
                // return[];
                $equipements[]= 
                     [
-                        "reference"=>$equipement->reference ,
+                        "reference"=>$value->reference ,
                          "categorie"=>$categorie->nom_categorie ,
                          "modele"=>$modele->nom_modele ,
                          'VCN'=>$VCN_Equipement,
@@ -982,7 +1168,8 @@ class WebController extends Controller
 
         } 
         catch (Exception $e) {
-            return[];
+            return['equipements'=>[], 'total_VCN'=>'' , 'taux_amortissement'=>''];
+
        }
         
         
