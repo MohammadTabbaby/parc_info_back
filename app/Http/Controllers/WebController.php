@@ -24,6 +24,8 @@ use App\Panne;
 use App\Devi;
 use App\DetailDevi;
 use App\Inventaire;
+use App\User;
+use App\Reclamation;
 use Auth;
 
 class WebController extends Controller
@@ -1186,6 +1188,38 @@ class WebController extends Controller
         {
             $array = $this->getEquipmentService($id_service);
             return View('inventaire')->with('array',$array);;  
+        }
+    }
+
+    public function getConnectedUser()
+    {
+        $user = auth()->user();
+        //print_r($user->id);
+        $user = User::find($user->id);
+        //dd($user); //dd: fonction laravel elle peut afficher un tableau associatif
+        //return $user->id_service;
+        $service=Service::find($user->id_service);
+        return $service;
+        //print_r($service);
+    }
+
+    public function addReclamation (Request $request)
+    {
+        try 
+        {
+            $reclamation= new Reclamation();
+            $reclamation->reference=$request->reference;
+            $reclamation->description=$request->discreption;
+            $reclamation->service=$request->service;
+            $reclamation->equipement=$request->service;
+            $reclamation->user=$request->user;
+            $reclamation->save();
+
+            
+        } 
+        catch (Exception $e) 
+        {
+            return ('Exception'.$e);
         }
     }
 

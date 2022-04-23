@@ -35,4 +35,5 @@ Route::get('/getEquipementByRefBonCommande/{ref_breference_BC}','WebController@g
 Route::get('/getEquipementByRefBonLivraison/{ref_BL}','WebController@getEquipementByRefBonLivraison');
 Route::get('/getDetailFacture/{reference_facture}','WebController@getDetailFacture');
 Route::get('/getEquipmentService/{id_service}','WebController@getEquipmentService');
+Route::get('/getConnectedUser','WebController@getConnectedUser');
 
