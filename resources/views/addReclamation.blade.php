@@ -1,68 +1,78 @@
 
 @extends('voyager::master')
-@section('page_header')  
+@section('page_header') 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-2.0.3.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<div class="container">
+    <h1 class="page-title">
+        Add Reclamation
+    </h1>
+    <!-- Start Content-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card-box">
+                    <p class="sub-header">     
+                    </p>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="p-2">
+                                <form method="POST" action="/addReclamation" class="form-horizontal">
+                                    {{ csrf_field() }}
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label" for="simpleinput">Reference</label>
+                                        <div class="col-md-10">
+                                            <input type="text" id="reference" name="reference" class="form-control" required >
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" hidden="hidden">
+                                        <label class="col-md-2 col-form-label" for="example-service">Services</label>
+                                        <!-- --><div class="col-md-10">
+                                            <input type="text" id="service" name="service" class="form-control" placeholder="Service" value="{{$array['service']}}"  >
+                                       </div> 
+                                    </div>
+                                    <div class="form-group row" hidden="hidden">
+                                        <label class="col-md-2 col-form-label" for="example-User">User</label>
+                                        <div class="col-md-10">
+                                            <input type="text" id="user" name="user" class="form-control"  value="{{$array['user']}}"  >
+                                        </div>
+                                    </div>
 
-<header>
-  <!-- Bootstrap Css -->
-  <link href="../assets/css/bootstrap.min.css" id="bootstrap-stylesheet" rel="stylesheet" type="text/css" />
-  <!-- Icons Css -->
-  <link href="../assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-  <!-- App Css-->
-  <link href="../assets/css/app.min.css" id="app-stylesheet" rel="stylesheet" type="text/css" />
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label" for="example-password">Equipements</label>
+                                        <div class="col-md-10">
+                                            <select name="equipement"  class="form-control" required>
+                                                <option value=""></option>
+                                                @foreach ($array['equipements'] as $item)
+                                                    <option value="{{$item->id}}">
+                                                        {{$item->reference}}
+                                                        
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
 
-</header>
-  
-        <h1 class="page-title">
-            Add Reclamation
-        </h1>
-        <!-- Start Content-->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card-box">
-                        <h4 class="header-title">Add Reclamation</h4>
-                        <p class="sub-header">     
-                        </p>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="p-2">
-                                    <form class="form-horizontal" role="form">
-                                        <div class="form-group row">
-                                            <label class="col-md-2 col-form-label" for="simpleinput">Text</label>
-                                            <div class="col-md-10">
-                                                <input type="text" id="simpleinput" class="form-control" value="Some text value...">
-                                            </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label" for="example-placeholder">Description</label>
+                                        <div class="col-md-10">
+                                            <textarea id="description" name="description" class="form-control" required></textarea>
+                                           
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-2 col-form-label" for="example-email">Email</label>
-                                            <div class="col-md-10">
-                                                <input type="email" id="example-email" name="example-email" class="form-control" placeholder="Email">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-2 col-form-label" for="example-password">Password</label>
-                                            <div class="col-md-10">
-                                                <input type="password" id="example-password" class="form-control" value="password">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-md-2 col-form-label" for="example-placeholder">Placeholder</label>
-                                            <div class="col-md-10">
-                                                <input type="text" id="example-placeholder" class="form-control" placeholder="placeholder">
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                    <input type="submit" value="Ajouter une recalamtion" class="btn btn-info waves-effect width-md waves-light" />
+                                </form>
                             </div>
-
                         </div>
-                        <!-- end row -->
 
-                    </div> <!-- end card-box -->
-                </div><!-- end col -->
-            </div>
-            <!-- end row -->
+                    </div>
+                    <!-- end row -->
+
+                </div> <!-- end card-box -->
+            </div><!-- end col -->
         </div>
-           
-    @stop
+        <!-- end row -->
+    </div>
+</div>
+     @stop

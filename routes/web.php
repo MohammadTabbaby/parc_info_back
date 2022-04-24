@@ -35,17 +35,13 @@ Route::get
     }
 );
 
-Route::get(
-    'admin/addReclamation',function()
-    {
-        return view('addReclamation');
-    }
-);
+Route::get('admin/addReclamation','WebController@getViewAddReclamation');
 Route::get('/admin/fiche_sortie/{id}','WebController@FicheSortie');
 //Route::get('/admin/DetailBonDeCommande','WebController@DetailBonDeCommande');
 Route::get('/admin/DetailBonDeCommande/{ref_breference_BC}','WebController@DetailBonDeCommande');
 Route::get('/admin/DetailBonDeLivraison/{ref_BL}','WebController@DetailBonDeLivraison');
 Route::get('/admin/facture/{reference_facture}','WebController@Facture');
 Route::get('/admin/inventaire/{id_service}','WebController@inventaire');
+Route::post("/addReclamation", "WebController@addReclamation");
 
 Route::get('/admin/getConnectedUser','WebController@getConnectedUser');

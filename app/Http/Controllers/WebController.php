@@ -1203,23 +1203,39 @@ class WebController extends Controller
         //print_r($service);
     }
 
+
+    public function getViewAddReclamation()
+    {  
+         $user = auth()->user();
+         $user = User::find($user->id);
+         $service=Service::find($user->id_service);
+         $equipements=Equipement::where('id_service',$service->nom_service)->get();
+
+        $array=
+        [
+            'user'=>$user->id,
+            'service'=>$service->id,
+            'equipements'=>$equipements
+        ];
+
+        return View('addReclamation')->with('array',$array);
+    }
     public function addReclamation (Request $request)
     {
         try 
         {
             $reclamation= new Reclamation();
             $reclamation->reference=$request->reference;
-            $reclamation->description=$request->discreption;
+            $reclamation->description=$request->description;
             $reclamation->service=$request->service;
-            $reclamation->equipement=$request->service;
+            $reclamation->equipement=$request->equipement;
             $reclamation->user=$request->user;
             $reclamation->save();
-
-            
+            return "L'ajout est effectué avec succes";
         } 
         catch (Exception $e) 
         {
-            return ('Exception'.$e);
+            return ('Exception'.$e->getMessage());
         }
     }
 
