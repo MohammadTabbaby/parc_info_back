@@ -1225,13 +1225,14 @@ class WebController extends Controller
         try 
         {
             $reclamation= new Reclamation();
-            $reclamation->reference=$request->reference;
+           // $reclamation->reference=$request->reference;
             $reclamation->description=$request->description;
             $reclamation->service=$request->service;
             $reclamation->equipement=$request->equipement;
             $reclamation->user=$request->user;
             $reclamation->save();
-            return "L'ajout est effectué avec succes";
+           // return "L'ajout est effectué avec succes";
+           return redirect()->back()->with('message',"Votre réclamation est envoyée");
         } 
         catch (Exception $e) 
         {

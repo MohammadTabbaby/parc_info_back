@@ -20,12 +20,12 @@
                             <div class="p-2">
                                 <form method="POST" action="/addReclamation" class="form-horizontal">
                                     {{ csrf_field() }}
-                                    <div class="form-group row">
+                                    <!-- <div class="form-group row">
                                         <label class="col-md-2 col-form-label" for="simpleinput">Reference</label>
                                         <div class="col-md-10">
                                             <input type="text" id="reference" name="reference" class="form-control" required >
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="form-group row" hidden="hidden">
                                         <label class="col-md-2 col-form-label" for="example-service">Services</label>
                                         <!-- --><div class="col-md-10">
@@ -61,7 +61,7 @@
                                            
                                         </div>
                                     </div>
-                                    <input type="submit" value="Ajouter une recalamtion" class="btn btn-info waves-effect width-md waves-light" />
+                                    <input type="submit" value="Ajouter une recalamtion" id="btAddReclamation" class="btn btn-info waves-effect width-md waves-light" />
                                 </form>
                             </div>
                         </div>
@@ -74,5 +74,11 @@
         </div>
         <!-- end row -->
     </div>
-</div>
+</div> 
+    @if(session()->has('message'))
+        <script>
+            toastr.success("Votre réclamation est envoyée", 'Success');
+        </script>  
+    @endif
      @stop
+    
