@@ -39,7 +39,7 @@
         @include('voyager::multilingual.language-selector')
     </div>
 @stop
-
+    @if ($user->id<=1)
 @section('content')
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
@@ -311,7 +311,10 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-@stop
+@stop  
+    @endif
+    
+
 
 @section('css')
 @if(!$dataType->server_side && config('dashboard.data_tables.responsive'))

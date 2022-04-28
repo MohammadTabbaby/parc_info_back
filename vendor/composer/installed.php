@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '498da5a2cb2737935a1b371ad91e9a8d4f1926f0',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -437,12 +437,12 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '498da5a2cb2737935a1b371ad91e9a8d4f1926f0',
             'dev_requirement' => false,
         ),
         'laravel/tinker' => array(
@@ -551,6 +551,15 @@
             'install_path' => __DIR__ . '/../opis/closure',
             'aliases' => array(),
             'reference' => '3d81e4309d2a927abbe66df935f4bb60082805ad',
+            'dev_requirement' => false,
+        ),
+        'panoscape/history' => array(
+            'pretty_version' => '2.3.0',
+            'version' => '2.3.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../panoscape/history',
+            'aliases' => array(),
+            'reference' => '10b7c6179ae15550f1c3a81fd11920f781c5ed9d',
             'dev_requirement' => false,
         ),
         'phar-io/manifest' => array(

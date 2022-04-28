@@ -688,12 +688,14 @@ class WebController extends Controller
         try
         {
             $equipementBondecommande = EquipementBondecommande::where('reference_bc',$ref_breference_BC)->get();
+            //return $equipementBondecommande;
             $tabEquipement = [];
             $total=0;
             foreach($equipementBondecommande as $v)
             {
                 $re=ReparationsExterne::find($v->id_reparation_externe);
                 $equipement = Equipement::where('reference',$re->id_equipement)->first();
+                //return $equipement;
                 //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
                 $categorie=Category::find($equipement->id_categorie);
                 $modele=Modele::find($equipement->id_modele);
@@ -1239,5 +1241,64 @@ class WebController extends Controller
             return ('Exception'.$e->getMessage());
         }
     }
+
+    
+    public function gethistory($reference)
+    {
+        // try {
+        $Equipement = Equipement::where('reference', $reference)->first();
+        //$historique = $Equipement->histories;
+        //return($historique->meta);
+
+        $x = 0;
+        $s = "";
+        $Strings = [];
+        foreach ($Equipement->histories as $eq) {
+            //print_r($eq->meta);
+           // print_r("changement N° : " . $x . " \n\r");
+
+            for ($i = 0; $i < count($eq->meta); $i++) {
+                if ($eq->meta[$i]['key'] == 'post_agent') {
+                    //print_r($eq->meta[$i]);
+                    $s .= ("(( Post_Agent )) changed from (( " . $eq->meta[$i]['old'] . ")) To ((" . $eq->meta[$i]['new'] . "))\n\r");
+                }
+                if ($eq->meta[$i]['key'] == 'id_service') {
+                    //print_r($eq->meta[$i]);
+                    $s .= ("(( Service )) changed from ((" . $eq->meta[$i]['old'] . ")) To ((" . $eq->meta[$i]['new'] . "))\n\r");
+                }
+                if ($eq->meta[$i]['key'] == 'date_affectation') {
+                    $p = substr($eq->meta[$i]['new'], 0, 10);
+                    //print($eq->meta[$i]['old']);
+                    //print($p);
+                    //print_r($eq->meta[$i]);
+                    if ($eq->meta[$i]['old'] != $p) {
+                        $s .= ("(( Date D'affectation )) changed from ((" . $eq->meta[$i]['old'] . ")) To ((" . substr($eq->meta[$i]['new'], 0, 10) . "))\n\r");
+                    }
+                }
+                if (!empty($s)) {
+                    // print_r($s);
+                    $Strings[] = $s;
+                }
+                $s = "";
+            }
+            $x++;
+        }
+
+        return ['Strings' => $Strings];
+    }
+
+    
+
+
+    public function displayhistory($reference)
+    {   //bech nchouf est ce que user connecter walla !!
+        if (!Auth::check()) {
+            return redirect('/admin/login');
+        } else {
+            $array = $this->gethistory($reference);
+            return View('displayhistory')->with('array', $array);;
+        }
+    }
+
 
 }

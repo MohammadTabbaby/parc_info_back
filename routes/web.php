@@ -45,3 +45,4 @@ Route::get('/admin/inventaire/{id_service}','WebController@inventaire');
 Route::post("/addReclamation", "WebController@addReclamation");
 Route::get('admin/addReclamation','WebController@getViewAddReclamation');
 Route::get('/admin/getConnectedUser','WebController@getConnectedUser');
+Route::get('/admin/displayhistory/{reference}', 'WebController@displayhistory');

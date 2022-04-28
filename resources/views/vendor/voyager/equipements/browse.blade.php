@@ -102,6 +102,7 @@
                                         </th>
                                         @endforeach
                                         <th>Fiche de vie</th>
+                                        <th>Detail</th>
                                         <th class="actions text-right dt-not-orderable">{{ __('voyager::generic.actions') }}</th>
                                     </tr>
                                 </thead>
@@ -251,8 +252,13 @@
                                                 @endif
                                             </td>
                                         @endforeach
-                                         
+                                        <?php
+                                        $reference =$data->reference;
+                                        $lien ='/admin/displayhistory/'.$reference;
+                                        $url = URL::asset($lien);
+                                        ?>
                                         <td> <a href="{{URL::asset('/admin/fiche_de_vie/')}}"> Lien </a> </td>
+                                        <td> <a href="{{ $url }}"> Detail Historique </a> </td>
                                         <td class="no-sort no-click bread-actions">
                                             @foreach($actions as $action)
                                                 @if (!method_exists($action, 'massAction'))
@@ -260,7 +266,6 @@
                                                 @endif
                                             @endforeach
                                         </td>
-                                        
                                     </tr>
                                     @endforeach
                     
