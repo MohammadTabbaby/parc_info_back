@@ -37,4 +37,7 @@ Route::get('/getDetailFacture/{reference_facture}','WebController@getDetailFactu
 Route::get('/getEquipmentService/{id_service}','WebController@getEquipmentService');
 Route::get('/getConnectedUser','WebController@getConnectedUser');
 Route::get('/gethistory/{reference}', 'WebController@gethistory');
-
+//api pour la partie front reactjs
+Route::get('/getAllService','ApiController@getAllService');
+Route::get('/AboutUs','ApiController@AboutUs');
+Route::post('/ContactUs','ApiController@ContactUs');

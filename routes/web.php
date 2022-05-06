@@ -42,7 +42,12 @@ Route::get('/admin/DetailBonDeCommande/{ref_breference_BC}','WebController@Detai
 Route::get('/admin/DetailBonDeLivraison/{ref_BL}','WebController@DetailBonDeLivraison');
 Route::get('/admin/facture/{reference_facture}','WebController@Facture');
 Route::get('/admin/inventaire/{id_service}','WebController@inventaire');
+//reclamation
 Route::post("/addReclamation", "WebController@addReclamation");
 Route::get('admin/addReclamation','WebController@getViewAddReclamation');
+//demande 
+Route::post("/demandeAchat", "WebController@demandeAchat");
+Route::get('admin/getViewAddDemandeAchat','WebController@getViewAddDemandeAchat');
+
 Route::get('/admin/getConnectedUser','WebController@getConnectedUser');
 Route::get('/admin/displayhistory/{reference}', 'WebController@displayhistory');

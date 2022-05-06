@@ -662,8 +662,10 @@ class WebController extends Controller
             {
                 $equipement = Equipement::where('reference', $reparation_externe->id_equipement)->first();
                 $equipement->modele = Modele::find($equipement->id_modele);
+               // return $equipement->modele;
                 $equipement->categorie = Category::find($equipement->id_categorie);
-                $equipement->service = Service::find($equipement->id_service);
+                $equipement->service = Service::where('nom_service',$equipement->id_service)->first();
+                //return $equipement->service ;
                 $equipements[] = $equipement;
 
             }
@@ -685,17 +687,14 @@ class WebController extends Controller
     //03 Avril 2022
     public function getEquipementByRefBonCommande($ref_breference_BC)
     {
-        try
-        {
+        
             $equipementBondecommande = EquipementBondecommande::where('reference_bc',$ref_breference_BC)->get();
-            //return $equipementBondecommande;
             $tabEquipement = [];
             $total=0;
             foreach($equipementBondecommande as $v)
             {
                 $re=ReparationsExterne::find($v->id_reparation_externe);
                 $equipement = Equipement::where('reference',$re->id_equipement)->first();
-                //return $equipement;
                 //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
                 $categorie=Category::find($equipement->id_categorie);
                 $modele=Modele::find($equipement->id_modele);
@@ -705,7 +704,7 @@ class WebController extends Controller
                         "reference"=>$equipement->reference ,
                          "categorie"=>$categorie->nom_categorie ,
                          "modele"=>$modele->nom_modele ,
-                         "service"=>$service->nom_service ,
+                         "service"=>$equipement->id_service ,
                          "cout"=>$v->cout
                     ];
                 
@@ -713,11 +712,7 @@ class WebController extends Controller
             }
             return["equipements"=>$tabEquipement,"total"=>$total];
             //return $tabEquipement;
-        }
-        catch(Exception $e)
-        {
-            return []; 
-        } 
+       
     }
 
     public function getEquipementByRefBonLivraison($ref_breference_BL)
@@ -741,7 +736,7 @@ class WebController extends Controller
                         "reference"=>$equipement->reference ,
                          "categorie"=>$categorie->nom_categorie ,
                          "modele"=>$modele->nom_modele ,
-                         "service"=>$service->nom_service ,
+                         "service"=>$equipement->id_service ,
                          "cout"=>$v->cout
                     ];
                 
@@ -1222,6 +1217,26 @@ class WebController extends Controller
 
         return View('addReclamation')->with('array',$array);
     }
+
+    public function getViewAddDemandeAchat()
+    {
+        $user = auth()->user();
+         $user = User::find($user->id);
+         $service=Service::find($user->id_service);
+         $categorie=Category::find($categorie->nom_categorie);
+
+        $array=
+        [
+            'user'=>$user->id,
+            'service'=>$service->id,
+            'categorie'=>$categorie
+        ];
+
+        return View('demandeAchat')->with('array',$array);
+    }
+
+
+
     public function addReclamation (Request $request)
     {
         try 
@@ -1235,6 +1250,26 @@ class WebController extends Controller
             $reclamation->save();
            // return "L'ajout est effectué avec succes";
            return redirect()->back()->with('message',"Votre réclamation est envoyée");
+        } 
+        catch (Exception $e) 
+        {
+            return ('Exception'.$e->getMessage());
+        }
+    }
+
+    public function demandeAchat(Request $request)
+    {
+        try 
+        {
+            $demande=new DemandeAchat();
+           // $reclamation->reference=$request->reference;
+            $demande->description=$request->description;
+            $demande->service=$request->service;
+            $demande->categorie=$request->categorie;
+            $demande->user=$request->user;
+            $demande->save();
+           // return "L'ajout est effectué avec succes";
+           return redirect()->back()->with('message',"Votre demande d'achat est envoyée");
         } 
         catch (Exception $e) 
         {

@@ -6,12 +6,14 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
     <style>
         <?php
         include '../public/css/bootstrap.min.css';
         include '../public/css/main.css';
         include '../public/js/jquery.min.js';
         include '../public/js/bootstrap.bundle.min.js';
+        include '../public/js/pdf.js';
         ?>
     </style>
 
@@ -19,12 +21,13 @@
 
 
 <body>
-    <div class="page-content page-container" id="page-content">
+    <div class="page-content page-container" >
+        <button class="btn btn-primary" id="download"> download pdf</button>
         <div class="padding">
             <div class="row container d-flex justify-content-center">
                 <div class="col-lg-8 grid-margin stretch-card">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body" id="invoice"> 
                             <div id="header">
                                 <div id="frenchtxt">
                                     <b>
@@ -113,5 +116,23 @@
             </div>
         </div>
 </body>
+<script>
+    window.onload = function () {
+    document.getElementById("download")
+        .addEventListener("click", () => {
+            const invoice = this.document.getElementById("invoice");
+            console.log(invoice);
+            console.log(window);
+            var opt = {
+                margin: 1,
+                filename: 'myfile.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2.5 },
+                jsPDF: { unit: 'pt', format: 'a4', orientation: 'p' }
+            };
+            html2pdf().from(invoice).set(opt).save();
+        })
+}
+</script>
 
 </html>
