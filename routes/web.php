@@ -47,7 +47,7 @@ Route::post("/addReclamation", "WebController@addReclamation");
 Route::get('admin/addReclamation','WebController@getViewAddReclamation');
 //demande 
 Route::post("/demandeAchat", "WebController@demandeAchat");
-Route::get('admin/getViewAddDemandeAchat','WebController@getViewAddDemandeAchat');
+Route::get('admin/demandeAchat','WebController@getViewAddDemandeAchat');
 
 Route::get('/admin/getConnectedUser','WebController@getConnectedUser');
 Route::get('/admin/displayhistory/{reference}', 'WebController@displayhistory');

@@ -26,6 +26,7 @@ use App\DetailDevi;
 use App\Inventaire;
 use App\User;
 use App\Reclamation;
+use App\DemandeAchat;
 use Auth;
 
 class WebController extends Controller
@@ -1262,7 +1263,7 @@ class WebController extends Controller
         try 
         {
             $demande=new DemandeAchat();
-           // $reclamation->reference=$request->reference;
+           
             $demande->description=$request->description;
             $demande->service=$request->service;
             $demande->categorie=$request->categorie;

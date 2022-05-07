@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="p-2">
-                                <form method="POST" action="/addReclamation" class="form-horizontal">
+                                <form method="POST" action="/demandeAchat" class="form-horizontal">
                                     {{ csrf_field() }}
                                     <!-- <div class="form-group row">
                                         <label class="col-md-2 col-form-label" for="simpleinput">Reference</label>
@@ -60,7 +60,7 @@
                                            
                                         </div>
                                     </div>
-                                    <input type="submit" value="Ajouter une recalamtion" id="btAddReclamation" class="btn btn-info waves-effect width-md waves-light" />
+                                    <input type="submit" value="Ajouter une demande achat" id="btdemandeAchat" class="btn btn-info waves-effect width-md waves-light" />
                                 </form>
                             </div>
                         </div>

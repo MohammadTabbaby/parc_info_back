@@ -176,7 +176,7 @@
             console.log(window);
             var opt = {
                 margin: 1,
-                filename: 'myfile.pdf',
+                filename: 'fiche_de_vie.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { scale: 2.5 },
                 jsPDF: { unit: 'pt', format: 'a4', orientation: 'p' }
