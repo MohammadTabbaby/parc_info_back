@@ -685,6 +685,11 @@ class WebController extends Controller
 
     }
 
+    public function FicheDeVie()
+    {
+        
+    }
+
     //03 Avril 2022
     public function getEquipementByRefBonCommande($ref_breference_BC)
     {
@@ -804,7 +809,7 @@ class WebController extends Controller
              $total+=$equipement->montant_TTC ;
            }
            //return($equipements);
-           return['equipements'=>$equipements, 'total'=>$total+600];
+           return['equipements'=>$equipements, 'total'=>$total+0.6];
         } 
         catch (Exception $e) 
         {
@@ -1154,21 +1159,25 @@ class WebController extends Controller
                          "categorie"=>$categorie->nom_categorie ,
                          "modele"=>$modele->nom_modele ,
                          'VCN'=>$VCN_Equipement,
-                         'taux_amortissement'=>$Y
+                         'taux_amortissement'=>$Y,
+                         'cout_initiale'=>$value->cout_initiale,
+                         'date_premier_utilisation'=>$value->date_premier_utilisation
                     ];
                     
               // return['equipements'=>$equipements, 'VCN'=>$VCN_Equipement , 'Taux Amortissement'=>$Y];
              $total_VCN+=$VCN_Equipement;
              $total_tauxAmort+=$Y;
+             $value->cout_initiale+=$value->cout_initiale;
+
              
          }
              $total_tauxAmort=$total_tauxAmort/$nb_equipements;
              $total_VCN=$total_VCN/$nb_equipements;
-             return['equipements'=>$equipements, 'total_VCN'=>$total_VCN , 'taux_amortissement'=>round($total_tauxAmort,2)];
+             return['equipements'=>$equipements, 'total_VCN'=>$total_VCN , 'taux_amortissement'=>round($total_tauxAmort,2),'cout_achat'=> $value->cout_initiale];
 
         } 
         catch (Exception $e) {
-            return['equipements'=>[], 'total_VCN'=>'' , 'taux_amortissement'=>''];
+            return['equipements'=>[], 'total_VCN'=>'' , 'taux_amortissement'=>'' ,'cout_achat'=>''];
 
        }
         
@@ -1224,7 +1233,7 @@ class WebController extends Controller
         $user = auth()->user();
          $user = User::find($user->id);
          $service=Service::find($user->id_service);
-         $categorie=Category::find($categorie->nom_categorie);
+        $categorie=Category::all();
 
         $array=
         [
@@ -1233,7 +1242,7 @@ class WebController extends Controller
             'categorie'=>$categorie
         ];
 
-        return View('demandeAchat')->with('array',$array);
+        return View('addDemandeAchat')->with('array',$array);
     }
 
 
@@ -1287,43 +1296,54 @@ class WebController extends Controller
         //return($historique->meta);
 
         $x = 0;
+        $n = 0;
         $s = "";
         $Strings = [];
         foreach ($Equipement->histories as $eq) {
-            //print_r($eq->meta);
-           // print_r("changement N° : " . $x . " \n\r");
 
+            //print_r(count($Equipement->histories));
+         
             for ($i = 0; $i < count($eq->meta); $i++) {
                 if ($eq->meta[$i]['key'] == 'post_agent') {
-                    //print_r($eq->meta[$i]);
-                    $s .= ("(( Post_Agent )) changed from (( " . $eq->meta[$i]['old'] . ")) To ((" . $eq->meta[$i]['new'] . "))\n\r");
+                   
+                    $s .= ("(( Post_Agent )) changed from (( " . $eq->meta[$i]['old'] . ")) To ((" . $eq->meta[$i]['new'] . "))");
+                    $champ[] = "Post / Agent";
+                    $post_old[] = $eq->meta[$i]['old'];
+                    $post_new[] = $eq->meta[$i]['new'];
                 }
                 if ($eq->meta[$i]['key'] == 'id_service') {
-                    //print_r($eq->meta[$i]);
-                    $s .= ("(( Service )) changed from ((" . $eq->meta[$i]['old'] . ")) To ((" . $eq->meta[$i]['new'] . "))\n\r");
+                   
+                    $s .= ("(( Service )) changed from ((" . $eq->meta[$i]['old'] . ")) To ((" . $eq->meta[$i]['new'] . "))");
+                    $champ[] = "Service";
+                    $post_old[] = $eq->meta[$i]['old'];
+                    $post_new[] = $eq->meta[$i]['new'];
                 }
                 if ($eq->meta[$i]['key'] == 'date_affectation') {
                     $p = substr($eq->meta[$i]['new'], 0, 10);
-                    //print($eq->meta[$i]['old']);
-                    //print($p);
-                    //print_r($eq->meta[$i]);
                     if ($eq->meta[$i]['old'] != $p) {
-                        $s .= ("(( Date D'affectation )) changed from ((" . $eq->meta[$i]['old'] . ")) To ((" . substr($eq->meta[$i]['new'], 0, 10) . "))\n\r");
+                        $s .= ("(( Date D'affectation )) changed from ((" . $eq->meta[$i]['old'] . ")) To ((" . substr($eq->meta[$i]['new'], 0, 10) . "))");
+                        $champ[] = "Date D'affectation";
+                        $post_old[] = $eq->meta[$i]['old'];
+                        $post_new[] = $p;
                     }
                 }
                 if (!empty($s)) {
-                    // print_r($s);
+                   // print_r($s);
                     $Strings[] = $s;
                 }
                 $s = "";
             }
             $x++;
+            $n = count($champ);
+           // print($x);
         }
 
-        return ['Strings' => $Strings];
+        return [
+             'champ' => $champ,
+            "post_old" => $post_old, "post_new" => $post_new, 'n' => $n
+        ];
     }
 
-    
 
 
     public function displayhistory($reference)
@@ -1334,6 +1354,63 @@ class WebController extends Controller
             $array = $this->gethistory($reference);
             return View('displayhistory')->with('array', $array);;
         }
+    }
+
+    public static function getReclamationByUser($idUser) 
+    {
+        try {
+        $user=User::find($idUser);
+       if($user->role_id!=1)
+       {
+        $reclamation=Reclamation::select ('created_at','equipement','description','etat') 
+        ->where('user',$idUser)->get();
+        $tab = [];
+        foreach($reclamation as $v)
+        {
+            $e = Equipement::find($v->equipement);
+            $tab[] =
+            [
+                "date_reclamation" => $v->created_at,
+                "equipement" => $e->reference,
+                "description" => $v->description,
+                "etat"=>$v->etat
+            ];
+        }
+        return $tab ;
+       }
+         
+        } catch (Exception $e) {
+           return[];
+     }
+    }
+
+    public static function getDemandeByUser($idUser) 
+    {
+        try {
+        $user=User::find($idUser);
+       if($user->role_id!=1)
+       {
+        $demande=demandeAchat::select ('created_at','categorie','description','intervention') 
+        ->where('user',$idUser)->get();
+        //return $demande;
+        $tab = [];
+        foreach($demande as $v)
+        {
+            $e = Category::find($v->categorie);
+            $tab[] =
+            [
+                "date_reclamation" => $v->created_at,
+                "categorie" => $e->nom_categorie,
+                "description" => $v->description,
+                "intervention"=>$v->intervention
+            ];
+        }
+        return $tab ;
+       }
+         
+        } catch (Exception $e) {
+           return[];
+     }
     }
 
 

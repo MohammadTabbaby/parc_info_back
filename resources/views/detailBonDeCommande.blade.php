@@ -10,7 +10,7 @@
                 <thead>
                     <tr>
                         <th>Detail</th>
-                        <th>Cout</th>
+                        <th>Cout (TND)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,12 +27,12 @@
                                     <li>{{ $e['service'] }}</li>
                                 </ul>
                             </td>
-                            <td>{{ $e['cout'] }}</td>
+                            <td>{{ $e['cout'] }} TND</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td><u>Total</u></td>
-                        <td>{{ $array['total'] }}</td>
+                        <td>{{ $array['total'] }} TND</td>
                     </tr>
                 </tbody>
             </table>

@@ -10,7 +10,7 @@
                     <tr>
                         <th>Detail</th>
                         <th>TVA</th>
-                        <th>Cout</th>
+                        <th>Cout(TND)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,18 +26,18 @@
                                 </ul>
                             </td>
                             <td> {{$e['tva']}}</td>
-                            <td>{{ $e['montant_TTC'] }}</td>
+                            <td>{{ $e['montant_TTC'] }} TND</td>
                         </tr>
                     @endforeach
                         <tr>
                             <td><b>Timbre Fiscal</b> </td>
                             <td></td>
-                            <td>600</td>            
+                            <td>0.600</td>            
                         </tr>
                     <tr>
-                        <td><u>Total TTC</u></td>
+                        <td><u>Total TTC (TND)</u></td>
                         <td> </td>
-                        <td>{{ $array['total'] }}</td>
+                        <td>{{ $array['total'] }} TND</td>
                     </tr>
                 </tbody>
             </table>

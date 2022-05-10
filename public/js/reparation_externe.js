@@ -8,7 +8,6 @@ $(document).ready
 			{
                 //id_equipement
                 var id_equipement = $('select[name="id_equipement"]').val();
-                //var id_equipement = $('input[name="id_equipement"]').val();
                 
                 //ajax
                 $.ajax

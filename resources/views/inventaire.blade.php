@@ -10,8 +10,10 @@
                 <thead>
                     <tr>
                         <th>Detail</th>
-                        <th>taux amortissement</th>
-                        <th>VCN</th>
+                        <th>Date de mise en service</th>
+                        <th>Cout Achat (TND)</th>
+                        <th>taux amortissement </th>
+                        <th>VCN (TND)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,14 +30,18 @@
                                   
                                 </ul>
                             </td>
-                            <td>{{ $e['taux_amortissement'] }}</td>
-                            <td>{{ $e['VCN'] }}</td>
+                            <td>{{$e['date_premier_utilisation']}}</td>
+                            <td>{{ $e['cout_initiale'] }} TND</td>
+                            <td>{{ $e['taux_amortissement'] * 100}} %</td>
+                            <td>{{ $e['VCN'] }} TND</td>
                         </tr>
                     @endforeach
                     <tr>
-                        <td><u>Totale</u></td>
-                        <td>{{ $array['taux_amortissement'] }}</td>
-                        <td>{{ $array['total_VCN'] }}</td>
+                        <td><u>Total</u></td>
+                        <td></td>
+                        <td>{{ $array['cout_achat']  }} TND</td>
+                        <td>{{ $array['taux_amortissement'] * 100}} %</td>
+                        <td>{{ $array['total_VCN'] }} TND</td>
                     </tr>
                 </tbody>
             </table>

@@ -12,7 +12,7 @@
         ?>
         @if ($user->id!=1)
         <a href="demandeAchat" class="btn btn-primary btn-add-new">
-            <i class="voyager-list"></i> <span>Demande Achats </span>
+            <i class="voyager-list"></i> <span>Add Demande Achat </span>
         </a>
         @endif
         @can('delete', app($dataType->model_name))
@@ -39,8 +39,9 @@
         @include('voyager::multilingual.language-selector')
     </div>
 @stop
-    @if ($user->id<=1)
+    
 @section('content')
+    @if ($user->id<=1)
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
         <div class="row">
@@ -311,8 +312,116 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-@stop  
+    @else
+    <div class="page-content browse container-fluid">
+        @include('voyager::alerts')
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-bordered">
+                    <div class="panel-body">
+                        @if ($isServerSide)
+                            <form method="get" class="form-search">
+                                <div id="search-input">
+                                    <div class="col-2">
+                                        <select id="search_key" name="key">
+                                            @foreach($searchNames as $key => $name)
+                                                <option value="{{ $key }}" @if($search->key == $key || (empty($search->key) && $key == $defaultSearchKey)) selected @endif>{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                        <select id="filter" name="filter">
+                                            <option value="contains" @if($search->filter == "contains") selected @endif>contains</option>
+                                            <option value="equals" @if($search->filter == "equals") selected @endif>=</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group col-md-12">
+                                        <input type="text" class="form-control" placeholder="{{ __('voyager::generic.search') }}" name="s" value="{{ $search->value }}">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-info btn-lg" type="submit">
+                                                <i class="voyager-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                @if (Request::has('sort_order') && Request::has('order_by'))
+                                    <input type="hidden" name="sort_order" value="{{ Request::get('sort_order') }}">
+                                    <input type="hidden" name="order_by" value="{{ Request::get('order_by') }}">
+                                @endif
+                            </form>
+                        @endif
+                        <div class="table-responsive">
+                            <table id="dataTable" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                       <th>Categorie</th>
+                                       <th>Date Récalamation</th>
+                                       <th>Descriptrion</th>
+                                       <th>Intervention</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        $reclamations = App\Http\Controllers\WebController::getDemandeByUser($user->id);
+                                    ?>
+                                    @foreach($reclamations as $v) 
+                                        <tr>
+                                        <td>{{$v['categorie']}}</td>
+                                        <td>{{$v['date_reclamation']}}</td>
+                                        <td>{{$v['description']}}</td>
+                                        <td>{{$v['intervention']}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @if ($isServerSide)
+                            <div class="pull-left">
+                                <div role="status" class="show-res" aria-live="polite">{{ trans_choice(
+                                    'voyager::generic.showing_entries', $dataTypeContent->total(), [
+                                        'from' => $dataTypeContent->firstItem(),
+                                        'to' => $dataTypeContent->lastItem(),
+                                        'all' => $dataTypeContent->total()
+                                    ]) }}</div>
+                            </div>
+                            <div class="pull-right">
+                                {{ $dataTypeContent->appends([
+                                    's' => $search->value,
+                                    'filter' => $search->filter,
+                                    'key' => $search->key,
+                                    'order_by' => $orderBy,
+                                    'sort_order' => $sortOrder,
+                                    'showSoftDeleted' => $showSoftDeleted,
+                                ])->links() }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Single delete modal --}}
+    <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager::generic.close') }}"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="voyager-trash"></i> {{ __('voyager::generic.delete_question') }} {{ strtolower($dataType->getTranslatedAttribute('display_name_singular')) }}?</h4>
+                </div>
+                <div class="modal-footer">
+                    <form action="#" id="delete_form" method="POST">
+                        {{ method_field('DELETE') }}
+                        {{ csrf_field() }}
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="{{ __('voyager::generic.delete_confirm') }}">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     @endif
+@stop  
     
 
 
