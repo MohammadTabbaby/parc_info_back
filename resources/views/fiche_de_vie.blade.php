@@ -10,7 +10,7 @@
     <style>
         <?php
         include '../public/css/bootstrap.min.css';
-        include '../public/css/style.css';
+        include '../public/css/fichedeviecss.css';
         include '../public/js/jquery.min.js';
         include '../public/js/bootstrap.bundle.min.js';
         include '../public/js/pdf.js';
@@ -56,7 +56,7 @@
                                     <thead>
                                         <tr>
                                             <td>Identifiant / Référence : </td>
-                                            <td>Fournisseur : </td>
+                                            <td>Fournisseur : {{$array['fournisseur']}}</td>
 
                                         </tr>
                                     </thead>
@@ -76,8 +76,8 @@
                                             <td>Grantie jusqu'au :</td>
                                         </tr>
                                         <tr>
-                                            <td>N° de série :</td>
-                                            <td>Localisation :</td>
+                                            <td>Cout initial : TND</td>
+                                            <td>Etat : </td>
                                         </tr>
                                 </table>
                             </div>
@@ -86,19 +86,22 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h4> Informations Complémentaires : </h4>
+                            <h4> Affectations : </h4>
+                            <br>
                             <div class=" table-responsive">
                                 <table class="table" border="2">
                                     <thead>
                                         <tr>
-                                            <td>Cout initial : TND</td>
-                                            <td>Valeur Nette Comptable :</td>
+                                            <th>Operation</th>
+                                            <th>Operation</th>
+                                            <th>Operation</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Amortissement :</td>
-                                            <td>Reforme : </td>
+                                            <td>Operation Operation </td>
+                                            <td>Operation Operation </td>
+                                            <td>Operation Operation </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -107,10 +110,34 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h4> Observations : </h4>
-                            <hr size="12">
+                            <h4> Réparations Externes : </h4>
+                            <br>
                             <div class=" table-responsive">
-                                <table class="table">
+                                <table class="table" border="2">
+                                    <thead>
+                                        <tr>
+                                            <th>Operation</th>
+                                            <th>Operation</th>
+                                            <th>Operation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Operation Operation </td>
+                                            <td>Operation Operation </td>
+                                            <td>Operation Operation </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4> Réparations Internes : </h4>
+                            <br>
+                            <div class=" table-responsive">
+                                <table class="table" border="2">
                                     <thead>
                                         <tr>
                                             <th>Operation</th>

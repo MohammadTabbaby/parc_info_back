@@ -254,10 +254,14 @@
                                         @endforeach
                                         <?php
                                         $reference =$data->reference;
+                                        $id=$data->id;
                                         $lien ='/admin/displayhistory/'.$reference;
+                                        $lien1='/admin/FicheDeVie/'.$id;
+
                                         $url = URL::asset($lien);
+                                        $url1= URL::asset($lien1);
                                         ?>
-                                        <td> <a href="{{URL::asset('/admin/fiche_de_vie/')}}"> Lien </a> </td>
+                                        <td> <a href="{{ $url1 }}"> Lien </a> </td>
                                         <td> <a href="{{ $url }}"> Detail Historique </a> </td>
                                         <td class="no-sort no-click bread-actions">
                                             @foreach($actions as $action)

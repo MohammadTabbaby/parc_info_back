@@ -22,11 +22,6 @@ Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
 
-Route::get('/admin/fiche_de_vie/',function()
-{
-        return view('fiche_de_vie');
-});
-
 Route::get
 (
     'admin/login1', function()
@@ -37,6 +32,7 @@ Route::get
 
 
 Route::get('/admin/fiche_sortie/{id}','WebController@FicheSortie');
+Route::get('/admin/FicheDeVie/{id}','WebController@FicheDeVie');
 //Route::get('/admin/DetailBonDeCommande','WebController@DetailBonDeCommande');
 Route::get('/admin/DetailBonDeCommande/{ref_breference_BC}','WebController@DetailBonDeCommande');
 Route::get('/admin/DetailBonDeLivraison/{ref_BL}','WebController@DetailBonDeLivraison');

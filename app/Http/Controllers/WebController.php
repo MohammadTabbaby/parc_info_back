@@ -27,7 +27,9 @@ use App\Inventaire;
 use App\User;
 use App\Reclamation;
 use App\DemandeAchat;
+use App\ParametreApplication;
 use Auth;
+
 
 class WebController extends Controller
 {
@@ -685,10 +687,51 @@ class WebController extends Controller
 
     }
 
-    public function FicheDeVie()
-    {
+    public function FicheDeVie($id)
+    {   
         
+        $equipement_fichedevie=Equipement::where('id',$id)->get();
+       //  return $equipement_fichedevie;
+        $date_achat=Carbon::parse($equipement_fichedevie[0]['date_achat'])->format("d/m/Y");
+        $date_mis=Carbon::parse($equipement_fichedevie[0]['date_premier_utilisation'])->format("d/m/Y");
+        $reference=($equipement_fichedevie[0]['reference']);
+        //return $reference;
+        $etat=($equipement_fichedevie[0]['etat']);
+        $cout_initiale=($equipement_fichedevie[0]['cout_initiale']);
+        $garentie=($equipement_fichedevie[0]['garentie']);
+        /*********************************************** */
+        $id_categorie=($equipement_fichedevie[0]['id_categorie']);
+        $categorie = Category::find( $id_categorie);
+        $nom_categorie = $categorie['nom_categorie'];
+
+        $id_fournisseur=($equipement_fichedevie[0]['id_fournisseur']);
+        
+        //recherche fournisseur w ili tal9ah t7otou fi array
+        $id_modele=($equipement_fichedevie[0]['id_modele']);
+        $modele = Modele::find( $id_modele);
+        $nom_modele= $modele['nom_modele'];
+        $marque= $modele['marque'];
+
+
+        $array=
+        [
+            "date_achat"=>$date_achat,
+            "date_mis" => $date_mis,
+            "etat" => $etat,
+            "cout_initiale" => $cout_initiale,
+            "reference" => $reference,
+            "garentie" => $garentie,
+            "nom_modele" => $nom_modele,
+            "marque" => $marque,
+            "nom_categorie"=>$nom_categorie,
+            "fournisseur"=>$id_fournisseur
+
+        ];
+        //return $array;
+        return View('fiche_de_vie')->with('array',$array);
+
     }
+    
 
     //03 Avril 2022
     public function getEquipementByRefBonCommande($ref_breference_BC)
@@ -1117,8 +1160,10 @@ class WebController extends Controller
     { 
         try {
             //code...
-         $equipement=Equipement::where('id_service',$id_service)->get();
-         $nb_equipements=$equipement->count();
+            $equipement=Equipement::where('id_service',$id_service)->get();
+            $Nombres_Annee=ParametreApplication::where('Champ','Nombres_Annee')->get("Value");
+            //return($Nombres_Annee[0]['Value']);
+            $nb_equipements=$equipement->count();
          $total_VCN=0;
          $total_tauxAmort=0;
          //return $nb_equipements;
@@ -1133,9 +1178,9 @@ class WebController extends Controller
                 //return($equipement->cout_initiale);
                 $equipement->date_premier_utilisation=$value->date_premier_utilisation;
                 //return($value->date_premier_utilisation);
-                $equipement->amortie_sur=$value->amortie_sur;
+                //$equipement->amortie_sur=$value->amortie_sur;
                 //return $equipement->amortie_sur;
-                $taux_dammortissement = 1/$value->amortie_sur;
+                $taux_dammortissement = 1/$Nombres_Annee[0]['Value'];
                 //return($taux_dammortissement);
                 $date=date("Y/m/d");
                 $date1 =strtotime($date);
