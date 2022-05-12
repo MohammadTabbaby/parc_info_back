@@ -55,29 +55,29 @@
                                 <table class="table" border="2">
                                     <thead>
                                         <tr>
-                                            <td>Identifiant / Référence : </td>
+                                            <td>Identifiant / Référence :{{$array['reference']}} </td>
                                             <td>Fournisseur : {{$array['fournisseur']}}</td>
 
                                         </tr>
                                     </thead>
                                     <thead>
                                         <tr>
-                                            <td>Type / catégorie :</td>
-                                            <td>Date d'achat :</td>
+                                            <td>Type / catégorie : {{$array['nom_categorie']}}</td>
+                                            <td>Date d'achat : {{$array['date_achat']}}</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Marque :</td>
-                                            <td>Date de Mise en Service :</td>
+                                            <td>Marque : {{$array['marque']}} </td>
+                                            <td>Date de Mise en Service : {{$array['date_mis']}}</td>
                                         </tr>
                                         <tr>
-                                            <td>Modèle :</td>
-                                            <td>Grantie jusqu'au :</td>
+                                            <td>Modèle : {{$array['nom_modele']}}</td>
+                                            <td>Grantie jusqu'au : {{$array['garentie']}}</td>
                                         </tr>
                                         <tr>
-                                            <td>Cout initial : TND</td>
-                                            <td>Etat : </td>
+                                            <td>Cout initial : {{$array['cout_initiale']}} TND</td>
+                                            <td>Etat : {{$array['etat']}}</td>
                                         </tr>
                                 </table>
                             </div>
@@ -92,16 +92,16 @@
                                 <table class="table" border="2">
                                     <thead>
                                         <tr>
-                                            <th>Operation</th>
-                                            <th>Operation</th>
-                                            <th>Operation</th>
+                                            <th>champ</th>
+                                            <th>changée de :</th>
+                                            <th>vers</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Operation Operation </td>
-                                            <td>Operation Operation </td>
-                                            <td>Operation Operation </td>
+                                            <td> </td>
+                                            <td></td>
+                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>

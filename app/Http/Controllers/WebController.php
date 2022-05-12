@@ -712,6 +712,7 @@ class WebController extends Controller
         $nom_modele= $modele['nom_modele'];
         $marque= $modele['marque'];
 
+      
 
         $array=
         [
@@ -1333,20 +1334,17 @@ class WebController extends Controller
     }
 
     
-    public function gethistory($reference)
+    public static function gethistory($reference)
     {
-        // try {
+       
         $Equipement = Equipement::where('reference', $reference)->first();
-        //$historique = $Equipement->histories;
-        //return($historique->meta);
-
         $x = 0;
         $n = 0;
         $s = "";
         $Strings = [];
         foreach ($Equipement->histories as $eq) {
 
-            //print_r(count($Equipement->histories));
+            
          
             for ($i = 0; $i < count($eq->meta); $i++) {
                 if ($eq->meta[$i]['key'] == 'post_agent') {
@@ -1373,14 +1371,12 @@ class WebController extends Controller
                     }
                 }
                 if (!empty($s)) {
-                   // print_r($s);
                     $Strings[] = $s;
                 }
                 $s = "";
             }
             $x++;
             $n = count($champ);
-           // print($x);
         }
 
         return [
