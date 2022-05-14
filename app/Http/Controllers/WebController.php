@@ -29,7 +29,8 @@ use App\Reclamation;
 use App\DemandeAchat;
 use App\ParametreApplication;
 use Auth;
-
+use Searchable;
+use DB;
 
 class WebController extends Controller
 {
@@ -1158,77 +1159,74 @@ class WebController extends Controller
 
 
     public function getEquipmentService($id_service)
-    { 
+    {
         try {
             //code...
-            $equipement=Equipement::where('id_service',$id_service)->get();
-            $Nombres_Annee=ParametreApplication::where('Champ','Nombres_Annee')->get("Value");
+            $equipement = Equipement::where('id_service', $id_service)->get();
+            $Nombres_Annee = ParametreApplication::where('Champ', 'Nombres_Annee')->get("Value");
             //return($Nombres_Annee[0]['Value']);
-            $nb_equipements=$equipement->count();
-         $total_VCN=0;
-         $total_tauxAmort=0;
-         //return $nb_equipements;
-        // return($equipement);
-        $equipements=[];
-         foreach ($equipement as $value) {
-             # code...
+            $nb_equipements = $equipement->count();
+            $total_VCN = 0;
+            $total_tauxAmort = 0;
+            $total_coutachat = 0;
+            //return $nb_equipements;
+            // return($equipement);
+            $equipements = [];
+            foreach ($equipement as $value) {
+                # code...
                 //return($equipement);
-                $categorie=Category::find($value->id_categorie);
-                $modele=Modele::find($value->id_modele);
-                $equipement->cout_initiale=$value->cout_initiale;
+                $categorie = Category::find($value->id_categorie);
+                $modele = Modele::find($value->id_modele);
+                $equipement->cout_initiale = $value->cout_initiale;
                 //return($equipement->cout_initiale);
-                $equipement->date_premier_utilisation=$value->date_premier_utilisation;
+                $equipement->date_premier_utilisation = $value->date_premier_utilisation;
                 //return($value->date_premier_utilisation);
                 //$equipement->amortie_sur=$value->amortie_sur;
                 //return $equipement->amortie_sur;
-                $taux_dammortissement = 1/$Nombres_Annee[0]['Value'];
+                $taux_dammortissement = 1 / $Nombres_Annee[0]['Value'];
                 //return($taux_dammortissement);
-                $date=date("Y/m/d");
-                $date1 =strtotime($date);
-                $date2 =strtotime($value->date_premier_utilisation);
+                $date = date("Y/m/d");
+                $date1 = strtotime($date);
+                $date2 = strtotime($value->date_premier_utilisation);
                 //return $date;
-                $nb_jours_utilisation =($date1- $date2)/86400;
+                $nb_jours_utilisation = ($date1 - $date2) / 86400;
                 //return($nb_jours_utilisation);
-                $mountant_a_amortir = $value->cout_initiale*$taux_dammortissement ; //kol 3am 9adeh yon9es VCN
+                $mountant_a_amortir = $value->cout_initiale * $taux_dammortissement; //kol 3am 9adeh yon9es VCN
                 //return $mountant_a_amortir;
-                $X =((( $mountant_a_amortir * $nb_jours_utilisation)/360) /1000);
+                $X = ((($mountant_a_amortir * $nb_jours_utilisation) / 360) / 1000);
                 // return $X;
-                $VCN_Equipement =( $value->cout_initiale - ($value->cout_initiale * $X));//VCN de chaque equipement
-               // return  $VCN_Equipement;
-                $Y=round((1-$X),2);
+                $VCN_Equipement = round(($value->cout_initiale - ($value->cout_initiale * $X)), 2); //VCN de chaque equipement
+                // return  $VCN_Equipement;
+                $Y = round((1 - $X), 2);
                 //return $Y;
                 //$equipements[]=$equipement;
-               // return[];
-               $equipements[]= 
+                // return[];
+                $equipements[] =
                     [
-                        "reference"=>$value->reference ,
-                         "categorie"=>$categorie->nom_categorie ,
-                         "modele"=>$modele->nom_modele ,
-                         'VCN'=>$VCN_Equipement,
-                         'taux_amortissement'=>$Y,
-                         'cout_initiale'=>$value->cout_initiale,
-                         'date_premier_utilisation'=>$value->date_premier_utilisation
+                        "reference" => $value->reference,
+                        "categorie" => $categorie->nom_categorie,
+                        "modele" => $modele->nom_modele,
+                        'VCN' => $VCN_Equipement,
+                        'taux_amortissement' => $Y,
+                        'cout_initiale' => $value->cout_initiale,
+                        'date_premier_utilisation' => $value->date_premier_utilisation
                     ];
-                    
-              // return['equipements'=>$equipements, 'VCN'=>$VCN_Equipement , 'Taux Amortissement'=>$Y];
-             $total_VCN+=$VCN_Equipement;
-             $total_tauxAmort+=$Y;
-             $value->cout_initiale+=$value->cout_initiale;
 
-             
-         }
-             $total_tauxAmort=$total_tauxAmort/$nb_equipements;
-             $total_VCN=$total_VCN/$nb_equipements;
-             return['equipements'=>$equipements, 'total_VCN'=>$total_VCN , 'taux_amortissement'=>round($total_tauxAmort,2),'cout_achat'=> $value->cout_initiale];
+                // return['equipements'=>$equipements, 'VCN'=>$VCN_Equipement , 'Taux Amortissement'=>$Y];
+                $total_VCN += round($VCN_Equipement, 2);
+                $total_tauxAmort += $Y;
+                $total_coutachat += $value->cout_initiale;
+            }
+            $total_tauxAmort = $total_tauxAmort / $nb_equipements;
+            $total_VCN = $total_VCN / $nb_equipements;
 
-        } 
-        catch (Exception $e) {
-            return['equipements'=>[], 'total_VCN'=>'' , 'taux_amortissement'=>'' ,'cout_achat'=>''];
-
-       }
-        
-        
+            return ['equipements' => $equipements, 'total_VCN' => round($total_VCN, 2), 'taux_amortissement' => round($total_tauxAmort, 2), 'cout_achat' => $total_coutachat];
+        } catch (Exception $e) {
+            return ['equipements' => [], 'total_VCN' => 0, 'taux_amortissement' => 0, 'cout_achat' => 0];
+        }
     }
+
+
     
     public function inventaire($id_service)
     {
@@ -1336,27 +1334,26 @@ class WebController extends Controller
     
     public static function gethistory($reference)
     {
-       
+        DB::delete('DELETE FROM model_histories WHERE message="Created Equipement";');
+        DB::delete('DELETE FROM model_histories WHERE message="Deleting Equipement";');
+        
+
         $Equipement = Equipement::where('reference', $reference)->first();
-        $x = 0;
         $n = 0;
-        $s = "";
-        $Strings = [];
+        $champ = [];
+        $post_old = [];
+        $post_new = [];
         foreach ($Equipement->histories as $eq) {
 
-            
-         
             for ($i = 0; $i < count($eq->meta); $i++) {
                 if ($eq->meta[$i]['key'] == 'post_agent') {
-                   
-                    $s .= ("(( Post_Agent )) changed from (( " . $eq->meta[$i]['old'] . ")) To ((" . $eq->meta[$i]['new'] . "))");
+
                     $champ[] = "Post / Agent";
                     $post_old[] = $eq->meta[$i]['old'];
                     $post_new[] = $eq->meta[$i]['new'];
                 }
                 if ($eq->meta[$i]['key'] == 'id_service') {
-                   
-                    $s .= ("(( Service )) changed from ((" . $eq->meta[$i]['old'] . ")) To ((" . $eq->meta[$i]['new'] . "))");
+
                     $champ[] = "Service";
                     $post_old[] = $eq->meta[$i]['old'];
                     $post_new[] = $eq->meta[$i]['new'];
@@ -1364,24 +1361,20 @@ class WebController extends Controller
                 if ($eq->meta[$i]['key'] == 'date_affectation') {
                     $p = substr($eq->meta[$i]['new'], 0, 10);
                     if ($eq->meta[$i]['old'] != $p) {
-                        $s .= ("(( Date D'affectation )) changed from ((" . $eq->meta[$i]['old'] . ")) To ((" . substr($eq->meta[$i]['new'], 0, 10) . "))");
                         $champ[] = "Date D'affectation";
                         $post_old[] = $eq->meta[$i]['old'];
                         $post_new[] = $p;
                     }
                 }
-                if (!empty($s)) {
-                    $Strings[] = $s;
-                }
-                $s = "";
             }
-            $x++;
             $n = count($champ);
         }
 
         return [
-             'champ' => $champ,
-            "post_old" => $post_old, "post_new" => $post_new, 'n' => $n
+            'champ' => $champ,
+            "post_old" => $post_old,
+            "post_new" => $post_new,
+            'n' => $n
         ];
     }
 
@@ -1452,6 +1445,18 @@ class WebController extends Controller
         } catch (Exception $e) {
            return[];
      }
+    }
+
+    public function getAmortissementOfAllServices()
+    {
+        $service=Service::all();
+        $array=[];
+        
+        foreach ($service as $v) 
+        {
+           $array[]=['nom_service'=>$v->nom_service,'Taux_amortissement'=>$this->getEquipmentService($v->id,'taux_amortissement')];
+        }
+        return $array;
     }
 
 

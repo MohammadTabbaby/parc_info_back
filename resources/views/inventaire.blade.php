@@ -39,7 +39,7 @@
                     <tr>
                         <td><u>Total</u></td>
                         <td></td>
-                        <td>{{ $array['cout_achat']  }} TND</td>
+                        <td>{{ $array['cout_achat']}} TND</td>
                         <td>{{ $array['taux_amortissement'] * 100}} %</td>
                         <td>{{ $array['total_VCN'] }} TND</td>
                     </tr>

@@ -43,5 +43,6 @@ Route::get('/getDemandeByUser/{idUser}', 'WebController@getDemandeByUser');
 Route::get('/getAllService','ApiController@getAllService');
 Route::get('/AboutUs','ApiController@AboutUs');
 Route::post('/ContactUs','ApiController@ContactUs');
+Route::get('/getAmortissementOfAllServices','WebController@getAmortissementOfAllServices');
 //dashboard
 //Route::get('Widgets/run','Equipement@run');
