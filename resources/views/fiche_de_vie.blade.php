@@ -14,19 +14,19 @@
         include '../public/js/jquery.min.js';
         include '../public/js/bootstrap.bundle.min.js';
         include '../public/js/pdf.js';
-        
+
         ?>
     </style>
 </head>
-                            
+
 <body>
-    <div class="page-content page-container" >
+    <div class="page-content page-container">
         <button class="btn btn-primary" id="download"> download pdf</button>
         <div class="padding">
             <div class="row container d-flex justify-content-center">
                 <div class="col-lg-8 grid-margin stretch-card">
                     <div class="card">
-                        <div class="card-body" id="invoice"> 
+                        <div class="card-body" id="invoice">
                             <div id="header">
                                 <div id="frenchtxt">
                                     <b>
@@ -55,29 +55,29 @@
                                 <table class="table" border="2">
                                     <thead>
                                         <tr>
-                                            <td>Identifiant / Référence :{{$array['reference']}} </td>
-                                            <td>Fournisseur : {{$array['fournisseur']}}</td>
+                                            <td><b>Identifiant / Référence : </b> {{$array['reference']}} </td>
+                                            <td><b>Fournisseur : </b>{{$array['fournisseur']}}</td>
 
                                         </tr>
                                     </thead>
                                     <thead>
                                         <tr>
-                                            <td>Type / catégorie : {{$array['nom_categorie']}}</td>
-                                            <td>Date d'achat : {{$array['date_achat']}}</td>
+                                            <td><b>Type / catégorie :</b> {{$array['nom_categorie']}}</td>
+                                            <td><b>Date d'achat :</b> {{$array['date_achat']}}</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Marque : {{$array['marque']}} </td>
-                                            <td>Date de Mise en Service : {{$array['date_mis']}}</td>
+                                            <td><b>Marque :</b> {{$array['marque']}} </td>
+                                            <td><b>Date de Mise en Service :</b> {{$array['date_mis']}}</td>
                                         </tr>
                                         <tr>
-                                            <td>Modèle : {{$array['nom_modele']}}</td>
-                                            <td>Grantie jusqu'au : {{$array['garentie']}}</td>
+                                            <td><b>Modèle :</b> {{$array['nom_modele']}}</td>
+                                            <td><b>Grantie jusqu'au :</b> {{$array['garentie']}}</td>
                                         </tr>
                                         <tr>
-                                            <td>Cout initial : {{$array['cout_initiale']}} TND</td>
-                                            <td>Etat : {{$array['etat']}}</td>
+                                            <td><b>Cout initial :</b> {{$array['cout_initiale']}} TND</td>
+                                            <td><b>Etat :</b> {{$array['etat']}}</td>
                                         </tr>
                                 </table>
                             </div>
@@ -92,17 +92,28 @@
                                 <table class="table" border="2">
                                     <thead>
                                         <tr>
-                                            <th>champ</th>
-                                            <th>changée de :</th>
-                                            <th>vers</th>
+                                            <td><b>Champ</b></td>
+                                            <td><b>De</b></td>
+                                            <td><b>Vers</b></td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td> </td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
+                                        <?php
+                                        $champ = $array['champ'];
+                                        $w = $array['n'];
+
+                                        $post_old = $array['post_old'];
+                                        $post_new = $array['post_new'];
+                                        ?>
+
+                                        @for($i=0;$i<$w;$i++) <tr>
+                                            <td>{{$champ[$i]}}</td>
+                                            <td>{{$post_old[$i]}}</td>
+                                            <td>{{$post_new[$i]}}</td>
+
+                                            </tr>
+
+                                            @endfor
                                     </tbody>
                                 </table>
                             </div>
@@ -116,16 +127,17 @@
                                 <table class="table" border="2">
                                     <thead>
                                         <tr>
-                                            <th>Operation</th>
-                                            <th>Operation</th>
-                                            <th>Operation</th>
+                                            <th><b>Date Réparation</b></th>
+                                            <th><b>Panne</b></th>
+                                            <th><b>Cout Réparation</b></th>
+                                            <th><b>Fournisseur</b></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Operation Operation </td>
-                                            <td>Operation Operation </td>
-                                            <td>Operation Operation </td>
+                                            <td> </td>
+                                            <td> </td>
+                                            <td> </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -140,17 +152,34 @@
                                 <table class="table" border="2">
                                     <thead>
                                         <tr>
-                                            <th>Operation</th>
-                                            <th>Operation</th>
-                                            <th>Operation</th>
+                                            <th><b>Date</b></th>
+                                            <th><b>Pièces des réchanges</b></th>
+                                            <th><b>Cout de Réparation</b></th>
+                                            <th><b>Description</b></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Operation Operation </td>
-                                            <td>Operation Operation </td>
-                                            <td>Operation Operation </td>
-                                        </tr>
+                                        <?php
+                                        $desc = $array['desc'];
+                                        $l = $array['l'];
+                                        $mypiècesderechange = $array['mypiècesderechange'];
+                                        $mypiècesderechange_count = $array['mypiècesderechange_count'];
+                                        $cout = $array['cout'];
+                                        $date = $array['date'];
+                                        ?>
+                                        @for($x=0;$x<$l;$x++) <tr>
+
+                                            <td>{{$date[$x]}}</td>
+                                            <td>
+
+                                                @for($i=0;$i<$mypiècesderechange_count;$i++) {{$mypiècesderechange[$i]}} <br> @endfor </td>
+
+                                            <td>{{$cout[$x]}} TND</td>
+                                            <td>{{$desc[$x]}}</td>
+
+                                            </tr>
+
+                                            @endfor
                                     </tbody>
                                 </table>
                             </div>
@@ -166,21 +195,31 @@
     </div>
 </body>
 <script>
-    window.onload = function () {
-    document.getElementById("download")
-        .addEventListener("click", () => {
-            const invoice = this.document.getElementById("invoice");
-            console.log(invoice);
-            console.log(window);
-            var opt = {
-                margin: 1,
-                filename: 'fiche_de_vie.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2.5 },
-                jsPDF: { unit: 'pt', format: 'a4', orientation: 'p' }
-            };
-            html2pdf().from(invoice).set(opt).save();
-        })
-}
+    window.onload = function() {
+        document.getElementById("download")
+            .addEventListener("click", () => {
+                const invoice = this.document.getElementById("invoice");
+                console.log(invoice);
+                console.log(window);
+                var opt = {
+                    margin: 1,
+                    filename: 'fiche_de_vie.pdf',
+                    image: {
+                        type: 'jpeg',
+                        quality: 1
+                    },
+                    html2canvas: {
+                        scale: 2.5
+                    },
+                    jsPDF: {
+                        unit: 'pt',
+                        format: 'a4',
+                        orientation: 'p'
+                    }
+                };
+                html2pdf().from(invoice).set(opt).save();
+            })
+    }
 </script>
+
 </html>

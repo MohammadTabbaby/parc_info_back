@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ReparationsExterne;
+use App\ReparationsInterne;
+use App\ReparationInternePieceDeRechange;
 use App\PieceDeRechange;
 use App\Equipement;
 use App\BondeCommande;
@@ -689,49 +691,131 @@ class WebController extends Controller
     }
 
     public function FicheDeVie($id)
-    {   
-        
-        $equipement_fichedevie=Equipement::where('id',$id)->get();
-       //  return $equipement_fichedevie;
-        $date_achat=Carbon::parse($equipement_fichedevie[0]['date_achat'])->format("d/m/Y");
-        $date_mis=Carbon::parse($equipement_fichedevie[0]['date_premier_utilisation'])->format("d/m/Y");
-        $reference=($equipement_fichedevie[0]['reference']);
+    {
+
+        $equipement_fichedevie = Equipement::where('id', $id)->get();
+        //  return $equipement_fichedevie;
+        $date_achat = Carbon::parse($equipement_fichedevie[0]['date_achat'])->format("d/m/Y");
+        $date_mis = Carbon::parse($equipement_fichedevie[0]['date_premier_utilisation'])->format("d/m/Y");
+        $reference = ($equipement_fichedevie[0]['reference']);
         //return $reference;
-        $etat=($equipement_fichedevie[0]['etat']);
-        $cout_initiale=($equipement_fichedevie[0]['cout_initiale']);
-        $garentie=($equipement_fichedevie[0]['garentie']);
+        $etat = ($equipement_fichedevie[0]['etat']);
+        $cout_initiale = ($equipement_fichedevie[0]['cout_initiale']);
+        $garentie = ($equipement_fichedevie[0]['garentie']);
         /*********************************************** */
-        $id_categorie=($equipement_fichedevie[0]['id_categorie']);
-        $categorie = Category::find( $id_categorie);
+        $id_categorie = ($equipement_fichedevie[0]['id_categorie']);
+        $categorie = Category::find($id_categorie);
         $nom_categorie = $categorie['nom_categorie'];
 
-        $id_fournisseur=($equipement_fichedevie[0]['id_fournisseur']);
-        
+        $id_fournisseur = ($equipement_fichedevie[0]['id_fournisseur']);
+
         //recherche fournisseur w ili tal9ah t7otou fi array
-        $id_modele=($equipement_fichedevie[0]['id_modele']);
-        $modele = Modele::find( $id_modele);
-        $nom_modele= $modele['nom_modele'];
-        $marque= $modele['marque'];
+        $id_modele = ($equipement_fichedevie[0]['id_modele']);
+        $modele = Modele::find($id_modele);
+        $nom_modele = $modele['nom_modele'];
+        $marque = $modele['marque'];
 
-      
 
-        $array=
-        [
-            "date_achat"=>$date_achat,
-            "date_mis" => $date_mis,
-            "etat" => $etat,
-            "cout_initiale" => $cout_initiale,
-            "reference" => $reference,
-            "garentie" => $garentie,
-            "nom_modele" => $nom_modele,
-            "marque" => $marque,
-            "nom_categorie"=>$nom_categorie,
-            "fournisseur"=>$id_fournisseur
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        ];
+        DB::delete('DELETE FROM `model_histories` WHERE message="Created Equipement";');
+        DB::delete('DELETE FROM `model_histories` WHERE message="Deleting Equipement";');
+
+        $Equipement = Equipement::where('reference', $reference)->first();
+        $n = 0;
+        $champ = [];
+        $post_old = [];
+        $post_new = [];
+        foreach ($Equipement->histories as $eq) {
+
+            for ($i = 0; $i < count($eq->meta); $i++) {
+                if ($eq->meta[$i]['key'] == 'post_agent') {
+                    $champ[] = "Post / Agent";
+                    $post_old[] = $eq->meta[$i]['old'];
+                    $post_new[] = $eq->meta[$i]['new'];
+                }
+                if ($eq->meta[$i]['key'] == 'id_service') {
+                    $champ[] = "Service";
+                    $post_old[] = $eq->meta[$i]['old'];
+                    $post_new[] = $eq->meta[$i]['new'];
+                }
+                if ($eq->meta[$i]['key'] == 'date_affectation') {
+                    $p = substr($eq->meta[$i]['new'], 0, 10);
+                    if ($eq->meta[$i]['old'] != $p) {
+                        $champ[] = "Date D'affectation";
+                        $post_old[] = $eq->meta[$i]['old'];
+                        $post_new[] = $p;
+                    }
+                }
+            }
+            $n = count($champ);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $desc = [];
+        $cout = [];
+        $date = [];
+        $id_reparartion = [];
+        $piecesderechangeid = [];
+        $mypiècesderechange = [];
+        $mypiècesderechange_count = 0;
+        $details = ReparationsInterne::where('id_equipement', $id)->get();
+        foreach ($details as $detail) {
+            $desc[] = $detail->description;
+            $cout[] = $detail->cout_reparation;
+            $date[] = $detail->date_reparation;
+            $id_reparartion = $detail->id;
+
+            $l = count($desc);
+        }
+
+        $ReparationInternePieceDeRechange = ReparationInternePieceDeRechange::where('reparations_interne_id', $id_reparartion)->get();
+        $piècesderechange = PieceDeRechange::all();
+
+        foreach ($ReparationInternePieceDeRechange as $r) {
+
+            $piecesderechangeid[] = $r->piece_de_rechange_id;
+        }
+        foreach ($piècesderechange as $p) {
+            for ($i = 0; $i < count($piecesderechangeid); $i++) {
+                if ($p->id == $piecesderechangeid[$i]) {
+                    array_push($mypiècesderechange, ($p->reference));
+                    $mypiècesderechange_count++;
+                }
+            }
+
+            
+        }
+        /////////////result//////////////////////result//////////////////////result//////////////////////result//////////////////////result/////////
+
+        $array =
+            [
+                "date_achat" => $date_achat,
+                "date_mis" => $date_mis,
+                "etat" => $etat,
+                "cout_initiale" => $cout_initiale,
+                "reference" => $reference,
+                "garentie" => $garentie,
+                "nom_modele" => $nom_modele,
+                "marque" => $marque,
+                "nom_categorie" => $nom_categorie,
+                "fournisseur" => $id_fournisseur,
+
+                'champ' => $champ,
+                "post_old" => $post_old,
+                "post_new" => $post_new,
+                'n' => $n,
+                "desc" => $desc,
+                "cout" => $cout,
+                "date" => $date,    
+                "l" => count($desc),
+                'mypiècesderechange' => $mypiècesderechange,
+                'mypiècesderechange_count' => $mypiècesderechange_count
+
+
+            ];
         //return $array;
-        return View('fiche_de_vie')->with('array',$array);
 
+        return View('fiche_de_vie')->with('array', $array);
     }
     
 
