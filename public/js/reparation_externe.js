@@ -8,7 +8,10 @@ $(document).ready
 			{
                 //id_equipement
                 var id_equipement = $('select[name="id_equipement"]').val();
-                
+                //add id
+                var id = $('input[name="id"]').val();
+                if(id === "")
+                    id = null;
                 //ajax
                 $.ajax
 				(
@@ -18,7 +21,8 @@ $(document).ready
 						url: "/api/verifReferenceReparationExterne",
 						data:
 						{
-							'id_equipement' : id_equipement
+							'id_equipement' : id_equipement,
+							'id' : id
 						},
 						success: 
 						function(result)

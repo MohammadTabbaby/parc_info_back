@@ -64,7 +64,7 @@ class WebController extends Controller
         {
             if(!isset($request->id))
         {
-            $r = ReparationsExterne::where('id_equipement', $request->id_equipement)->first();
+            $r = ReparationsExterne::where('id_equipement', $request->id_equipement)->where('reparer',1)->first();
             if(isset($r))
             {
                 return response()->json
@@ -72,7 +72,7 @@ class WebController extends Controller
                     [
                         "code" => 0,
                         "status" => "error",
-                        "message" => "Equipement existe"
+                        "message" => "Equipement en cours de réparation"
                     ]
                 );
             }
@@ -93,6 +93,7 @@ class WebController extends Controller
             $r = Equipement::where('reference', $request->reference)->where('id',$request->id)->first();
             if(isset($r))
             {
+                $this->UpdateEtatReparationExterne();
                 return response()->json
                 (
                     [
@@ -1541,6 +1542,18 @@ class WebController extends Controller
            $array[]=['nom_service'=>$v->nom_service,'Taux_amortissement'=>$this->getEquipmentService($v->id,'taux_amortissement')];
         }
         return $array;
+    }
+
+    public  function UpdateEtatReparationExterne()
+    {
+        $reparations=ReparationsExterne::where('reparer',0)->get();
+        //return $reparations;
+        foreach ($reparations as $v) 
+        {
+            $reparation=ReparationsExterne::find($v->id);
+            $reparation->etat = 100;
+            $reparation->save();
+        }
     }
 
 

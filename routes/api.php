@@ -46,3 +46,4 @@ Route::post('/ContactUs','ApiController@ContactUs');
 Route::get('/getAmortissementOfAllServices','WebController@getAmortissementOfAllServices');
 //dashboard
 //Route::get('Widgets/run','Equipement@run');
+Route::get('/UpdateEtatReparationExterne','WebController@UpdateEtatReparationExterne');
