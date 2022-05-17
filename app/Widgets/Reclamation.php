@@ -5,7 +5,7 @@ namespace App\Widgets;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use TCG\Voyager\Facades\Voyager;
-use DB;
+
 class Reclamation extends BaseDimmer
 {
     /**
@@ -23,15 +23,13 @@ class Reclamation extends BaseDimmer
     {
         $count = \App\Reclamation::count();
         $string = 'Reclamation';
-        $count2 = 33;
-        $string2="qsdqsdqs";
+
         return view('voyager::dimmer', array_merge($this->config, [
             'icon'   => 'voyager-megaphone',
-            'title'  => "{$count} {$string},{$count2} {$string2}",
-            'text'   => __('', ['count' => $count, 'string' => Str::lower($string),
-            'count2' => $count2, 'string2' => Str::lower($string2)]),
+            'title'  => "{$count} {$string}",
+            'text'   => __('', ['count' => $count, 'string' => Str::lower($string)]),
             'button' => [
-                'text' => 'Reclamations',
+                'text' => 'Reclamation',
                 'link' => route('voyager.reclamations.index'),
             ],
             'image' => voyager_asset('images/widget-backgrounds/02.jpg'),

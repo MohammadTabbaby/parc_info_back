@@ -24,16 +24,15 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::get
 (
-    'admin/login1', function()
+    'admin/dashbord', function()
     {
-        return view('login1');
+        return view('dashbord');
     }
 );
 
 
 Route::get('/admin/fiche_sortie/{id}','WebController@FicheSortie');
 Route::get('/admin/FicheDeVie/{id}','WebController@FicheDeVie');
-//Route::get('/admin/DetailBonDeCommande','WebController@DetailBonDeCommande');
 Route::get('/admin/DetailBonDeCommande/{ref_breference_BC}','WebController@DetailBonDeCommande');
 Route::get('/admin/DetailBonDeLivraison/{ref_BL}','WebController@DetailBonDeLivraison');
 Route::get('/admin/facture/{reference_facture}','WebController@Facture');
