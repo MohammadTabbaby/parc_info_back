@@ -717,7 +717,7 @@ class WebController extends Controller
         $marque = $modele['marque'];
 
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////// affectation/////////////////////////////////////////////////////////////////////////////////////////////////////
 
         DB::delete('DELETE FROM `model_histories` WHERE message="Created Equipement";');
         DB::delete('DELETE FROM `model_histories` WHERE message="Deleting Equipement";');
@@ -751,7 +751,7 @@ class WebController extends Controller
             }
             $n = count($champ);
         }
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////// REP internes //////////////////////////////////////////////////////////////////////////////////////////////
         $desc = [];
         $cout = [];
         $date = [];
@@ -783,9 +783,25 @@ class WebController extends Controller
                     $mypiècesderechange_count++;
                 }
             }
-
-            
         }
+        /////////////REP//////////////////////REP//////////////////////REP Externe//////////////////////REP//////////////////////REP/////////
+
+        $Dates = [];
+        $Pannes = [];
+        $Couts = [];
+        $references_factures = [];
+        $counter = 0;
+
+        $equipements_reparé = DetailFacture::where('reference', $reference)->get();
+
+        foreach ($equipements_reparé as $er) {
+            array_push($references_factures, $er['reference_facture']);
+            array_push($Pannes, $er['panne']);
+            array_push($Couts, $er['prix_HT'] * $er['tva']);
+            array_push($Dates, substr($er['created_at'], 0, 10));
+            $counter++;
+        }
+
         /////////////result//////////////////////result//////////////////////result//////////////////////result//////////////////////result/////////
 
         $array =
@@ -807,10 +823,16 @@ class WebController extends Controller
                 'n' => $n,
                 "desc" => $desc,
                 "cout" => $cout,
-                "date" => $date,    
+                "date" => $date,
                 "l" => count($desc),
                 'mypiècesderechange' => $mypiècesderechange,
-                'mypiècesderechange_count' => $mypiècesderechange_count
+                'mypiècesderechange_count' => $mypiècesderechange_count,
+
+                'Dates' => $Dates,
+                'Pannes' => $Pannes,
+                'Couts' => $Couts,
+                'references_factures' => $references_factures,
+                'counter' => $counter
 
 
             ];
@@ -818,6 +840,7 @@ class WebController extends Controller
 
         return View('fiche_de_vie')->with('array', $array);
     }
+
     
 
     //03 Avril 2022
