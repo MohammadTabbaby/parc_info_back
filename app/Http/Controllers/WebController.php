@@ -36,15 +36,7 @@ use DB;
 
 class WebController extends Controller
 {
-    public function Inscription (Request $request)
-    {
-        try
-        {
-        } 
-        catch (Exception $e)
-        {
-        }
-    }
+    
 
     public static function test()
     {
@@ -1558,13 +1550,86 @@ class WebController extends Controller
     public function getAmortissementOfAllServices()
     {
         $service=Service::all();
-        $array=[];
-        
-        foreach ($service as $v) 
-        {
-           $array[]=['nom_service'=>$v->nom_service,'Taux_amortissement'=>$this->getEquipmentService($v->id,'taux_amortissement')];
+        //return ($service);
+        $noms_des_services = [];
+        $nb_equipements_pcs=[];
+        foreach($service as $s){
+            array_push($noms_des_services ,$s->nom_service);
         }
-        return $array;
+      
+        $taux_dammort = [];
+        foreach($noms_des_services as $i){
+            $equipement = Equipement::where('id_service', $i)->get();
+            //return($equipement);
+            $Nombres_Annee = ParametreApplication::where('Champ', 'Nombres_Annee')->get("Value");
+            //return($Nombres_Annee[0]['Value']);
+            $nb_equipements = $equipement->count();
+            array_push($nb_equipements_pcs, $nb_equipements);
+            $total_VCN = 0;
+            $total_tauxAmort = 0;
+            $total_coutachat = 0;
+            //return($equipement);
+            $equipements = [];
+            foreach ($equipement as $value) {
+                # code...
+                //return($equipement);
+                $categorie = Category::find($value->id_categorie);
+                $modele = Modele::find($value->id_modele);
+                $equipement->cout_initiale = $value->cout_initiale;
+                //return($equipement->cout_initiale);
+                $equipement->date_premier_utilisation = $value->date_premier_utilisation;
+                //return($value->date_premier_utilisation);
+                //$equipement->amortie_sur=$value->amortie_sur;
+                //return $equipement->amortie_sur;
+                $taux_dammortissement = 1 / $Nombres_Annee[0]['Value'];
+                //return($taux_dammortissement);
+                $date = date("Y/m/d");
+                $date1 = strtotime($date);
+                $date2 = strtotime($value->date_premier_utilisation);
+                //return $date;
+                $nb_jours_utilisation = ($date1 - $date2) / 86400;
+                //return($nb_jours_utilisation);
+                $mountant_a_amortir = $value->cout_initiale * $taux_dammortissement; //kol 3am 9adeh yon9es VCN
+                //return $mountant_a_amortir;
+                $X = ((($mountant_a_amortir * $nb_jours_utilisation) / 360) / 1000);
+                // return $X;
+                $VCN_Equipement = round(($value->cout_initiale - ($value->cout_initiale * $X)), 2); //VCN de chaque equipement
+                // return  $VCN_Equipement;
+                $Y = round((1 - $X), 2);
+                //return $Y;
+                //$equipements[]=$equipement;
+                // return[];
+                $equipements[] =
+                    [
+                        "reference" => $value->reference,
+                        "categorie" => $categorie->nom_categorie,
+                        "modele" => $modele->nom_modele,
+                        'VCN' => $VCN_Equipement,
+                        'taux_amortissement' => $Y,
+                        'cout_initiale' => $value->cout_initiale,
+                        'date_premier_utilisation' => $value->date_premier_utilisation
+                    ];
+
+                // return['equipements'=>$equipements, 'VCN'=>$VCN_Equipement , 'Taux Amortissement'=>$Y];
+                $total_VCN += round($VCN_Equipement, 2);
+                $total_tauxAmort += $Y;
+                $total_coutachat += $value->cout_initiale;
+            }
+
+            if($nb_equipements !=0){
+            $total_tauxAmort = $total_tauxAmort / $nb_equipements;
+            $total_VCN = $total_VCN / $nb_equipements;
+            }
+            else{
+            $total_tauxAmort = 0;
+            $total_VCN = 0;
+            }
+             array_push($taux_dammort,$total_tauxAmort);
+         
+        }
+        //calcul ended
+        return($taux_dammort);
+
     }
 
     public  function UpdateEtatReparationExterne()
@@ -1578,6 +1643,29 @@ class WebController extends Controller
             $reparation->save();
         }
     }
+    public static function HELLO(){
+        $string = "HELLO YA SHAYMA ";
+        return($string);
+    }
 
-
+    public function run()
+    {
+        $tab = [];
+        $count_equipements = \App\Equipement::count();
+        $count_fournisseurs = \App\Fournisseur::count();
+        $count_reclamations = \App\Reclamation::count();
+        $count_PR = \App\PieceDeRechange::count();
+        $count_services = \App\Service::count();
+        $count_Besoin = \App\DemandeAchat::count();
+        $tab=
+        [
+            "nombre_equipements"=>$count_equipement,
+            "nombre_fournisseurs"=>$count_fournisseurs,
+            "nombre_reclamation"=>$count_reclamations,
+            "nombre_PR" =>$count_PR,
+            "nombre_Services"=>$count_services,
+            "nombre_besoin"=>$count_Besoin,
+        ];
+        return($tab);
+    }
 }

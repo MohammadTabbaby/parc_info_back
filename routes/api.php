@@ -47,3 +47,4 @@ Route::get('/getAmortissementOfAllServices','WebController@getAmortissementOfAll
 //dashboard
 //Route::get('Widgets/run','Equipement@run');
 Route::get('/UpdateEtatReparationExterne','WebController@UpdateEtatReparationExterne');
+Route::get('/run','WebController@run');

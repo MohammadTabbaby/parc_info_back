@@ -46,3 +46,4 @@ Route::get('admin/demandeAchat','WebController@getViewAddDemandeAchat');
 
 Route::get('/admin/getConnectedUser','WebController@getConnectedUser');
 Route::get('/admin/displayhistory/{reference}', 'WebController@displayhistory');
+//Route::get('/admin/dashboards','WebController@HELLO');

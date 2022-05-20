@@ -147,13 +147,13 @@ return [
             //'TCG\\Voyager\\Widgets\\UserDimmer',
            //'TCG\\Voyager\\Widgets\\PostDimmer',
           // 'TCG\\Voyager\\Widgets\\PageDimmer', 
-           'App\\Widgets\\Besoin',
-           'App\\Widgets\\UserDimmer',
-           'App\\Widgets\\Equipement',
-           'App\\Widgets\\Service',
-           'App\\Widgets\\Fournisseur',
-           'App\\Widgets\\PieceDeRechange',
-           'App\\Widgets\\Reclamation',
+           //'App\\Widgets\\Besoin',
+           //'App\\Widgets\\UserDimmer',
+           //'App\\Widgets\\Equipement',
+           //'App\\Widgets\\Service',
+           //'App\\Widgets\\Fournisseur',
+           //'App\\Widgets\\PieceDeRechange',
+           //'App\\Widgets\\Reclamation',
            
            //'App\\Widgets\\charts',
         ],
@@ -194,7 +194,7 @@ return [
 
     'primary_color' => '#22A7F0',
 
-    'show_dev_tips' => true, // Show development tip "How To Use:" in Menu and Settings
+    'show_dev_tips' => false, // Show development tip "How To Use:" in Menu and Settings
 
     // Here you can specify additional assets you would like to be included in the master.blade
     'additional_css' => [
