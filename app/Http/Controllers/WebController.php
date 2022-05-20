@@ -1547,7 +1547,7 @@ class WebController extends Controller
      }
     }
 
-    public function getAmortissementOfAllServices()
+    public static function getAmortissementOfAllServices()
     {
         $service=Service::all();
         //return ($service);
@@ -1628,7 +1628,17 @@ class WebController extends Controller
          
         }
         //calcul ended
-        return($taux_dammort);
+        $compter = count($noms_des_services);
+        $tab=
+        [
+            "taux_dammort"=>$taux_dammort,
+            "noms_des_services"=>$noms_des_services,
+            "nb_equipements_pcs"=>$nb_equipements_pcs,
+            "compter"=>$compter
+        ];
+
+        return($tab);
+        
 
     }
 
@@ -1643,29 +1653,93 @@ class WebController extends Controller
             $reparation->save();
         }
     }
-    public static function HELLO(){
-        $string = "HELLO YA SHAYMA ";
-        return($string);
-    }
 
-    public function run()
+    public static function run()
     {
         $tab = [];
         $count_equipements = \App\Equipement::count();
-        $count_fournisseurs = \App\Fournisseur::count();
-        $count_reclamations = \App\Reclamation::count();
         $count_PR = \App\PieceDeRechange::count();
+        $count_reclamations = \App\Reclamation::count();
         $count_services = \App\Service::count();
         $count_Besoin = \App\DemandeAchat::count();
+
+
         $tab=
         [
-            "nombre_equipements"=>$count_equipement,
-            "nombre_fournisseurs"=>$count_fournisseurs,
+            "nombre_equipements"=>$count_equipements,
             "nombre_reclamation"=>$count_reclamations,
             "nombre_PR" =>$count_PR,
             "nombre_Services"=>$count_services,
             "nombre_besoin"=>$count_Besoin,
         ];
+
         return($tab);
+    }
+
+    
+    public static function getReclamationsEnattente(){
+        $Reclamations = Reclamation::all();
+        $Reclamations_En_Attente = 0;
+
+        for($i=0; $i<count($Reclamations);$i++){
+            if($Reclamations[$i]['interventions'] == 'En Attente' || $Reclamations[$i]['interventions'] == NULL){
+                $Reclamations_En_Attente++;
+            }
+        }
+        //return($Reclamations_En_Attente);
+            
+        $tab=
+        [
+            "Reclamations_En_Attente"=>$Reclamations_En_Attente,
+        ];
+
+        return($tab);
+    }
+
+
+    public static function getBesoinsEnattente(){
+        $DemandeAchats = DemandeAchat::all();
+        //return($Reclamations);
+        $DemandeAchats_En_Attente = 0;
+
+        for($i=0; $i<count($DemandeAchats);$i++){
+            if($DemandeAchats[$i]['intervention'] == 'En Attente'){
+                $DemandeAchats_En_Attente++;
+            }
+        }
+        
+        $tab=
+        [
+            "DemandeAchats_En_Attente"=>$DemandeAchats_En_Attente,
+        ];
+
+        return($tab);
+
+    }
+
+
+    public static function getCountForEachCategorie(){
+        $Equipements = Equipement::all();
+        $tab_ids=[];
+        foreach($Equipements as $e){
+            array_push($tab_ids,$e->id_categorie);
+        }
+        //return($tab_ids);
+        $noms_categories=[];
+
+        foreach($tab_ids as $id){
+            $mesCategories = Category::all();
+            //return($mesCategories[0]);
+
+            for($i = 0 ; $i< count($mesCategories); $i++){
+            if($id == $mesCategories[$i]['id'] ){
+                array_push($noms_categories,$mesCategories[$i]['nom_categorie'] );
+            }
+            }
+        }
+        //return($noms_categories);
+        $tab=(array_count_values($noms_categories));
+        return($tab);
+      
     }
 }

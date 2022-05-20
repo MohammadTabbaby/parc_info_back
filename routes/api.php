@@ -48,3 +48,9 @@ Route::get('/getAmortissementOfAllServices','WebController@getAmortissementOfAll
 //Route::get('Widgets/run','Equipement@run');
 Route::get('/UpdateEtatReparationExterne','WebController@UpdateEtatReparationExterne');
 Route::get('/run','WebController@run');
+Route::get('/getReclamationsEnattente','WebController@getReclamationsEnattente');
+Route::get('/getBesoinsEnattente','WebController@getBesoinsEnattente');
+Route::get('/getCountForEachCategorie','WebController@getCountForEachCategorie');
+
+
+

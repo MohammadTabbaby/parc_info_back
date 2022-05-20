@@ -61,19 +61,33 @@
                                             <div class="bg-gradient-to-b from-green-200 to-green-100 border-b-4 border-green-600 rounded-lg shadow-xl p-5">
                                                 <div class="flex flex-row items-center">
                                                     <div class="flex-shrink pr-4">
-                                                        <div class="rounded-full p-5 bg-green-600"><i class="fa fa-wallet fa-2x fa-inverse"></i></div>
+                                                        <div class="rounded-full p-5 bg-green-600"><i class="fa fa-desktop fa-2x fa-inverse"></i>
+                                                        </div> 
                                                     </div>
                                                     <div class="flex-1 text-right md:text-center">
-                                                        <h2 class="font-bold uppercase text-gray-600">Total Revenue</h2>
+                                                        <h2 style="font-size:20px" class="font-bold uppercase text-gray-600">équipements</h2>
                                                        <p class="font-bold text-3xl"> 
                                                            <?php
-                                                                 $string = App\Http\Controllers\WebController::HELLO();
-                                                                 echo $string;
+                                                                 $tab = App\Http\Controllers\WebController::run();
+                                                                 echo $tab['nombre_equipements'];
                                                             ?>
                                                      <span class="text-green-500"><i class="fas fa-caret-up"></i></span></p>
+                                                     
+                                                            
                                                     </div>
                                                 </div>
+                                                <br>
+                                                <ul>
+                                                    <?php
+                                                    $tab = App\Http\Controllers\WebController::getCountForEachCategorie();
+                                                    foreach($tab as $key => $item){
+                
+                                                    echo ("<li class='font-bold uppercase text-gray-800'>".$key .":".$item."</li>");
+                                                    }
+                                                    ?>
+                                                </ul>
                                             </div>
+                            
                                             <!--/Metric Card-->
                                         </div>
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
@@ -81,81 +95,127 @@
                                             <div class="bg-gradient-to-b from-pink-200 to-pink-100 border-b-4 border-pink-500 rounded-lg shadow-xl p-5">
                                                 <div class="flex flex-row items-center">
                                                     <div class="flex-shrink pr-4">
-                                                        <div class="rounded-full p-5 bg-pink-600"><i class="fas fa-users fa-2x fa-inverse"></i></div>
-                                                    </div>
+                                                        <div class="rounded-full p-5 bg-pink-600"><i class="fas fa-cogs fa-2x fa-inverse"></i></div>
+                                                    </div> 
+                    
+                                        
+                                                    </ul>
                                                     <div class="flex-1 text-right md:text-center">
-                                                        <h2 class="font-bold uppercase text-gray-600">Total Users</h2>
-                                                        <p class="font-bold text-3xl">249 <span class="text-pink-500"><i class="fas fa-exchange-alt"></i></span></p>
+                                                        <h2 style="font-size:20px" class="font-bold uppercase text-gray-600">Pièces de rechange</h2>
+                                                        <p class="font-bold text-3xl"> 
+                                                            <?php
+                                                                  $tab = App\Http\Controllers\WebController::run();
+                                                                  echo $tab['nombre_PR'];
+                                                             ?>
+                                                        <span class="text-pink-500"><i class="fas fa-exchange-alt"></i></span></p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!--/Metric Card-->
                                         </div>
+
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                             <!--Metric Card-->
                                             <div class="bg-gradient-to-b from-yellow-200 to-yellow-100 border-b-4 border-yellow-600 rounded-lg shadow-xl p-5">
                                                 <div class="flex flex-row items-center">
                                                     <div class="flex-shrink pr-4">
-                                                        <div class="rounded-full p-5 bg-yellow-600"><i class="fas fa-user-plus fa-2x fa-inverse"></i></div>
+                                                        <div class="rounded-full p-5 bg-yellow-600"><i class="fas fa-envelope fa-2x fa-inverse"></i>
+                                                        </div>
                                                     </div>
+                                                    <br>
+                                                    <h2 style="font-size:20px" class="font-bold uppercase text-gray-800">Reclamation</h2>
+                                                        
                                                     <div class="flex-1 text-right md:text-center">
-                                                        <h2 class="font-bold uppercase text-gray-600">New Users</h2>
-                                                        <p class="font-bold text-3xl">2 <span class="text-yellow-600"><i class="fas fa-caret-up"></i></span></p>
+                                                    
+                                                        <p class="font-bold text-3xl"> 
+                                                            <?php
+                                                                  $tab = App\Http\Controllers\WebController::run();
+                                                                  echo $tab['nombre_reclamation'];
+                                                             ?>
+                                                             <i class="fas fa-caret-up"></i></span></p>
                                                     </div>
                                                 </div>
+                                                <br>
+                                                <?php
+                                            $tab = App\Http\Controllers\WebController::getReclamationsEnattente();
+                                            echo ("<h2 class='font-bold uppercase text-gray-800'>En Attente : ". $tab['Reclamations_En_Attente']."</h2>");
+                                       ?>
                                             </div>
                                             <!--/Metric Card-->
                                         </div>
+
+                                        
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                             <!--Metric Card-->
-                                            <div class="bg-gradient-to-b from-blue-200 to-blue-100 border-b-4 border-blue-500 rounded-lg shadow-xl p-5">
+                                            <div class="bg-gradient-to-b from-blue-200 to-blue-100 border-b-4 border-blue-600 rounded-lg shadow-xl p-5">
                                                 <div class="flex flex-row items-center">
                                                     <div class="flex-shrink pr-4">
-                                                        <div class="rounded-full p-5 bg-blue-600"><i class="fas fa-server fa-2x fa-inverse"></i></div>
+                                                        <div class="rounded-full p-5 bg-blue-600"><i class="fas fa-shopping-cart fa-2x fa-inverse"></i>
+                                                        </div>
                                                     </div>
+                                                    <br>
+                                                    <h2 style="font-size:20px" class="font-bold uppercase text-gray-800">Besoins </h2>
+                                                        
                                                     <div class="flex-1 text-right md:text-center">
-                                                        <h2 class="font-bold uppercase text-gray-600">Server Uptime</h2>
-                                                        <p class="font-bold text-3xl">152 days</p>
+                                                    
+                                                        <p class="font-bold text-3xl"> 
+                                                            <?php
+                                                                  $tab = App\Http\Controllers\WebController::run();
+                                                                  echo $tab['nombre_besoin'];
+                                                             ?>
+                                                             <i class="fas fa-caret-up"></i></span></p>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <!--/Metric Card-->
-                                        </div>
-                                        <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                            <!--Metric Card-->
-                                            <div class="bg-gradient-to-b from-indigo-200 to-indigo-100 border-b-4 border-indigo-500 rounded-lg shadow-xl p-5">
-                                                <div class="flex flex-row items-center">
-                                                    <div class="flex-shrink pr-4">
-                                                        <div class="rounded-full p-5 bg-indigo-600"><i class="fas fa-tasks fa-2x fa-inverse"></i></div>
-                                                    </div>
-                                                    <div class="flex-1 text-right md:text-center">
-                                                        <h2 class="font-bold uppercase text-gray-600">To Do List</h2>
-                                                        <p class="font-bold text-3xl">7 tasks</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!--/Metric Card-->
-                                        </div>
-                                        <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                            <!--Metric Card-->
-                                            <div class="bg-gradient-to-b from-red-200 to-red-100 border-b-4 border-red-500 rounded-lg shadow-xl p-5">
-                                                <div class="flex flex-row items-center">
-                                                    <div class="flex-shrink pr-4">
-                                                        <div class="rounded-full p-5 bg-red-600"><i class="fas fa-inbox fa-2x fa-inverse"></i></div>
-                                                    </div>
-                                                    <div class="flex-1 text-right md:text-center">
-                                                        <h2 class="font-bold uppercase text-gray-600">Issues</h2>
-                                                        <p class="font-bold text-3xl">3 <span class="text-red-500"><i class="fas fa-caret-up"></i></span></p>
-                                                    </div>
-                                                </div>
+                                                <br>
+                                                <?php
+                                            $tab = App\Http\Controllers\WebController::getBesoinsEnattente();
+                                            echo ("<h2 class='font-bold uppercase text-gray-800'>En Attente : ". $tab['DemandeAchats_En_Attente']."</h2>");
+                                       ?>
                                             </div>
                                             <!--/Metric Card-->
                                         </div>
                                     </div>
-                    
-                    
+                                    <!--/Services-->
                                     <div class="flex flex-row flex-wrap flex-grow mt-2">
-                    
+                                    <div style="width:100%">
+                                        <!--Graph Card-->
+                                        <div class="bg-white border-transparent rounded-lg shadow-xl">
+                                            <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
+                                                <h1 class="font-bold uppercase text-gray-600">Services</h1>
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table class="table table-hover mb-0">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Nom de Service</th>
+                                                        <th>Nombres des équipements</th>
+                                                        <th>Taux d'amortissement</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                        $tab = App\Http\Controllers\WebController::getAmortissementOfAllServices();
+                                                        for($i=0;$i<$tab['compter'];$i++ ){
+                                                        echo ("<tr class='font-bold uppercase text-gray-800'>
+                                                            <td>". ($i+1) ."</td><td>"
+                                                            .$tab['noms_des_services'][$i].
+                                                            "</td><td>".$tab['nb_equipements_pcs'][$i].
+                                                            "</td><td>".(($tab['taux_dammort'][$i])*100).
+                                                            " % </td></tr>");
+                                                        }
+                                                        ?>
+        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!--/Graph Card-->
+                                    </div>
+                                    </div>
+                                    <!--/Services-->
+                                    <div class="flex flex-row flex-wrap flex-grow mt-2">
+                                   
                                     <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                         <!--Graph Card-->
                                         <div class="bg-white border-transparent rounded-lg shadow-xl">
@@ -290,7 +350,7 @@
                                         <!--/Graph Card-->
                                     </div>
                     
-                                        <div class="w-full md:w-1/2 xl:w-1/3 p-6">
+                                    <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                             <!--Table Card-->
                                             <div class="bg-white border-transparent rounded-lg shadow-xl">
                                                 <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
@@ -332,7 +392,8 @@
                                             <!--/table Card-->
                                         </div>
                     
-                                    <div class="w-full md:w-1/2 xl:w-1/3 p-6">
+                                    
+                                        <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                         <!--Advert Card-->
                                         <div class="bg-white border-transparent rounded-lg shadow-xl">
                                             <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
@@ -348,8 +409,7 @@
                                         </div>
                                         <!--/Advert Card-->
                                     </div>
-                    
-                    
+        
                                     </div>
                                 </div>
                             </section>
