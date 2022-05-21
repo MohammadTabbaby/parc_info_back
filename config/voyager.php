@@ -125,6 +125,8 @@ return [
     */
 
     'dashboard' => [
+         // which role add premissions to
+         'default_role' => 'admin',
         // Add custom list items to navbar's dropdown
         'navbar_items' => [
             'voyager::generic.profile' => [

@@ -109,7 +109,17 @@
                                                              ?>
                                                         <span class="text-pink-500"><i class="fas fa-exchange-alt"></i></span></p>
                                                     </div>
+                                                   
+
                                                 </div>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                
                                             </div>
                                             <!--/Metric Card-->
                                         </div>
@@ -136,6 +146,13 @@
                                                     </div>
                                                 </div>
                                                 <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                
+
                                                 <?php
                                             $tab = App\Http\Controllers\WebController::getReclamationsEnattente();
                                             echo ("<h2 class='font-bold uppercase text-gray-800'>En Attente : ". $tab['Reclamations_En_Attente']."</h2>");
@@ -201,10 +218,11 @@
                                                             <td>". ($i+1) ."</td><td>"
                                                             .$tab['noms_des_services'][$i].
                                                             "</td><td>".$tab['nb_equipements_pcs'][$i].
-                                                            "</td><td>".(($tab['taux_dammort'][$i])*100).
-                                                            " % </td></tr>");
+                                                            "</td><td <span class='badge badge-info badge-pill float-left mt-3'>" .(($tab['taux_dammort'][$i])*100).
+                                                            " % </span></td></tr>");
                                                         }
                                                         ?>
+                                                        
         
                                                     </tbody>
                                                 </table>
@@ -216,76 +234,7 @@
                                     <!--/Services-->
                                     <div class="flex flex-row flex-wrap flex-grow mt-2">
                                    
-                                    <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                        <!--Graph Card-->
-                                        <div class="bg-white border-transparent rounded-lg shadow-xl">
-                                            <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                <h1 class="font-bold uppercase text-gray-600">Graph</h1>
-                                            </div>
-                                            <div class="p-5">
-                                                <canvas id="chartjs-7" class="chartjs" width="undefined" height="undefined"></canvas>
-                                                <script>
-                                                    new Chart(document.getElementById("chartjs-7"), {
-                                                        "type": "bar",
-                                                        "data": {
-                                                            "labels": ["January", "February", "March", "April"],
-                                                            "datasets": [{
-                                                                "label": "Page Impressions",
-                                                                "data": [10, 20, 30, 40],
-                                                                "borderColor": "rgb(255, 99, 132)",
-                                                                "backgroundColor": "rgba(255, 99, 132, 0.2)"
-                                                            }, {
-                                                                "label": "Adsense Clicks",
-                                                                "data": [5, 15, 10, 30],
-                                                                "type": "line",
-                                                                "fill": false,
-                                                                "borderColor": "rgb(54, 162, 235)"
-                                                            }]
-                                                        },
-                                                        "options": {
-                                                            "scales": {
-                                                                "yAxes": [{
-                                                                    "ticks": {
-                                                                        "beginAtZero": true
-                                                                    }
-                                                                }]
-                                                            }
-                                                        }
-                                                    });
-                                                </script>
-                                            </div>
-                                        </div>
-                                        <!--/Graph Card-->
-                                    </div>
-                    
-                                    <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                        <!--Graph Card-->
-                                        <div class="bg-white border-transparent rounded-lg shadow-xl">
-                                            <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                <h2 class="font-bold uppercase text-gray-600">Graph</h2>
-                                            </div>
-                                            <div class="p-5">
-                                                <canvas id="chartjs-0" class="chartjs" width="undefined" height="undefined"></canvas>
-                                                <script>
-                                                    new Chart(document.getElementById("chartjs-0"), {
-                                                        "type": "line",
-                                                        "data": {
-                                                            "labels": ["January", "February", "March", "April", "May", "June", "July"],
-                                                            "datasets": [{
-                                                                "label": "Views",
-                                                                "data": [65, 59, 80, 81, 56, 55, 40],
-                                                                "fill": false,
-                                                                "borderColor": "rgb(75, 192, 192)",
-                                                                "lineTension": 0.1
-                                                            }]
-                                                        },
-                                                        "options": {}
-                                                    });
-                                                </script>
-                                            </div>
-                                        </div>
-                                        <!--/Graph Card-->
-                                    </div>
+                                    
                     
                                     <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                         <!--Graph Card-->
@@ -325,9 +274,9 @@
                                         <!--/Graph Card-->
                                     </div>
                     
-                                    <div class="w-full md:w-1/2 xl:w-1/3 p-6">
+                                   <!-- <div class="w-full md:w-1/2 xl:w-1/3 p-6"> -->
                                         <!--Graph Card-->
-                                        <div class="bg-white border-transparent rounded-lg shadow-xl">
+                                        <!--<div class="bg-white border-transparent rounded-lg shadow-xl">
                                             <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
                                                 <h5 class="font-bold uppercase text-gray-600">Graph</h5>
                                             </div>
@@ -346,13 +295,13 @@
                                                     });
                                                 </script>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <!--/Graph Card-->
                                     </div>
                     
-                                    <div class="w-full md:w-1/2 xl:w-1/3 p-6">
+                                   <!-- <div class="w-full md:w-1/2 xl:w-1/3 p-6"> -->
                                             <!--Table Card-->
-                                            <div class="bg-white border-transparent rounded-lg shadow-xl">
+                                            <!--<div class="bg-white border-transparent rounded-lg shadow-xl">
                                                 <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
                                                     <h2 class="font-bold uppercase text-gray-600">Graph</h2>
                                                 </div>
@@ -388,14 +337,14 @@
                                                     <p class="py-2"><a href="#">See More issues...</a></p>
                     
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!--/table Card-->
-                                        </div>
+                                        <!-- </div> -->
                     
                                     
-                                        <div class="w-full md:w-1/2 xl:w-1/3 p-6">
+                                    <!--  <div class="w-full md:w-1/2 xl:w-1/3 p-6"> -->
                                         <!--Advert Card-->
-                                        <div class="bg-white border-transparent rounded-lg shadow-xl">
+                                        <!-- <div class="bg-white border-transparent rounded-lg shadow-xl">
                                             <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
                                                 <h2 class="font-bold uppercase text-gray-600">Advert</h2>
                                             </div>
@@ -406,13 +355,13 @@
                     
                     
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <!--/Advert Card-->
-                                    </div>
+                                   <!-- </div> -->
         
-                                    </div>
                                 </div>
-                            </section>
+                            </div>
+                        </section>
                     
                         </div>
                         @if ($isServerSide)
