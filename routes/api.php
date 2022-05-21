@@ -51,6 +51,7 @@ Route::get('/run','WebController@run');
 Route::get('/getReclamationsEnattente','WebController@getReclamationsEnattente');
 Route::get('/getBesoinsEnattente','WebController@getBesoinsEnattente');
 Route::get('/getCountForEachCategorie','WebController@getCountForEachCategorie');
+Route::get('/getUsedPiece','WebController@getUsedPiece');
 
 
 

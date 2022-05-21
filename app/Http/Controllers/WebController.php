@@ -1742,4 +1742,36 @@ class WebController extends Controller
         return($tab);
       
     }
+    
+  /*  public static function getUsedPiece(){
+
+        $total_nb_PR = \App\PieceDeRechange::count();
+        $tout_PR = PieceDeRechange::all();
+        $toutids=[];
+        $mycount = 0;
+
+        foreach($tout_PR as $t){
+            array_push($toutids ,$t['id']);
+
+        }
+        $PR_MID = ReparationInternePieceDeRechange::all();
+        $PR_MID_ids = [];
+
+        foreach($PR_MID as $pr){
+            array_push($PR_MID_ids ,$pr['piece_de_rechange_id']);
+
+        }
+        $nb_PR_MID_ids=array_unique($PR_MID_ids);
+        return($nb_PR_MID_ids);
+
+        for($i=0;$i<count($toutids);$i++){
+
+            if($toutids[$i] == $PR_MID[$j]['piece_de_rechange_id']){
+                $mycount++;
+            }
+            
+
+            
+        }
+    }*/
 }
