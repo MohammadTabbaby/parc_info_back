@@ -1662,6 +1662,8 @@ class WebController extends Controller
         $count_reclamations = \App\Reclamation::count();
         $count_services = \App\Service::count();
         $count_Besoin = \App\DemandeAchat::count();
+        $count_RE = \App\ReparationsExterne::count();
+        $count_RI = \App\ReparationsInterne::count();
 
 
         $tab=
@@ -1671,6 +1673,8 @@ class WebController extends Controller
             "nombre_PR" =>$count_PR,
             "nombre_Services"=>$count_services,
             "nombre_besoin"=>$count_Besoin,
+            "nombre_RE"=>$count_RE,
+            "nombre_RI"=>$count_RI,
         ];
 
         return($tab);

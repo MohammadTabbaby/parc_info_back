@@ -56,6 +56,7 @@
                             <section>
                                 <div id="main" class="main-content flex-1 bg-gray-100 mt-12 md:mt-2 pb-24 md:pb-5">
                                     <div class="flex flex-wrap">
+                                        
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                             <!--Metric Card-->
                                             <div class="bg-gradient-to-b from-green-200 to-green-100 border-b-4 border-green-600 rounded-lg shadow-xl p-5">
@@ -71,7 +72,7 @@
                                                                  $tab = App\Http\Controllers\WebController::run();
                                                                  echo $tab['nombre_equipements'];
                                                             ?>
-                                                     <span class="text-green-500"><i class="fas fa-caret-up"></i></span></p>
+                                                        </p>
                                                      
                                                             
                                                     </div>
@@ -87,9 +88,71 @@
                                                     ?>
                                                 </ul>
                                             </div>
-                            
                                             <!--/Metric Card-->
                                         </div>
+
+                                       
+
+
+                                        <div class="w-full md:w-1/2 xl:w-1/3 p-6">
+                                            <!--Metric Card-->
+                                            <div class="bg-gradient-to-b from-red-200 to-red-100 border-b-4 border-red-500 rounded-lg shadow-xl p-5">
+                                                <div class="flex flex-row items-center">
+                                                    <div class="flex-shrink pr-4">
+                                                        <div class="rounded-full p-5 bg-red-600"><i class="fas fa-inbox fa-2x fa-inverse"></i></div>
+                                                    </div>
+                                                    <div class="flex-1 text-right md:text-center">
+                                                        <h2 style="font-size:20px" class="font-bold uppercase text-gray-600">Reparations Interne</h2>
+                                                        <p class="font-bold text-3xl">
+                                                                <?php
+                                                                $tab = App\Http\Controllers\WebController::run();
+                                                                echo $tab['nombre_RI'];
+                                                                ?>
+                                                            
+                                                                
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                            </div>
+                                            <!--/Metric Card-->
+                                        </div>
+                                        
+
+                                        <div class="w-full md:w-1/2 xl:w-1/3 p-6">
+                                            <!--Metric Card-->
+                                            <div class="bg-gradient-to-b from-indigo-200 to-indigo-100 border-b-4 border-indigo-500 rounded-lg shadow-xl p-5">
+                                                <div class="flex flex-row items-center">
+                                                    <div class="flex-shrink pr-4">
+                                                        <div class="rounded-full p-5 bg-indigo-600"><i class="fas fa-tasks fa-2x fa-inverse"></i></div>
+                                                    </div>
+                                                    <div class="flex-1 text-right md:text-center">
+                                                        <h2 style="font-size:20px" class="font-bold uppercase text-gray-600">Reparations Externe</h2>
+                                                        <p class="font-bold text-3xl">
+                                                            <?php
+                                                            $tab = App\Http\Controllers\WebController::run();
+                                                            echo $tab['nombre_RE'];
+                                                            ?>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                            </div>
+                                            <!--/Metric Card-->
+                                        </div>
+ 
+
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                             <!--Metric Card-->
                                             <div class="bg-gradient-to-b from-pink-200 to-pink-100 border-b-4 border-pink-500 rounded-lg shadow-xl p-5">
@@ -107,7 +170,7 @@
                                                                   $tab = App\Http\Controllers\WebController::run();
                                                                   echo $tab['nombre_PR'];
                                                              ?>
-                                                        <span class="text-pink-500"><i class="fas fa-exchange-alt"></i></span></p>
+                                                        </p>
                                                     </div>
                                                    
 
@@ -142,7 +205,8 @@
                                                                   $tab = App\Http\Controllers\WebController::run();
                                                                   echo $tab['nombre_reclamation'];
                                                              ?>
-                                                             <i class="fas fa-caret-up"></i></span></p>
+                                                             
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <br>
@@ -154,14 +218,15 @@
                                                 
 
                                                 <?php
-                                            $tab = App\Http\Controllers\WebController::getReclamationsEnattente();
-                                            echo ("<h2 class='font-bold uppercase text-gray-800'>En Attente : ". $tab['Reclamations_En_Attente']."</h2>");
-                                       ?>
+                                                $tab = App\Http\Controllers\WebController::getReclamationsEnattente();
+                                                echo ("<h2  style='font-size:25px' class='font-bold uppercase text-gray-800'>En Attente : ". $tab['Reclamations_En_Attente']."</h2>");
+                                                ?>
                                             </div>
                                             <!--/Metric Card-->
                                         </div>
 
                                         
+
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                             <!--Metric Card-->
                                             <div class="bg-gradient-to-b from-blue-200 to-blue-100 border-b-4 border-blue-600 rounded-lg shadow-xl p-5">
@@ -180,63 +245,34 @@
                                                                   $tab = App\Http\Controllers\WebController::run();
                                                                   echo $tab['nombre_besoin'];
                                                              ?>
-                                                             <i class="fas fa-caret-up"></i></span></p>
+                                                             </p>
                                                     </div>
                                                 </div>
-                                                <br>
+                                                    
+                                               <br>
+                                               <br>
+                                               <br>
+                                               <br>
+                                               <br>
+                                               <br>
+                                                
                                                 <?php
-                                            $tab = App\Http\Controllers\WebController::getBesoinsEnattente();
-                                            echo ("<h2 class='font-bold uppercase text-gray-800'>En Attente : ". $tab['DemandeAchats_En_Attente']."</h2>");
-                                       ?>
-                                            </div>
+                                                    $tab = App\Http\Controllers\WebController::getBesoinsEnattente();
+                                                    echo ("<h2 style='font-size:25px' class='font-bold uppercase text-gray-800'>En Attente : ". $tab['DemandeAchats_En_Attente']."</h2>");
+                                                ?>
+                                             </div>
                                             <!--/Metric Card-->
                                         </div>
+
+                                       
+
                                     </div>
-                                    <!--/Services-->
+                                </div>
+                                    <br>  
+                                    <br>
+
                                     <div class="flex flex-row flex-wrap flex-grow mt-2">
-                                    <div style="width:100%">
-                                        <!--Graph Card-->
-                                        <div class="bg-white border-transparent rounded-lg shadow-xl">
-                                            <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                <h1 class="font-bold uppercase text-gray-600">Services</h1>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <table class="table table-hover mb-0">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Nom de Service</th>
-                                                        <th>Nombres des équipements</th>
-                                                        <th>Taux d'amortissement</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        $tab = App\Http\Controllers\WebController::getAmortissementOfAllServices();
-                                                        for($i=0;$i<$tab['compter'];$i++ ){
-                                                        echo ("<tr class='font-bold uppercase text-gray-800'>
-                                                            <td>". ($i+1) ."</td><td>"
-                                                            .$tab['noms_des_services'][$i].
-                                                            "</td><td>".$tab['nb_equipements_pcs'][$i].
-                                                            "</td><td <span class='badge badge-info badge-pill float-left mt-3'>" .(($tab['taux_dammort'][$i])*100).
-                                                            " % </span></td></tr>");
-                                                        }
-                                                        ?>
-                                                        
-        
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <!--/Graph Card-->
-                                    </div>
-                                    </div>
-                                    <!--/Services-->
-                                    <div class="flex flex-row flex-wrap flex-grow mt-2">
-                                        <div style="width:100%">
-                                    
-                    
-                                    
+                                        <div style="width:50%">
                                         <!--Graph Card-->
                                         <div class="bg-white border-transparent rounded-lg shadow-xl">
                                             <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
@@ -273,95 +309,53 @@
                                         </div>
                                         <!--/Graph Card-->
                                     </div>
-                    
-                                   <!-- <div class="w-full md:w-1/2 xl:w-1/3 p-6"> -->
-                                        <!--Graph Card-->
-                                        <!--<div class="bg-white border-transparent rounded-lg shadow-xl">
-                                            <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                <h5 class="font-bold uppercase text-gray-600">Graph</h5>
-                                            </div>
-                                            <div class="p-5"><canvas id="chartjs-4" class="chartjs" width="undefined" height="undefined"></canvas>
-                                                <script>
-                                                    new Chart(document.getElementById("chartjs-4"), {
-                                                        "type": "doughnut",
-                                                        "data": {
-                                                            "labels": ["P1", "P2", "P3"],
-                                                            "datasets": [{
-                                                                "label": "Issues",
-                                                                "data": [300, 50, 100],
-                                                                "backgroundColor": ["rgb(255, 99, 132)", "rgb(54, 162, 235)", "rgb(255, 205, 86)"]
-                                                            }]
-                                                        }
-                                                    });
-                                                </script>
-                                            </div>
-                                        </div> -->
-                                        <!--/Graph Card-->
-                                    </div>
-                    
-                                   <!-- <div class="w-full md:w-1/2 xl:w-1/3 p-6"> -->
-                                            <!--Table Card-->
-                                            <!--<div class="bg-white border-transparent rounded-lg shadow-xl">
+
+                                    <!--Services-->
+                                    <div class="flex flex-row flex-wrap flex-grow mt-2">
+                                        <div style="width:50% , height:50%" >
+                                            <!--Graph Card-->
+                                            <div class="bg-white border-transparent rounded-lg shadow-xl">
                                                 <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                    <h2 class="font-bold uppercase text-gray-600">Graph</h2>
+                                                    <h1 class="font-bold uppercase text-gray-600">Services</h1>
                                                 </div>
-                                                <div class="p-5">
-                                                    <table class="w-full p-5 text-gray-700">
-                                                        <thead>
-                                                        <tr>
-                                                            <th class="text-left text-blue-900">Name</th>
-                                                            <th class="text-left text-blue-900">Side</th>
-                                                            <th class="text-left text-blue-900">Role</th>
-                                                        </tr>
-                                                        </thead>
-                    
-                                                        <tbody>
-                                                        <tr>
-                                                            <td>Obi Wan Kenobi</td>
-                                                            <td>Light</td>
-                                                            <td>Jedi</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Greedo</td>
-                                                            <td>South</td>
-                                                            <td>Scumbag</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Darth Vader</td>
-                                                            <td>Dark</td>
-                                                            <td>Sith</td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                    
-                                                    <p class="py-2"><a href="#">See More issues...</a></p>
-                    
-                                                </div>
-                                            </div> -->
-                                            <!--/table Card-->
-                                        <!-- </div> -->
-                    
-                                    
-                                    <!--  <div class="w-full md:w-1/2 xl:w-1/3 p-6"> -->
-                                        <!--Advert Card-->
-                                        <!-- <div class="bg-white border-transparent rounded-lg shadow-xl">
-                                            <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                <h2 class="font-bold uppercase text-gray-600">Advert</h2>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover mb-0">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Nom de Service</th>
+                                                                <th>Nombres des équipements</th>
+                                                                <th>Taux d'amortissement</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
+                                                                $tab = App\Http\Controllers\WebController::getAmortissementOfAllServices();
+                                                                for($i=0;$i<$tab['compter'];$i++ ){
+                                                                echo ("<tr class='font-bold uppercase text-gray-800'>
+                                                                    <td>". ($i+1) ."</td><td>"
+                                                                    .$tab['noms_des_services'][$i].
+                                                                    "</td><td>".$tab['nb_equipements_pcs'][$i].
+                                                                    "</td><td <span class='badge badge-info badge-pill float-left mt-3'>" .(($tab['taux_dammort'][$i])*100).
+                                                                    " % </span></td></tr>");
+                                                                }
+                                                                ?>
+                                                                
+                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                             </div>
-                                            <div class="p-5 text-center">
+                                            <!--/Graph Card-->
+                                        </div>
+                                    </div>
+                                        <!--/Services-->
                     
-                    
-                                                <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CK7D52JJ&placement=wwwtailwindtoolboxcom" id="_carbonads_js"></script>
-                    
-                    
-                                            </div>
-                                        </div>-->
-                                        <!--/Advert Card-->
-                                   <!-- </div> -->
+                                 
         
-                                </div>
-                            </div>
-                        </section>
+                              
+                            
+                             </section>
                     
                         </div>
                         @if ($isServerSide)
