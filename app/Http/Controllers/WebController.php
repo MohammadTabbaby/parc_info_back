@@ -715,34 +715,86 @@ class WebController extends Controller
         DB::delete('DELETE FROM `model_histories` WHERE message="Deleting Equipement";');
 
         $Equipement = Equipement::where('reference', $reference)->first();
-        $n = 0;
-        $champ = [];
-        $post_old = [];
-        $post_new = [];
+        $post_agent = [];
+        $post_agent_old = [];
+        $post_agent_new = [];
+        $Service = [];
+        $Service_old = [];
+        $Service_new = [];
+        $affectation = [];
+        $affectation_old = [];
+        $affectation_new = [];
+        //compteurs
+        $n_post_agent = 0;
+        $n_Service = 0;
+        $n_affectation = 0;
         foreach ($Equipement->histories as $eq) {
 
             for ($i = 0; $i < count($eq->meta); $i++) {
                 if ($eq->meta[$i]['key'] == 'post_agent') {
-                    $champ[] = "Post / Agent";
-                    $post_old[] = $eq->meta[$i]['old'];
-                    $post_new[] = $eq->meta[$i]['new'];
+                    $post_agent[] = $eq->meta[$i]['old'];
+                    $post_agent[] = $eq->meta[$i]['new'];
                 }
                 if ($eq->meta[$i]['key'] == 'id_service') {
-                    $champ[] = "Service";
-                    $post_old[] = $eq->meta[$i]['old'];
-                    $post_new[] = $eq->meta[$i]['new'];
+                    $Service[] = $eq->meta[$i]['old'];
+                    $Service[] = $eq->meta[$i]['new'];
                 }
                 if ($eq->meta[$i]['key'] == 'date_affectation') {
-                    $p = substr($eq->meta[$i]['new'], 0, 10);
-                    if ($eq->meta[$i]['old'] != $p) {
-                        $champ[] = "Date D'affectation";
-                        $post_old[] = $eq->meta[$i]['old'];
-                        $post_new[] = $p;
-                    }
+                    $p = substr($eq->meta[$i]['old'], 0, 10);
+                    $p2 = substr($eq->meta[$i]['new'], 0, 10);
+                    $affectation[] = $p;
                 }
             }
-            $n = count($champ);
         }
+
+        for ($i = 0; $i < count($affectation) - 1; $i++) {
+            if ($affectation[$i] === $affectation[$i + 1]) {
+                array_splice($affectation, $i + 1, 1);
+            }
+        }
+
+        for ($i = 0; $i < count($post_agent) - 1; $i++) {
+            if ($post_agent[$i] == $post_agent[$i + 1]) {
+                array_splice($post_agent, $i + 1, 1);
+            }
+        }
+
+        if (count($Service) != count($post_agent)) {
+            for ($i = 0; $i < count($post_agent); $i++) {
+                array_push($Service, $equipement_fichedevie[0]['id_service']);
+                if (count($Service) == count($post_agent)) {
+                    break;
+                }
+            }
+        }
+
+        if (count($affectation) != count($post_agent)) {
+            for ($i = 0; $i < count($post_agent); $i++) {
+                array_push($affectation, $equipement_fichedevie[0]['date_affectation']);
+                if (count($affectation) == count($post_agent)) {
+                    break;
+                }
+            }
+        }
+
+        //return ($affectation);
+
+        $n_post_agent = count($post_agent);
+        $n_Service = count($Service);
+        $n_affectation = count($affectation);
+
+        //PREVENT EMPTY TABLE
+        if ($n_post_agent == 0) {
+            array_push($post_agent, $equipement_fichedevie[0]['post_agent']);
+            array_push($Service, $equipement_fichedevie[0]['id_service']);
+            array_push($affectation, $equipement_fichedevie[0]['date_affectation']);
+        }
+        //PREVENT EMPTY TABLE
+
+        $n_post_agent = count($post_agent);
+        $n_Service = count($Service);
+        $n_affectation = count($affectation);
+
         ////////////////////////////////////////////////// REP internes //////////////////////////////////////////////////////////////////////////////////////////////
         $desc = [];
         $cout = [];
@@ -757,9 +809,8 @@ class WebController extends Controller
             $cout[] = $detail->cout_reparation;
             $date[] = $detail->date_reparation;
             $id_reparartion = $detail->id;
-
-            $l = count($desc);
         }
+        $l = count($desc);
 
         $ReparationInternePieceDeRechange = ReparationInternePieceDeRechange::where('reparations_interne_id', $id_reparartion)->get();
         $piècesderechange = PieceDeRechange::all();
@@ -809,14 +860,27 @@ class WebController extends Controller
                 "nom_categorie" => $nom_categorie,
                 "fournisseur" => $id_fournisseur,
 
-                'champ' => $champ,
-                "post_old" => $post_old,
-                "post_new" => $post_new,
-                'n' => $n,
+
+                "CLEAN_post_agent" => $post_agent,
+                "CLEAN_Service" => $Service,
+                "CLEAN_affectation" => $affectation,
+
+                "post_agent_old" => $post_agent_old,
+                "post_agent_new" => $post_agent_new,
+                "Service_old" => $Service_old,
+                "Service_new" => $Service_new,
+                "affectation_old" => $affectation_old,
+                "affectation_new" => $affectation_new,
+
+                "Npost_agent" => $n_post_agent,
+                "NService" => $n_Service,
+                "Naffectation" => $n_affectation,
+
+
                 "desc" => $desc,
                 "cout" => $cout,
                 "date" => $date,
-                "l" => count($desc),
+                "l" => $l,
                 'mypiècesderechange' => $mypiècesderechange,
                 'mypiècesderechange_count' => $mypiècesderechange_count,
 
@@ -829,10 +893,8 @@ class WebController extends Controller
 
             ];
         //return $array;
-
         return View('fiche_de_vie')->with('array', $array);
     }
-
     
 
     //03 Avril 2022
@@ -1547,100 +1609,7 @@ class WebController extends Controller
      }
     }
 
-    public static function getAmortissementOfAllServices()
-    {
-        $service=Service::all();
-        //return ($service);
-        $noms_des_services = [];
-        $nb_equipements_pcs=[];
-        foreach($service as $s){
-            array_push($noms_des_services ,$s->nom_service);
-        }
-      
-        $taux_dammort = [];
-        foreach($noms_des_services as $i){
-            $equipement = Equipement::where('id_service', $i)->get();
-            //return($equipement);
-            $Nombres_Annee = ParametreApplication::where('Champ', 'Nombres_Annee')->get("Value");
-            //return($Nombres_Annee[0]['Value']);
-            $nb_equipements = $equipement->count();
-            array_push($nb_equipements_pcs, $nb_equipements);
-            $total_VCN = 0;
-            $total_tauxAmort = 0;
-            $total_coutachat = 0;
-            //return($equipement);
-            $equipements = [];
-            foreach ($equipement as $value) {
-                # code...
-                //return($equipement);
-                $categorie = Category::find($value->id_categorie);
-                $modele = Modele::find($value->id_modele);
-                $equipement->cout_initiale = $value->cout_initiale;
-                //return($equipement->cout_initiale);
-                $equipement->date_premier_utilisation = $value->date_premier_utilisation;
-                //return($value->date_premier_utilisation);
-                //$equipement->amortie_sur=$value->amortie_sur;
-                //return $equipement->amortie_sur;
-                $taux_dammortissement = 1 / $Nombres_Annee[0]['Value'];
-                //return($taux_dammortissement);
-                $date = date("Y/m/d");
-                $date1 = strtotime($date);
-                $date2 = strtotime($value->date_premier_utilisation);
-                //return $date;
-                $nb_jours_utilisation = ($date1 - $date2) / 86400;
-                //return($nb_jours_utilisation);
-                $mountant_a_amortir = $value->cout_initiale * $taux_dammortissement; //kol 3am 9adeh yon9es VCN
-                //return $mountant_a_amortir;
-                $X = ((($mountant_a_amortir * $nb_jours_utilisation) / 360) / 1000);
-                // return $X;
-                $VCN_Equipement = round(($value->cout_initiale - ($value->cout_initiale * $X)), 2); //VCN de chaque equipement
-                // return  $VCN_Equipement;
-                $Y = round((1 - $X), 2);
-                //return $Y;
-                //$equipements[]=$equipement;
-                // return[];
-                $equipements[] =
-                    [
-                        "reference" => $value->reference,
-                        "categorie" => $categorie->nom_categorie,
-                        "modele" => $modele->nom_modele,
-                        'VCN' => $VCN_Equipement,
-                        'taux_amortissement' => $Y,
-                        'cout_initiale' => $value->cout_initiale,
-                        'date_premier_utilisation' => $value->date_premier_utilisation
-                    ];
-
-                // return['equipements'=>$equipements, 'VCN'=>$VCN_Equipement , 'Taux Amortissement'=>$Y];
-                $total_VCN += round($VCN_Equipement, 2);
-                $total_tauxAmort += $Y;
-                $total_coutachat += $value->cout_initiale;
-            }
-
-            if($nb_equipements !=0){
-            $total_tauxAmort = $total_tauxAmort / $nb_equipements;
-            $total_VCN = $total_VCN / $nb_equipements;
-            }
-            else{
-            $total_tauxAmort = 0;
-            $total_VCN = 0;
-            }
-             array_push($taux_dammort,$total_tauxAmort);
-         
-        }
-        //calcul ended
-        $compter = count($noms_des_services);
-        $tab=
-        [
-            "taux_dammort"=>$taux_dammort,
-            "noms_des_services"=>$noms_des_services,
-            "nb_equipements_pcs"=>$nb_equipements_pcs,
-            "compter"=>$compter
-        ];
-
-        return($tab);
-        
-
-    }
+    
 
     public  function UpdateEtatReparationExterne()
     {
@@ -1701,6 +1670,7 @@ class WebController extends Controller
     }
 
 
+
     public static function getBesoinsEnattente(){
         $DemandeAchats = DemandeAchat::all();
         //return($Reclamations);
@@ -1720,62 +1690,139 @@ class WebController extends Controller
         return($tab);
 
     }
-
-
-    public static function getCountForEachCategorie(){
-        $Equipements = Equipement::all();
-        $tab_ids=[];
-        foreach($Equipements as $e){
-            array_push($tab_ids,$e->id_categorie);
-        }
-        //return($tab_ids);
-        $noms_categories=[];
-
-        foreach($tab_ids as $id){
-            $mesCategories = Category::all();
-            //return($mesCategories[0]);
-
-            for($i = 0 ; $i< count($mesCategories); $i++){
-            if($id == $mesCategories[$i]['id'] ){
-                array_push($noms_categories,$mesCategories[$i]['nom_categorie'] );
-            }
-            }
-        }
-        //return($noms_categories);
-        $tab=(array_count_values($noms_categories));
-        return($tab);
-      
-    }
     
-  /*  public static function getUsedPiece(){
 
+    public static function getUsedPiece()
+    {   
+        //nombre total des pièces de rechanges
         $total_nb_PR = \App\PieceDeRechange::count();
-        $tout_PR = PieceDeRechange::all();
-        $toutids=[];
-        $mycount = 0;
 
-        foreach($tout_PR as $t){
-            array_push($toutids ,$t['id']);
-
-        }
+        //Calcul des nombre des pièce utilisées
         $PR_MID = ReparationInternePieceDeRechange::all();
         $PR_MID_ids = [];
-
-        foreach($PR_MID as $pr){
-            array_push($PR_MID_ids ,$pr['piece_de_rechange_id']);
-
+        foreach ($PR_MID as $pr) {
+            array_push($PR_MID_ids, $pr['piece_de_rechange_id']);
         }
-        $nb_PR_MID_ids=array_unique($PR_MID_ids);
-        return($nb_PR_MID_ids);
+        $PR_MID_ids = array_unique($PR_MID_ids);
+        $n_of_usedPR =  count($PR_MID_ids);
 
-        for($i=0;$i<count($toutids);$i++){
+        // Result = total PR - PR utilisées
+        $Result = $total_nb_PR - $n_of_usedPR;
 
-            if($toutids[$i] == $PR_MID[$j]['piece_de_rechange_id']){
-                $mycount++;
+        return ($Result);
+    }
+
+    public static function getAmortissementOfAllServices()
+    {
+        $service = Service::all();
+        $noms_des_services = [];
+        $nb_equipements_pcs = [];
+        $outertab = [];
+        foreach ($service as $s) {
+            array_push($noms_des_services, $s->nom_service);
+        }
+
+        $taux_dammort = [];
+        foreach ($noms_des_services as $i) {
+            $equipement = Equipement::where('id_service', $i)->get();
+            $tab_ids = [];
+            foreach ($equipement as $e) {
+                array_push($tab_ids, $e->id_categorie);
             }
-            
+            $noms_categories = [];
 
-            
+            foreach ($tab_ids as $id) {
+                $mesCategories = Category::all();
+                for ($i = 0; $i < count($mesCategories); $i++) {
+                    if ($id == $mesCategories[$i]['id'] && $mesCategories[$i]['nom_categorie'] != 'Clavier' && $mesCategories[$i]['nom_categorie'] != 'sourie') {
+                        array_push($noms_categories, $mesCategories[$i]['nom_categorie']);
+                    }
+                }
+            }
+            $innertab = (array_count_values($noms_categories));
+            array_push($outertab, $innertab);
+ 
+            $Nombres_Annee = ParametreApplication::where('Champ', 'Nombres_Annee')->get("Value");
+            $nb_equipements = $equipement->count();
+            array_push($nb_equipements_pcs, $nb_equipements);
+            $total_VCN = 0;
+            $total_tauxAmort = 0;
+            $total_coutachat = 0;
+
+            $equipements = [];
+            foreach ($equipement as $value) {
+                $categorie = Category::find($value->id_categorie);
+                $modele = Modele::find($value->id_modele);
+                $equipement->cout_initiale = $value->cout_initiale;
+                $equipement->date_premier_utilisation = $value->date_premier_utilisation;
+                $taux_dammortissement = 1 / $Nombres_Annee[0]['Value'];
+                $date = date("Y/m/d");
+                $date1 = strtotime($date);
+                $date2 = strtotime($value->date_premier_utilisation);
+                $nb_jours_utilisation = ($date1 - $date2) / 86400;
+                $mountant_a_amortir = $value->cout_initiale * $taux_dammortissement; //kol 3am 9adeh yon9es VCN
+                $X = ((($mountant_a_amortir * $nb_jours_utilisation) / 360) / 1000);
+                $VCN_Equipement = round(($value->cout_initiale - ($value->cout_initiale * $X)), 2); //VCN de chaque equipement
+                $Y = round((1 - $X), 2);
+
+                $equipements[] =
+                    [
+                        "reference" => $value->reference,
+                        "categorie" => $categorie->nom_categorie,
+                        "modele" => $modele->nom_modele,
+                        'VCN' => $VCN_Equipement,
+                        'taux_amortissement' => $Y,
+                        'cout_initiale' => $value->cout_initiale,
+                        'date_premier_utilisation' => $value->date_premier_utilisation
+                    ];
+
+                $total_VCN += round($VCN_Equipement, 2);
+                $total_tauxAmort += $Y;
+                $total_coutachat += $value->cout_initiale;
+            }
+
+            if ($nb_equipements != 0) {
+                $total_tauxAmort = $total_tauxAmort / $nb_equipements;
+                $total_VCN = $total_VCN / $nb_equipements;
+            } else {
+                $total_tauxAmort = 0;
+                $total_VCN = 0;
+            }
+            array_push($taux_dammort, $total_tauxAmort);
         }
-    }*/
+        //calcul ended
+        $compter = count($noms_des_services);
+        $tab =
+            [
+                "taux_dammort" => $taux_dammort,
+                "noms_des_services" => $noms_des_services,
+                "equipments_details" => $outertab,
+                "nb_equipements_pcs" => $nb_equipements_pcs,
+                "compter" => $compter
+            ];
+
+     return($tab);
+    }
+
+    public static function getCountForEachCategorie()
+    {
+        $Equipements = Equipement::all();
+        $tab_ids = [];
+        foreach ($Equipements as $e) {
+            array_push($tab_ids, $e->id_categorie);
+        }
+        $noms_categories = [];
+        foreach ($tab_ids as $id) {
+            $mesCategories = Category::all();
+            for ($i = 0; $i < count($mesCategories); $i++) {
+                if ($id == $mesCategories[$i]['id'] && $mesCategories[$i]['nom_categorie'] != 'Clavier' && $mesCategories[$i]['nom_categorie'] != 'sourie') {
+                    array_push($noms_categories, $mesCategories[$i]['nom_categorie']);
+                }
+            }
+        }
+        $tab = (array_count_values($noms_categories));
+
+        return ($tab);
+    }
+
 }

@@ -151,6 +151,7 @@
                                             </div>
                                             <!--/Metric Card-->
                                         </div>
+
  
 
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
@@ -310,47 +311,51 @@
                                         <!--/Graph Card-->
                                     </div>
 
-                                    <!--Services-->
+                                    <!--/Services-->
                                     <div class="flex flex-row flex-wrap flex-grow mt-2">
-                                        <div style="width:50% , height:50%" >
+                                        <div style="width:100%">
                                             <!--Graph Card-->
                                             <div class="bg-white border-transparent rounded-lg shadow-xl">
                                                 <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
                                                     <h1 class="font-bold uppercase text-gray-600">Services</h1>
                                                 </div>
-                                                    <div class="table-responsive">
-                                                        <table class="table table-hover mb-0">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Nom de Service</th>
-                                                                <th>Nombres des équipements</th>
-                                                                <th>Taux d'amortissement</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                $tab = App\Http\Controllers\WebController::getAmortissementOfAllServices();
-                                                                for($i=0;$i<$tab['compter'];$i++ ){
-                                                                echo ("<tr class='font-bold uppercase text-gray-800'>
-                                                                    <td>". ($i+1) ."</td><td>"
-                                                                    .$tab['noms_des_services'][$i].
-                                                                    "</td><td>".$tab['nb_equipements_pcs'][$i].
-                                                                    "</td><td <span class='badge badge-info badge-pill float-left mt-3'>" .(($tab['taux_dammort'][$i])*100).
-                                                                    " % </span></td></tr>");
-                                                                }
-                                                                ?>
-                                                                
-                
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover mb-0">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Nom de Service</th>
+                                                            <th>équipements</th>
+                                                            <th>Taux d'amortissement</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            $tab = App\Http\Controllers\WebController::getAmortissementOfAllServices();
+                                                            for($i=0;$i<$tab['compter'];$i++ ){
+                                                            echo ("<tr class='font-bold uppercase text-gray-800'>
+                                                                <td>". ($i+1) ."</td><td>"
+                                                                .$tab['noms_des_services'][$i].
+                                                                "</td><td>");
+                                                                foreach ( $tab['equipments_details'][$i] as $key => $value ) {
+                                                                    print($key .':'.$value.'<br>');
+                                                                   }
+                                                           
+    
+                                                            echo ("</td><td> <span class='badge badge-info badge-pill float-left mt-3'>" 
+                                                            .(($tab['taux_dammort'][$i])*100)." % </span></td></tr>");
+                                                            }
+                                                            ?>
+                                                            <!--"Total = ".$tab['nb_equipements_pcs'][$i].-->                                                
+            
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                             <!--/Graph Card-->
                                         </div>
-                                    </div>
+                                        </div>
                                         <!--/Services-->
-                    
                                  
         
                               

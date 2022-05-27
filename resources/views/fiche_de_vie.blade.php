@@ -21,7 +21,7 @@
 
 <body>
     <div class="page-content page-container">
-        <button class="btn btn-primary" id="download"> download pdf</button>
+        <button class="btn btn-primary" id="download"> telecharger</button>
         <div class="padding">
             <div class="row container d-flex justify-content-center">
                 <div class="col-lg-8 grid-margin stretch-card">
@@ -47,38 +47,38 @@
                                         </b>
                                     </div>
                                 </div>
-                                <hr size="8" />
+                                <hr style="width:90%; height:5px;" />
                                 <div class="row container d-flex justify-content-center">
-                                    <h2>FICHE DE VIE ÉQUIPEMENT</h2><br><br><br>
+                                    <br><br>
+                                    <h2>FICHE DE VIE ÉQUIPEMENT</h2><br><br>
                                 </div>
                                 <h4> Identité du materiel : </h4>
                                 <div class=" table-responsive">
-                                    <table class="table" border="2">
+                                    <table class="table" border="2" style="width:100%">
                                         <thead>
-                                            <tr>
-                                                <td><b>Identifiant / Référence : </b> {{$array['reference']}} </td>
-                                                <td><b>Fournisseur : </b>{{$array['fournisseur']}}</td>
-
+                                            <tr style="height : 5px;">
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Identifiant / Référence : </b> {{$array['reference']}} </td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Fournisseur : </b>{{$array['fournisseur']}}</td>
                                             </tr>
                                         </thead>
                                         <thead>
-                                            <tr>
-                                                <td><b>Type / catégorie :</b> {{$array['nom_categorie']}}</td>
-                                                <td><b>Date d'achat :</b> {{$array['date_achat']}}</td>
+                                            <tr style="height : 5px;">
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Type / catégorie :</b> {{$array['nom_categorie']}}</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Date d'achat :</b> {{$array['date_achat']}}</td>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td><b>Marque :</b> {{$array['marque']}} </td>
-                                                <td><b>Date de Mise en Service :</b> {{$array['date_mis']}}</td>
+                                            <tr style="height : 5px;">
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Marque :</b> {{$array['marque']}} </td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Date de Mise en Service :</b> {{$array['date_mis']}}</td>
                                             </tr>
-                                            <tr>
-                                                <td><b>Modèle :</b> {{$array['nom_modele']}}</td>
-                                                <td><b>Grantie jusqu'au :</b> {{$array['garentie']}}</td>
+                                            <tr style="height : 5px;">
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Modèle :</b> {{$array['nom_modele']}}</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Grantie :</b> {{$array['garentie']}} ans</td>
                                             </tr>
-                                            <tr>
-                                                <td><b>Cout initial :</b> {{$array['cout_initiale']}} TND</td>
-                                                <td><b>Etat :</b> {{$array['etat']}}</td>
+                                            <tr style="height : 5px;">
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Cout initial :</b> {{$array['cout_initiale']}} TND</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Etat :</b> {{$array['etat']}}</td>
                                             </tr>
                                     </table>
                                 </div>
@@ -88,33 +88,45 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4> Affectations : </h4>
-                                <br>
                                 <div class=" table-responsive">
                                     <table class="table" border="2">
                                         <thead>
-                                            <tr>
-                                                <td><b>Champ</b></td>
-                                                <td><b>De</b></td>
-                                                <td><b>Vers</b></td>
+                                            <tr style="height : 5px;">
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Service</b></td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Post/Agent</b></td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Date</b></td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $champ = $array['champ'];
-                                            $w = $array['n'];
+                                            $CLEAN_post_agent = $array['CLEAN_post_agent'];
+                                            $CLEAN_Service = $array['CLEAN_Service'];
+                                            $CLEAN_affectation = $array['CLEAN_affectation'];
 
-                                            $post_old = $array['post_old'];
-                                            $post_new = $array['post_new'];
+                                            $post_agent_old = $array['post_agent_old'];
+                                            $post_agent_new = $array['post_agent_new'];
+                                            $Service_old = $array['Service_old'];
+                                            $Service_new = $array['Service_new'];
+                                            $affectation_old = $array['affectation_old'];
+                                            $affectation_new = $array['affectation_new'];
+
+                                            $Npost_agent = $array['Npost_agent'];
+                                            $NService = $array['NService'];
+                                            $Naffectation = $array['Naffectation'];
                                             ?>
 
-                                            @for($i=0;$i<$w;$i++) <tr>
-                                                <td>{{$champ[$i]}}</td>
-                                                <td>{{$post_old[$i]}}</td>
-                                                <td>{{$post_new[$i]}}</td>
+                                            @for($i=0;$i<$Npost_agent;$i++) <tr>
 
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">{{$CLEAN_Service[$i]}}</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">
+                                                    {{$CLEAN_post_agent[$i]}}
+                                                </td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">
+                                                    {{$CLEAN_affectation[$i]}}
+                                                </td>
                                                 </tr>
-
                                                 @endfor
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -123,15 +135,14 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4> Réparations Externes : </h4>
-                                <br>
                                 <div class=" table-responsive">
                                     <table class="table" border="2">
                                         <thead>
-                                            <tr>
-                                                <th><b>Date Réparation</b></th>
-                                                <th><b>Reference Facture</b></th>
-                                                <th><b>Panne</b></th>
-                                                <th><b>Cout Réparation</b></th>
+                                            <tr style="height : 5px;">
+                                                <th style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Date Réparation</b></th>
+                                                <th style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Reference Facture</b></th>
+                                                <th style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Panne</b></th>
+                                                <th style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Cout Réparation</b></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -142,12 +153,12 @@
                                             $Couts = $array['Couts'];
                                             $Dates = $array['Dates'];
                                             ?>
-                                            @for($j=0;$j<$counter;$j++) <tr>
+                                            @for($j=0;$j<$counter;$j++) <tr style="height : 5px;">
 
-                                                <td>{{$Dates[$j]}}</td>
-                                                <td>{{$references_factures[$j]}} </td>
-                                                <td>{{$Pannes[$j]}}</td>
-                                                <td>{{$Couts[$j]}} TND</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">{{$Dates[$j]}}</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">{{$references_factures[$j]}} </td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">{{$Pannes[$j]}}</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">{{$Couts[$j]}} TND</td>
 
                                                 </tr>
 
@@ -160,15 +171,14 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4> Réparations Internes : </h4>
-                                <br>
                                 <div class=" table-responsive">
                                     <table class="table" border="2">
                                         <thead>
-                                            <tr>
-                                                <th><b>Date</b></th>
-                                                <th><b>Pièces des réchanges</b></th>
-                                                <th><b>Cout de Réparation</b></th>
-                                                <th><b>Description</b></th>
+                                            <tr style="height : 5px;">
+                                                <th style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Date</b></th>
+                                                <th style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Pièces des réchanges</b></th>
+                                                <th style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Cout de Réparation</b></th>
+                                                <th style="font-size: 9px; line-height: 9px; padding : 8.5"><b>Description</b></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -180,15 +190,15 @@
                                             $cout = $array['cout'];
                                             $date = $array['date'];
                                             ?>
-                                            @for($x=0;$x<$l;$x++) <tr>
+                                            @for($x=0;$x<$l;$x++) <tr style="height : 5px;">
 
-                                                <td>{{$date[$x]}}</td>
-                                                <td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">{{$date[$x]}}</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">
 
-                                                    @for($i=0;$i<$mypiècesderechange_count;$i++) {{$mypiècesderechange[$i]}} <br> @endfor </td>
+                                                    @for($i=0;$i<$mypiècesderechange_count;$i++) {{$mypiècesderechange[$i]}} || @endfor </td>
 
-                                                <td>{{$cout[$x]}} TND</td>
-                                                <td>{{$desc[$x]}}</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">{{$cout[$x]}} TND</td>
+                                                <td style="font-size: 9px; line-height: 9px; padding : 8.5">{{$desc[$x]}}</td>
 
                                                 </tr>
 
