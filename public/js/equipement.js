@@ -10,6 +10,8 @@ $(document).ready
                 var reference = $('input[name="reference"]').val();
                 //add id
                 var id = $('input[name="id"]').val();
+                var etat = $('select[name="etat"]').val();
+                
                 if(id === "")
                     id = null;
                 //ajax
@@ -23,7 +25,8 @@ $(document).ready
                         data:
                         {
                             'reference' : reference,
-                            'id' : id
+                            'id' : id,
+                            'etat':etat
                         },
                         success: 
                         function(result)

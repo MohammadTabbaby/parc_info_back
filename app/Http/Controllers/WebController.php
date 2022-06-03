@@ -30,101 +30,92 @@ use App\User;
 use App\Reclamation;
 use App\DemandeAchat;
 use App\ParametreApplication;
+use App\Reform;
 use Auth;
 use Searchable;
 use DB;
 
 class WebController extends Controller
 {
-    
+
 
     public static function test()
     {
-        $reparation_externe= ReparationsExterne::all();
+        $reparation_externe = ReparationsExterne::all();
         $tab = [];
-        foreach($reparation_externe as $v)
-        {
+        foreach ($reparation_externe as $v) {
             $tab[] = $v->id_equipement;
         }
         return array_unique($tab);
     }
-//verifReferenceReparationExterne
+    //verifReferenceReparationExterne
 
     public function verifReferenceReparationExterne(Request $request)
     {
-        try
-        {
-            if(!isset($request->id))
-        {
-            $r = ReparationsExterne::where('id_equipement', $request->id_equipement)->where('reparer',1)->first();
-            if(isset($r))
+        try {
+            if ($this->EquipementReformeReference($request->id_equipement))
             {
-                return response()->json
-                (
+                return response()->json(
                     [
                         "code" => 0,
                         "status" => "error",
-                        "message" => "Equipement en cours de réparation"
+                        "message" => "Cet equipement est en reforme"
                     ]
                 );
             }
-            else
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "Equipement non existe"
-                    ]
-                );
+            if (!isset($request->id)) {
+                $r = ReparationsExterne::where('id_equipement', $request->id_equipement)->where('reparer', 1)->first();
+                if (isset($r)) {
+                    return response()->json(
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Equipement en cours de réparation"
+                        ]
+                    );
+                } else {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Equipement non existe"
+                        ]
+                    );
+                }
+            } else {
+                $r = Equipement::where('reference', $request->reference)->where('id', $request->id)->first();
+                if (isset($r)) {
+                    $this->UpdateEtatReparationExterne();
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cet equipement est effectué avec succès"
+                        ]
+                    );
+                }
+
+                $r = Equipement::where('reference', $request->reference)->first();
+                if (isset($r)) {
+                    return response()->json(
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Equipement existe"
+                        ]
+                    );
+                } else {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Equipement non existe"
+                        ]
+                    );
+                }
             }
-        }
-        else
-        {
-            $r = Equipement::where('reference', $request->reference)->where('id',$request->id)->first();
-            if(isset($r))
-            {
-                $this->UpdateEtatReparationExterne();
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "La mise à jour de cet equipement est effectué avec succès"
-                    ]
-                );
-            }
-            
-            $r = Equipement::where('reference', $request->reference)->first();
-            if(isset($r))
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 0,
-                        "status" => "error",
-                        "message" => "Equipement existe"
-                    ]
-                );
-            }
-            else
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "Equipement non existe"
-                    ]
-                );
-            }
-        }
-        }
-        catch(\Exception $e)
-        {
-            return response()->json
-            (
+        } catch (\Exception $e) {
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -134,115 +125,172 @@ class WebController extends Controller
         }
     }
 
- //verifReferenceEquipements
-
- public function verifReferenceEquipements(Request $request)
- {
-    try
+    //verifReferenceReparationInterne
+    public function verifReferenceReparationInterne(Request $request)
     {
-        if(!isset($request->id))
-        {
-            $r = Equipement::where('reference', $request->reference)->first();
-            if(isset($r))
+        try {
+            if ($this->EquipementReformeId($request->id_equipement))
             {
-                return response()->json
-                (
+                return response()->json(
                     [
                         "code" => 0,
                         "status" => "error",
-                        "message" => "Equipement existe"
+                        "message" => "Cet equipement est en reforme"
                     ]
                 );
             }
-            else
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "Equipement non existe"
-                    ]
-                );
-            }
-        }
-        else
-        {
-            $r = Equipement::where('reference', $request->reference)->where('id',$request->id)->first();
-            if(isset($r))
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "La mise à jour de cet equipement est effectué avec succès"
-                    ]
-                );
-            }
-            
-            $r = Equipement::where('reference', $request->reference)->first();
-            if(isset($r))
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 0,
-                        "status" => "error",
-                        "message" => "Equipement existe"
-                    ]
-                );
-            }
-            else
-            {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "Equipement non existe"
-                    ]
-                );
-            }
-        }
-    }
-    catch(\Exception $e)
-    {
-        return response()->json
-        (
-            [
-                "code" => 0,
-                "status" => "exception",
-                "message" => "Exception"
-            ]
-        );
-    }
- }
+            if (!isset($request->id)) {
+                $r = ReparationsInterne::where('id_equipement', $request->id_equipement)->where('reparer', 1)->first();
+                if (isset($r)) {
+                    return response()->json(
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Equipement en cours de réparation"
+                        ]
+                    );
+                } else {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Equipement non existe"
+                        ]
+                    );
+                }
+            } else {
+                $r = Equipement::where('reference', $request->reference)->where('id', $request->id)->first();
+                if (isset($r)) {
+                    $this->UpdateEtatReparationInterne();
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cet equipement est effectué avec succès"
+                        ]
+                    );
+                }
 
-   //verifReferenceBondeCommande
+                $r = Equipement::where('reference', $request->reference)->first();
+                if (isset($r)) {
+                    return response()->json(
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Equipement existe"
+                        ]
+                    );
+                } else {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Equipement non existe"
+                        ]
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
+
+    //verifReferenceEquipements
+
+    public function verifReferenceEquipements(Request $request)
+    {
+        try {
+            if (!isset($request->id)) {
+                $r = Equipement::where('reference', $request->reference)->first();
+                if (isset($r)) {
+                    return response()->json(
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Equipement existe"
+                        ]
+                    );
+                } else {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Equipement non existe"
+                        ]
+                    );
+                }
+            } 
+            else {
+                $r = Equipement::where('reference', $request->reference)->where('id', $request->id)->first();
+                if (isset($r)) {
+                    //******Insert Reform*********//
+                    if (isset($request->etat))
+                    {   
+                        if($request->etat=='Reforme')
+                             $this->AddEquipementReform($r->id);
+                    }
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cet equipement est effectué avec succès"
+                        ]
+                    );
+                }
+
+                $r = Equipement::where('reference', $request->reference)->first();
+                if (isset($r)) {
+                    return response()->json(
+                        [
+                            "code" => 0,
+                            "status" => "error",
+                            "message" => "Equipement existe"
+                        ]
+                    );
+                } else {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "Equipement non existe"
+                        ]
+                    );
+                }
+            }
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    "code" => 0,
+                    "status" => "exception",
+                    "message" => "Exception"
+                ]
+            );
+        }
+    }
+
+    //verifReferenceBondeCommande
 
     public function verifReferenceBondeCommande(Request $request)
     {
-        try
-        {
-            if(!isset($request->id))
-            {
+        try {
+            if (!isset($request->id)) {
                 $r = BondeCommande::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Bon de Commande existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -250,14 +298,10 @@ class WebController extends Controller
                         ]
                     );
                 }
-            }
-            else
-            {
-                $r = BondeCommande::where('reference', $request->reference)->where('id',$request->id)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+            } else {
+                $r = BondeCommande::where('reference', $request->reference)->where('id', $request->id)->first();
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -265,23 +309,18 @@ class WebController extends Controller
                         ]
                     );
                 }
-                
+
                 $r = BondeCommande::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Bon de Commande existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -290,11 +329,8 @@ class WebController extends Controller
                     );
                 }
             }
-        }
-        catch(\Exception $e)
-        {
-            return response()->json
-            (
+        } catch (\Exception $e) {
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -306,30 +342,23 @@ class WebController extends Controller
 
 
     //verifReferenceBondeLivraison BondeLivraison
-    
+
     public function verifReferenceBondeLivraison(Request $request)
     {
-        try
-        {
-            if(!isset($request->id))
-            {
+        try {
+            if (!isset($request->id)) {
                 $r = BondeLivraison::where('reference', $request->reference)->first();
-                
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Bon de Livraison existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -337,14 +366,10 @@ class WebController extends Controller
                         ]
                     );
                 }
-            }
-            else
-            {
-                $r = BondeLivraison::where('reference', $request->reference)->where('id',$request->id)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+            } else {
+                $r = BondeLivraison::where('reference', $request->reference)->where('id', $request->id)->first();
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -352,23 +377,18 @@ class WebController extends Controller
                         ]
                     );
                 }
-                
+
                 $r = BondeLivraison::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Bon de Livraison existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -377,11 +397,8 @@ class WebController extends Controller
                     );
                 }
             }
-        }
-        catch(\Exception $e)
-        {
-            return response()->json
-            (
+        } catch (\Exception $e) {
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -395,26 +412,19 @@ class WebController extends Controller
 
     public function verifReferenceDevis(Request $request)
     {
-        try
-        {
-            if(!isset($request->id))
-            {
+        try {
+            if (!isset($request->id)) {
                 $r = Devi::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Devi existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -422,14 +432,10 @@ class WebController extends Controller
                         ]
                     );
                 }
-            }
-            else
-            {
-                $r = Devi::where('reference', $request->reference)->where('id',$request->id)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+            } else {
+                $r = Devi::where('reference', $request->reference)->where('id', $request->id)->first();
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -437,23 +443,18 @@ class WebController extends Controller
                         ]
                     );
                 }
-                
+
                 $r = Devi::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Devi existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -462,11 +463,8 @@ class WebController extends Controller
                     );
                 }
             }
-        }
-        catch(\Exception $e)
-        {
-            return response()->json
-            (
+        } catch (\Exception $e) {
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -479,26 +477,19 @@ class WebController extends Controller
 
     public function verifReferencePieceDeRechange(Request $request)
     {
-        try
-        {
-            if(!isset($request->id))
-            {
+        try {
+            if (!isset($request->id)) {
                 $r = PieceDeRechange::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Bon de Commande existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -506,14 +497,10 @@ class WebController extends Controller
                         ]
                     );
                 }
-            }
-            else
-            {
-                $r = PieceDeRechange::where('reference', $request->reference)->where('id',$request->id)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+            } else {
+                $r = PieceDeRechange::where('reference', $request->reference)->where('id', $request->id)->first();
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -521,23 +508,18 @@ class WebController extends Controller
                         ]
                     );
                 }
-                
+
                 $r = PieceDeRechange::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Bon de Commande existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -546,11 +528,8 @@ class WebController extends Controller
                     );
                 }
             }
-        }
-        catch(\Exception $e)
-        {
-            return response()->json
-            (
+        } catch (\Exception $e) {
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -564,26 +543,19 @@ class WebController extends Controller
 
     public function verifReferenceFacture(Request $request)
     {
-        try
-        {
-            if(!isset($request->id))
-            {
+        try {
+            if (!isset($request->id)) {
                 $r = Facture::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "La reference de cette facture est existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -591,14 +563,10 @@ class WebController extends Controller
                         ]
                     );
                 }
-            }
-            else
-            {
-                $r = Facture::where('reference', $request->reference)->where('id',$request->id)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+            } else {
+                $r = Facture::where('reference', $request->reference)->where('id', $request->id)->first();
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -606,23 +574,18 @@ class WebController extends Controller
                         ]
                     );
                 }
-                
+
                 $r = Facture::where('reference', $request->reference)->first();
-                if(isset($r))
-                {
-                    return response()->json
-                    (
+                if (isset($r)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Facture existe"
                         ]
                     );
-                }
-                else
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -631,11 +594,8 @@ class WebController extends Controller
                     );
                 }
             }
-        }
-        catch(\Exception $e)
-        {
-            return response()->json
-            (
+        } catch (\Exception $e) {
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -645,42 +605,38 @@ class WebController extends Controller
         }
     }
 
-    public function FicheSortie ($id)
-    {   
-        $fiche_sortie=FicheSorty::find($id);
+    public function FicheSortie($id)
+    {
+        $fiche_sortie = FicheSorty::find($id);
 
-        $date=Carbon::parse($fiche_sortie->created_at)->format("d/m/Y");
-        $equipement_fichesorties=EquipementFicheSorty::where('fiche_sorty_id',$id)->get();
+        $date = Carbon::parse($fiche_sortie->created_at)->format("d/m/Y");
+        $equipement_fichesorties = EquipementFicheSorty::where('fiche_sorty_id', $id)->get();
         //recherche fournisseur w ili tal9ah t7otou fi array
-       $fournisseur = Fournisseur::find( $fiche_sortie->id_fournisseur);
+        $fournisseur = Fournisseur::find($fiche_sortie->id_fournisseur);
         $equipements = [];
-        foreach($equipement_fichesorties as $v)
-        {
+        foreach ($equipement_fichesorties as $v) {
             $reparation_externe = ReparationsExterne::find($v->reparations_externe_id);
-            if(isset($reparation_externe))
-            {
+            if (isset($reparation_externe)) {
                 $equipement = Equipement::where('reference', $reparation_externe->id_equipement)->first();
                 $equipement->modele = Modele::find($equipement->id_modele);
-               // return $equipement->modele;
+                // return $equipement->modele;
                 $equipement->categorie = Category::find($equipement->id_categorie);
-                $equipement->service = Service::where('nom_service',$equipement->id_service)->first();
+                $equipement->service = Service::where('nom_service', $equipement->id_service)->first();
                 //return $equipement->service ;
                 $equipements[] = $equipement;
-
             }
         }
-        $array=
-        [
-            "date"=>$date,
-            "equipement_fichesorties" => $equipement_fichesorties,
-            "equipements" => $equipements,
-            "fournisseur" => $fournisseur->nom_fourniseur,
+        $array =
+            [
+                "date" => $date,
+                "equipement_fichesorties" => $equipement_fichesorties,
+                "equipements" => $equipements,
+                "fournisseur" => $fournisseur->nom_fourniseur,
 
-            "total" => count($equipements)
-        ];
-        
-        return View('fiche_sortie')->with('array',$array);
+                "total" => count($equipements)
+            ];
 
+        return View('fiche_sortie')->with('array', $array);
     }
 
     public function FicheDeVie($id)
@@ -895,175 +851,151 @@ class WebController extends Controller
         //return $array;
         return View('fiche_de_vie')->with('array', $array);
     }
-    
+
 
     //03 Avril 2022
     public function getEquipementByRefBonCommande($ref_breference_BC)
     {
-        
-            $equipementBondecommande = EquipementBondecommande::where('reference_bc',$ref_breference_BC)->get();
-            $tabEquipement = [];
-            $total=0;
-            foreach($equipementBondecommande as $v)
-            {
-                $re=ReparationsExterne::find($v->id_reparation_externe);
-                $equipement = Equipement::where('reference',$re->id_equipement)->first();
-                //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
-                $categorie=Category::find($equipement->id_categorie);
-                $modele=Modele::find($equipement->id_modele);
-                $service=Service::find($equipement->id_service);
-                $tabEquipement[]= 
-                    [
-                        "reference"=>$equipement->reference ,
-                         "categorie"=>$categorie->nom_categorie ,
-                         "modele"=>$modele->nom_modele ,
-                         "service"=>$equipement->id_service ,
-                         "cout"=>$v->cout
-                    ];
-                
-                    $total+=$v->cout;
-            }
-            return["equipements"=>$tabEquipement,"total"=>$total];
-            //return $tabEquipement;
-       
+
+        $equipementBondecommande = EquipementBondecommande::where('reference_bc', $ref_breference_BC)->get();
+        $tabEquipement = [];
+        $total = 0;
+        foreach ($equipementBondecommande as $v) {
+            $re = ReparationsExterne::find($v->id_reparation_externe);
+            $equipement = Equipement::where('reference', $re->id_equipement)->first();
+            //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
+            $categorie = Category::find($equipement->id_categorie);
+            $modele = Modele::find($equipement->id_modele);
+            $service = Service::find($equipement->id_service);
+            $tabEquipement[] =
+                [
+                    "reference" => $equipement->reference,
+                    "categorie" => $categorie->nom_categorie,
+                    "modele" => $modele->nom_modele,
+                    "service" => $equipement->id_service,
+                    "cout" => $v->cout
+                ];
+
+            $total += $v->cout;
+        }
+        return ["equipements" => $tabEquipement, "total" => $total];
+        //return $tabEquipement;
+
     }
 
     public function getEquipementByRefBonLivraison($ref_breference_BL)
     {
-        try
-        {
-            $equipementBondelivraison = DetailBonDeLivraison::where('ref_bl',$ref_breference_BL)->get();
-           //return $equipementBondelivraison;
+        try {
+            $equipementBondelivraison = DetailBonDeLivraison::where('ref_bl', $ref_breference_BL)->get();
+            //return $equipementBondelivraison;
             $tabEquipement = [];
-            $total=0;
-            foreach($equipementBondelivraison as $v)
-            {
-                $re=ReparationsExterne::find($v->equipement);
-                $equipement = Equipement::where('reference',$re->id_equipement)->first();
+            $total = 0;
+            foreach ($equipementBondelivraison as $v) {
+                $re = ReparationsExterne::find($v->equipement);
+                $equipement = Equipement::where('reference', $re->id_equipement)->first();
                 //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
-                $categorie=Category::find($equipement->id_categorie);
-                $modele=Modele::find($equipement->id_modele);
-                $service=Service::find($equipement->id_service);
-                $tabEquipement[]= 
+                $categorie = Category::find($equipement->id_categorie);
+                $modele = Modele::find($equipement->id_modele);
+                $service = Service::find($equipement->id_service);
+                $tabEquipement[] =
                     [
-                        "reference"=>$equipement->reference ,
-                         "categorie"=>$categorie->nom_categorie ,
-                         "modele"=>$modele->nom_modele ,
-                         "service"=>$equipement->id_service ,
-                         "cout"=>$v->cout
+                        "reference" => $equipement->reference,
+                        "categorie" => $categorie->nom_categorie,
+                        "modele" => $modele->nom_modele,
+                        "service" => $equipement->id_service,
+                        "cout" => $v->cout
                     ];
-                
-                    $total+=$v->cout;
+
+                $total += $v->cout;
             }
-            return["equipements"=>$tabEquipement,"total"=>$total];
+            return ["equipements" => $tabEquipement, "total" => $total];
             //return $tabEquipement;
+        } catch (Exception $e) {
+            return [];
         }
-        catch(Exception $e)
-        {
-            return []; 
-        } 
     }
 
-    public function DetailBonDeCommande ($ref_breference_BC)
+    public function DetailBonDeCommande($ref_breference_BC)
     {   //bech nchouf est ce que user connecter walla !!
-        if (!Auth::check()) 
-        {
+        if (!Auth::check()) {
             return redirect('/admin/login');
-        }
-        else 
-        {
+        } else {
             $array = $this->getEquipementByRefBonCommande($ref_breference_BC);
-            return View('detailBonDeCommande')->with('array',$array);;  
+            return View('detailBonDeCommande')->with('array', $array);;
         }
     }
 
 
 
     //10/04/2022
-    public function DetailBonDeLivraison ($ref_breference_BL)
+    public function DetailBonDeLivraison($ref_breference_BL)
     {   //bech nchouf est ce que user connecter walla !!
-        if (!Auth::check()) 
-        {
+        if (!Auth::check()) {
             return redirect('/admin/login');
-        }
-        else 
-        {
+        } else {
             $array = $this->getEquipementByRefBonLivraison($ref_breference_BL);
-            return View('detailBonDeLivraison')->with('array',$array);;  
+            return View('detailBonDeLivraison')->with('array', $array);;
         }
     }
 
-   // 11/04/2022
+    // 11/04/2022
 
-    public function getDetailFacture ($reference_facture)
+    public function getDetailFacture($reference_facture)
     {
-        try 
-        {
+        try {
             //code...
-            $detailFacture=DetailFacture::where('reference_facture',$reference_facture)->get();
-           // return($detailFacture);
-           $equipements=[];
-           $total=0;
-           foreach ($detailFacture as $value) {
-               # code...
-             $equipement= Equipement::where('reference',$value->reference)->first();
-             $panne = Panne::find($value->panne);
-             $equipement->panne=$value->panne;
-             $equipement->montant_TTC = $value->prix_HT+($value->prix_HT * $value->tva);
-             $equipement->tva = $value->tva;
-             $equipement->prix_HT = $value->prix_HT;
-             $equipements[]=$equipement;
-             $total+=$equipement->montant_TTC ;
-           }
-           //return($equipements);
-           return['equipements'=>$equipements, 'total'=>$total+0.6];
-        } 
-        catch (Exception $e) 
-        {
+            $detailFacture = DetailFacture::where('reference_facture', $reference_facture)->get();
+            // return($detailFacture);
+            $equipements = [];
+            $total = 0;
+            foreach ($detailFacture as $value) {
+                # code...
+                $equipement = Equipement::where('reference', $value->reference)->first();
+                $panne = Panne::find($value->panne);
+                $equipement->panne = $value->panne;
+                $equipement->montant_TTC = $value->prix_HT + ($value->prix_HT * $value->tva);
+                $equipement->tva = $value->tva;
+                $equipement->prix_HT = $value->prix_HT;
+                $equipements[] = $equipement;
+                $total += $equipement->montant_TTC;
+            }
+            //return($equipements);
+            return ['equipements' => $equipements, 'total' => $total + 0.6];
+        } catch (Exception $e) {
             return [];
         }
     }
-    
+
     public function Facture($reference_facture)
     {
         //bech nchouf est ce que user connecter walla !!
-        if (!Auth::check()) 
-        {
+        if (!Auth::check()) {
             return redirect('/admin/login');
-        }
-        else 
-        {
+        } else {
             $array = $this->getDetailFacture($reference_facture);
-            return View('facture')->with('array',$array);
+            return View('facture')->with('array', $array);
         }
     }
 
     //15/04/2022 controle sur ref equipmenrnt et ref BC 
 
     public function VerifDetailBondecommande(Request $request)
-    {       
-        try 
-        {
-           if (!isset($request->id) ) 
-           {
+    {
+        try {
+            if (!isset($request->id)) {
                 //insert
-                $equipementBondecommande=EquipementBondecommande::where('id_reparation_externe',$request-> id_reparation_externe)->where('reference_BC',$request->reference_BC)->first();
+                $equipementBondecommande = EquipementBondecommande::where('id_reparation_externe', $request->id_reparation_externe)->where('reference_BC', $request->reference_BC)->first();
                 // return $equipementBondecommande;
-                if (isset($equipementBondecommande))
-                {
-                    return response()->json
-                    (
+                if (isset($equipementBondecommande)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Cette bon de commende est existe"
                         ]
                     );
-                } 
-                else 
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -1071,44 +1003,33 @@ class WebController extends Controller
                         ]
                     );
                 }
-           } 
-           else 
-           {
-               //update
-               $equipementBondecommande=EquipementBondecommande::where('id_reparation_externe',$request->id_reparation_externe)
-                    ->where('reference_BC',$request->reference_BC)
-                    ->where('id',$request->id)
+            } else {
+                //update
+                $equipementBondecommande = EquipementBondecommande::where('id_reparation_externe', $request->id_reparation_externe)
+                    ->where('reference_BC', $request->reference_BC)
+                    ->where('id', $request->id)
                     ->first();
-               if (isset($equipementBondecommande)) 
-               {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "La mise à jour de cette bon de commande est effectué avec success"
-                    ]
-                );
-               }
-               else 
-               {
-                    $equipementBondecommande=EquipementBondecommande::where('id_reparation_externe',$request-> id_reparation_externe)->where('reference_BC',$request->reference_BC)->first();
+                if (isset($equipementBondecommande)) {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cette bon de commande est effectué avec success"
+                        ]
+                    );
+                } else {
+                    $equipementBondecommande = EquipementBondecommande::where('id_reparation_externe', $request->id_reparation_externe)->where('reference_BC', $request->reference_BC)->first();
                     // return $equipementBondecommande;
-                    if (isset($equipementBondecommande)) 
-                    {
-                        return response()->json
-                        (
+                    if (isset($equipementBondecommande)) {
+                        return response()->json(
                             [
                                 "code" => 0,
                                 "status" => "error",
                                 "message" => "Cette bon de commende est existe"
                             ]
                         );
-                    } 
-                    else 
-                    {
-                        return response()->json
-                        (
+                    } else {
+                        return response()->json(
                             [
                                 "code" => 1,
                                 "status" => "sucess",
@@ -1117,13 +1038,10 @@ class WebController extends Controller
                         );
                     }
                 }
-           }
-        }
-        catch (Exception $e)  
-        {
-            
-            return response()->json
-            (
+            }
+        } catch (Exception $e) {
+
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -1134,29 +1052,22 @@ class WebController extends Controller
     }
 
     public function VerifDetailBondeLivraison(Request $request)
-    {       
-        try 
-        {
-           if (!isset($request->id) ) 
-           {
+    {
+        try {
+            if (!isset($request->id)) {
                 //insert
-                $equipementBondelivraison=DetailBonDeLivraison::where('equipement',$request->equipement)->where('ref_bl',$request->ref_bl)->first();
+                $equipementBondelivraison = DetailBonDeLivraison::where('equipement', $request->equipement)->where('ref_bl', $request->ref_bl)->first();
                 // return $equipementBondecommande;
-                if (isset($equipementBondelivraison))
-                {
-                    return response()->json
-                    (
+                if (isset($equipementBondelivraison)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Cette Bon de Livraison est existe"
                         ]
                     );
-                } 
-                else 
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -1164,44 +1075,33 @@ class WebController extends Controller
                         ]
                     );
                 }
-           } 
-           else 
-           {
-               //update
-               $equipementBondelivraison=DetailBonDeLivraison::where('equipement',$request->equipement)
-                    ->where('ref_bl',$request->ref_bl)
-                    ->where('id',$request->id)
+            } else {
+                //update
+                $equipementBondelivraison = DetailBonDeLivraison::where('equipement', $request->equipement)
+                    ->where('ref_bl', $request->ref_bl)
+                    ->where('id', $request->id)
                     ->first();
-               if (isset($equipementBondelivraison)) 
-               {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "La mise à jour de cette Bon de Livraison est effectué avec success"
-                    ]
-                );
-               }
-               else 
-               {
-                $equipementBondelivraison=DetailBonDeLivraison::where('equipement',$request-> equipement)->where('ref_bl',$request->ref_bl)->first();
+                if (isset($equipementBondelivraison)) {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cette Bon de Livraison est effectué avec success"
+                        ]
+                    );
+                } else {
+                    $equipementBondelivraison = DetailBonDeLivraison::where('equipement', $request->equipement)->where('ref_bl', $request->ref_bl)->first();
                     // return $equipementBondecommande;
-                    if (isset($equipementBondelivraison)) 
-                    {
-                        return response()->json
-                        (
+                    if (isset($equipementBondelivraison)) {
+                        return response()->json(
                             [
                                 "code" => 0,
                                 "status" => "error",
                                 "message" => "Cette Bon de Livraisonest existe"
                             ]
                         );
-                    } 
-                    else 
-                    {
-                        return response()->json
-                        (
+                    } else {
+                        return response()->json(
                             [
                                 "code" => 1,
                                 "status" => "sucess",
@@ -1210,13 +1110,10 @@ class WebController extends Controller
                         );
                     }
                 }
-           }
-        }
-        catch (Exception $e)  
-        {
-            
-            return response()->json
-            (
+            }
+        } catch (Exception $e) {
+
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -1227,29 +1124,22 @@ class WebController extends Controller
     }
 
     public function VerifDetailFacture(Request $request)
-    {       
-        try 
-        {
-           if (!isset($request->id) ) 
-           {
+    {
+        try {
+            if (!isset($request->id)) {
                 //insert
-                $equipementFacture=DetailFacture::where('reference',$request->reference)->where('reference_facture',$request->reference_facture)->first();
+                $equipementFacture = DetailFacture::where('reference', $request->reference)->where('reference_facture', $request->reference_facture)->first();
                 // return $equipementFacture;
-                if (isset($equipementFacture))
-                {
-                    return response()->json
-                    (
+                if (isset($equipementFacture)) {
+                    return response()->json(
                         [
                             "code" => 0,
                             "status" => "error",
                             "message" => "Facture est existe"
                         ]
                     );
-                } 
-                else 
-                {
-                    return response()->json
-                    (
+                } else {
+                    return response()->json(
                         [
                             "code" => 1,
                             "status" => "sucess",
@@ -1257,44 +1147,33 @@ class WebController extends Controller
                         ]
                     );
                 }
-           } 
-           else 
-           {
-               //update
-               $equipementFacture=DetailFacture::where('reference',$request->reference)
-                    ->where('reference_facture',$request->reference_facture)
-                    ->where('id',$request->id)
+            } else {
+                //update
+                $equipementFacture = DetailFacture::where('reference', $request->reference)
+                    ->where('reference_facture', $request->reference_facture)
+                    ->where('id', $request->id)
                     ->first();
-               if (isset($equipementFacture)) 
-               {
-                return response()->json
-                (
-                    [
-                        "code" => 1,
-                        "status" => "sucess",
-                        "message" => "La mise à jour de cette Facture est effectué avec success"
-                    ]
-                );
-               }
-               else 
-               {
-                $equipementFacture=DetailFacture::where('reference',$request-> reference)->where('reference_facture',$request->reference_facture)->first();
+                if (isset($equipementFacture)) {
+                    return response()->json(
+                        [
+                            "code" => 1,
+                            "status" => "sucess",
+                            "message" => "La mise à jour de cette Facture est effectué avec success"
+                        ]
+                    );
+                } else {
+                    $equipementFacture = DetailFacture::where('reference', $request->reference)->where('reference_facture', $request->reference_facture)->first();
                     // return $equipementBondecommande;
-                    if (isset($equipementFacture)) 
-                    {
-                        return response()->json
-                        (
+                    if (isset($equipementFacture)) {
+                        return response()->json(
                             [
                                 "code" => 0,
                                 "status" => "error",
                                 "message" => "Cette Facture existe"
                             ]
                         );
-                    } 
-                    else 
-                    {
-                        return response()->json
-                        (
+                    } else {
+                        return response()->json(
                             [
                                 "code" => 1,
                                 "status" => "sucess",
@@ -1303,13 +1182,10 @@ class WebController extends Controller
                         );
                     }
                 }
-           }
-        }
-        catch (Exception $e)  
-        {
-            
-            return response()->json
-            (
+            }
+        } catch (Exception $e) {
+
+            return response()->json(
                 [
                     "code" => 0,
                     "status" => "exception",
@@ -1389,18 +1265,15 @@ class WebController extends Controller
     }
 
 
-    
+
     public function inventaire($id_service)
     {
         //bech nchouf est ce que user connecter walla !!
-        if (!Auth::check()) 
-        {
+        if (!Auth::check()) {
             return redirect('/admin/login');
-        }
-        else 
-        {
+        } else {
             $array = $this->getEquipmentService($id_service);
-            return View('inventaire')->with('array',$array);;  
+            return View('inventaire')->with('array', $array);;
         }
     }
 
@@ -1411,94 +1284,94 @@ class WebController extends Controller
         $user = User::find($user->id);
         //dd($user); //dd: fonction laravel elle peut afficher un tableau associatif
         //return $user->id_service;
-        $service=Service::find($user->id_service);
+        $service = Service::find($user->id_service);
         return $service;
         //print_r($service);
     }
 
+    public static function getIdConnectedUser()
+    {
+        $user = auth()->user();
+        return $user->id;
+    }
+
 
     public function getViewAddReclamation()
-    {  
-         $user = auth()->user();
-         $user = User::find($user->id);
-         $service=Service::find($user->id_service);
-         $equipements=Equipement::where('id_service',$service->nom_service)->get();
+    {
+        $user = auth()->user();
+        $user = User::find($user->id);
+        $service = Service::find($user->id_service);
+        $equipements = Equipement::where('id_service', $service->nom_service)->get();
 
-        $array=
-        [
-            'user'=>$user->id,
-            'service'=>$service->id,
-            'equipements'=>$equipements
-        ];
+        $array =
+            [
+                'user' => $user->id,
+                'service' => $service->id,
+                'equipements' => $equipements
+            ];
 
-        return View('addReclamation')->with('array',$array);
+        return View('addReclamation')->with('array', $array);
     }
 
     public function getViewAddDemandeAchat()
     {
         $user = auth()->user();
-         $user = User::find($user->id);
-         $service=Service::find($user->id_service);
-        $categorie=Category::all();
+        $user = User::find($user->id);
+        $service = Service::find($user->id_service);
+        $categorie = Category::all();
 
-        $array=
-        [
-            'user'=>$user->id,
-            'service'=>$service->id,
-            'categorie'=>$categorie
-        ];
+        $array =
+            [
+                'user' => $user->id,
+                'service' => $service->id,
+                'categorie' => $categorie
+            ];
 
-        return View('addDemandeAchat')->with('array',$array);
+        return View('addDemandeAchat')->with('array', $array);
     }
 
 
 
-    public function addReclamation (Request $request)
+    public function addReclamation(Request $request)
     {
-        try 
-        {
-            $reclamation= new Reclamation();
-           // $reclamation->reference=$request->reference;
-            $reclamation->description=$request->description;
-            $reclamation->service=$request->service;
-            $reclamation->equipement=$request->equipement;
-            $reclamation->user=$request->user;
+        try {
+            $reclamation = new Reclamation();
+            // $reclamation->reference=$request->reference;
+            $reclamation->description = $request->description;
+            $reclamation->service = $request->service;
+            $reclamation->equipement = $request->equipement;
+            $reclamation->user = $request->user;
             $reclamation->save();
-           // return "L'ajout est effectué avec succes";
-           return redirect()->back()->with('message',"Votre réclamation est envoyée");
-        } 
-        catch (Exception $e) 
-        {
-            return ('Exception'.$e->getMessage());
+            // return "L'ajout est effectué avec succes";
+            return redirect()->back()->with('message', "Votre réclamation est envoyée");
+        } catch (Exception $e) {
+            return ('Exception' . $e->getMessage());
         }
     }
 
     public function demandeAchat(Request $request)
     {
-        try 
-        {
-            $demande=new DemandeAchat();
-           
-            $demande->description=$request->description;
-            $demande->service=$request->service;
-            $demande->categorie=$request->categorie;
-            $demande->user=$request->user;
+        try {
+            $demande = new DemandeAchat();
+
+            $demande->description = $request->description;
+            $demande->service = $request->service;
+            $demande->categorie = $request->categorie;
+            $demande->user = $request->user;
             $demande->save();
-           // return "L'ajout est effectué avec succes";
-           return redirect()->back()->with('message',"Votre demande d'achat est envoyée");
-        } 
-        catch (Exception $e) 
-        {
-            return ('Exception'.$e->getMessage());
+            // return "L'ajout est effectué avec succes";
+            return redirect()->back()->with('message', "Votre demande d'achat est envoyée");
+        } catch (Exception $e) {
+            return ('Exception' . $e->getMessage());
         }
     }
 
-    
+
     public static function gethistory($reference)
     {
         DB::delete('DELETE FROM model_histories WHERE message="Created Equipement";');
         DB::delete('DELETE FROM model_histories WHERE message="Deleting Equipement";');
-        
+
 
         $Equipement = Equipement::where('reference', $reference)->first();
         $n = 0;
@@ -1552,72 +1425,78 @@ class WebController extends Controller
         }
     }
 
-    public static function getReclamationByUser($idUser) 
+    public static function getReclamationByUser($idUser)
     {
         try {
-        $user=User::find($idUser);
-       if($user->role_id!=1)
-       {
-        $reclamation=Reclamation::select ('created_at','equipement','description','etat') 
-        ->where('user',$idUser)->get();
-        $tab = [];
-        foreach($reclamation as $v)
-        {
-            $e = Equipement::find($v->equipement);
-            $tab[] =
-            [
-                "date_reclamation" => $v->created_at,
-                "equipement" => $e->reference,
-                "description" => $v->description,
-                "etat"=>$v->etat
-            ];
-        }
-        return $tab ;
-       }
-         
+            $user = User::find($idUser);
+            if ($user->role_id != 1) {
+                $reclamation = Reclamation::select('created_at', 'equipement', 'description', 'etat')
+                    ->where('user', $idUser)->get();
+                $tab = [];
+                foreach ($reclamation as $v) {
+                    $e = Equipement::find($v->equipement);
+                    $tab[] =
+                        [
+                            "date_reclamation" => $v->created_at,
+                            "equipement" => $e->reference,
+                            "description" => $v->description,
+                            "etat" => $v->etat
+                        ];
+                }
+                return $tab;
+            }
         } catch (Exception $e) {
-           return[];
-     }
+            return [];
+        }
     }
 
-    public static function getDemandeByUser($idUser) 
+    public static function getDemandeByUser($idUser)
     {
         try {
-        $user=User::find($idUser);
-       if($user->role_id!=1)
-       {
-        $demande=demandeAchat::select ('created_at','categorie','description','intervention') 
-        ->where('user',$idUser)->get();
-        //return $demande;
-        $tab = [];
-        foreach($demande as $v)
-        {
-            $e = Category::find($v->categorie);
-            $tab[] =
-            [
-                "date_reclamation" => $v->created_at,
-                "categorie" => $e->nom_categorie,
-                "description" => $v->description,
-                "intervention"=>$v->intervention
-            ];
-        }
-        return $tab ;
-       }
-         
+            $user = User::find($idUser);
+            if ($user->role_id != 1) {
+                $demande = demandeAchat::select('created_at', 'categorie', 'description', 'intervention')
+                    ->where('user', $idUser)->get();
+                //return $demande;
+                $tab = [];
+                foreach ($demande as $v) {
+                    $e = Category::find($v->categorie);
+                    $tab[] =
+                        [
+                            "date_reclamation" => $v->created_at,
+                            "categorie" => $e->nom_categorie,
+                            "description" => $v->description,
+                            "intervention" => $v->intervention
+                        ];
+                }
+                return $tab;
+            }
         } catch (Exception $e) {
-           return[];
-     }
+            return [];
+        }
     }
 
-    
+
 
     public  function UpdateEtatReparationExterne()
     {
-        $reparations=ReparationsExterne::where('reparer',0)->get();
+        $reparations = ReparationsExterne::where('reparer', 0)->get();
         //return $reparations;
-        foreach ($reparations as $v) 
-        {
-            $reparation=ReparationsExterne::find($v->id);
+        foreach ($reparations as $v) {
+            $reparation = ReparationsExterne::find($v->id);
+            $reparation->etat = 100;
+            $reparation->save();
+        }
+    }
+
+    //UpdateEtatReparationInterne
+
+    public  function UpdateEtatReparationInterne()
+    {
+        $reparations = ReparationsInterne::where('reparer', 0)->get();
+        //return $reparations;
+        foreach ($reparations as $v) {
+            $reparation = ReparationsInterne::find($v->id);
             $reparation->etat = 100;
             $reparation->save();
         }
@@ -1635,65 +1514,66 @@ class WebController extends Controller
         $count_RI = \App\ReparationsInterne::count();
 
 
-        $tab=
-        [
-            "nombre_equipements"=>$count_equipements,
-            "nombre_reclamation"=>$count_reclamations,
-            "nombre_PR" =>$count_PR,
-            "nombre_Services"=>$count_services,
-            "nombre_besoin"=>$count_Besoin,
-            "nombre_RE"=>$count_RE,
-            "nombre_RI"=>$count_RI,
-        ];
+        $tab =
+            [
+                "nombre_equipements" => $count_equipements,
+                "nombre_reclamation" => $count_reclamations,
+                "nombre_PR" => $count_PR,
+                "nombre_Services" => $count_services,
+                "nombre_besoin" => $count_Besoin,
+                "nombre_RE" => $count_RE,
+                "nombre_RI" => $count_RI,
+            ];
 
-        return($tab);
+        return ($tab);
     }
 
-    
-    public static function getReclamationsEnattente(){
+
+    public static function getReclamationsEnattente()
+    {
         $Reclamations = Reclamation::all();
         $Reclamations_En_Attente = 0;
 
-        for($i=0; $i<count($Reclamations);$i++){
-            if($Reclamations[$i]['interventions'] == 'En Attente' || $Reclamations[$i]['interventions'] == NULL){
+        for ($i = 0; $i < count($Reclamations); $i++) {
+            if ($Reclamations[$i]['interventions'] == 'En Attente' || $Reclamations[$i]['interventions'] == NULL) {
                 $Reclamations_En_Attente++;
             }
         }
         //return($Reclamations_En_Attente);
-            
-        $tab=
-        [
-            "Reclamations_En_Attente"=>$Reclamations_En_Attente,
-        ];
 
-        return($tab);
+        $tab =
+            [
+                "Reclamations_En_Attente" => $Reclamations_En_Attente,
+            ];
+
+        return ($tab);
     }
 
 
 
-    public static function getBesoinsEnattente(){
+    public static function getBesoinsEnattente()
+    {
         $DemandeAchats = DemandeAchat::all();
         //return($Reclamations);
         $DemandeAchats_En_Attente = 0;
 
-        for($i=0; $i<count($DemandeAchats);$i++){
-            if($DemandeAchats[$i]['intervention'] == 'En Attente'){
+        for ($i = 0; $i < count($DemandeAchats); $i++) {
+            if ($DemandeAchats[$i]['intervention'] == 'En Attente') {
                 $DemandeAchats_En_Attente++;
             }
         }
-        
-        $tab=
-        [
-            "DemandeAchats_En_Attente"=>$DemandeAchats_En_Attente,
-        ];
 
-        return($tab);
+        $tab =
+            [
+                "DemandeAchats_En_Attente" => $DemandeAchats_En_Attente,
+            ];
 
+        return ($tab);
     }
-    
+
 
     public static function getUsedPiece()
-    {   
+    {
         //nombre total des pièces de rechanges
         $total_nb_PR = \App\PieceDeRechange::count();
 
@@ -1741,7 +1621,7 @@ class WebController extends Controller
             }
             $innertab = (array_count_values($noms_categories));
             array_push($outertab, $innertab);
- 
+
             $Nombres_Annee = ParametreApplication::where('Champ', 'Nombres_Annee')->get("Value");
             $nb_equipements = $equipement->count();
             array_push($nb_equipements_pcs, $nb_equipements);
@@ -1801,7 +1681,7 @@ class WebController extends Controller
                 "compter" => $compter
             ];
 
-     return($tab);
+        return ($tab);
     }
 
     public static function getCountForEachCategorie()
@@ -1825,4 +1705,142 @@ class WebController extends Controller
         return ($tab);
     }
 
+
+    public static function dashReparartions()
+    {
+
+        $nb_Total_Rep_int = \App\ReparationsInterne::count();
+        $nb_Total_Rep_ext = \App\ReparationsExterne::count();
+        $nb_Total_devis = \App\Devi::count();
+        $nb_Total_BC = \App\BondeCommande::count();
+        $nb_Total_BS = \App\FicheSorty::count();
+        $nb_Total_BL = \App\BondeLivraison::count();
+        $nb_Total_Factures = \App\Facture::count();
+        ///////////////////////////////////////////////details
+        $nb_Rep_int_Incomp = 0;
+        $nb_Rep_Ext_Incomp = 0;
+        $Reparation_ext_ann = [];
+        $Reparation_ext_ann[0] = 0;
+        $Reparation_ext_ann[1] = 0;
+        $Reparation_ext_ann[2] = 0;
+        $Reparation_ext_ann[3] = 0;
+        $Reparation_ext_ann[4] = 0;
+        $Reparation_ext_ann[5] = 0;
+        $Reparation_ext_ann[6] = 0;
+        $Reparation_ext_ann[7] = 0;
+        $Reparation_ext_ann[8] = 0;
+        $Reparation_ext_ann[9] = 0;
+        $Reparation_ext_ann[10] = 0;
+        $Reparation_ext_ann[11] = 0;
+
+        $Tous_rep_int = \App\ReparationsInterne::all();
+        foreach ($Tous_rep_int as $rep_int) {
+            if ($rep_int['reparer'] == 1) {
+                $nb_Rep_int_Incomp++;
+            }
+        }
+
+        $Tous_rep_Ext = \App\ReparationsExterne::all();
+
+        foreach ($Tous_rep_Ext as $rep_ext) {
+            if ($rep_ext['reparer'] != 0) {
+                $nb_Rep_Ext_Incomp++;
+            }
+        }
+
+        $equips_sans_bc = $nb_Total_devis - $nb_Total_BC;
+        $equips_sans_bs = $nb_Total_BC - $nb_Total_BS;
+        $equips_sans_bl = $nb_Total_BS - $nb_Total_BL;
+        $equips_sans_fact = $nb_Total_BL - $nb_Total_Factures;
+
+        foreach ($Tous_rep_Ext as $e) {
+            if (substr($e->date_reparation, 0, 4) == date("Y")) {
+                switch (substr($e->date_reparation, 5, 2)) {
+                    case 1:
+                        $Reparation_ext_ann[0]++;
+                        break;
+                    case 2:
+                        $Reparation_ext_ann[1]++;
+                        break;
+                    case 3:
+                        $Reparation_ext_ann[2]++;
+                        break;
+                    case 4:
+                        $Reparation_ext_ann[3]++;
+                        break;
+                    case 5:
+                        $Reparation_ext_ann[4]++;
+                        break;
+                    case 6:
+                        $Reparation_ext_ann[5]++;
+                        break;
+                    case 7:
+                        $Reparation_ext_ann[6]++;
+                        break;
+                    case 8:
+                        $Reparation_ext_ann[7]++;
+                        break;
+                    case 9:
+                        $Reparation_ext_ann[8]++;
+                        break;
+                    case 10:
+                        $Reparation_ext_ann[9]++;
+                        break;
+                    case 11:
+                        $Reparation_ext_ann[10]++;
+                        break;
+                    case 12:
+                        $Reparation_ext_ann[11]++;
+                        break;
+                }
+            }
+        };
+
+        $Resault = [
+            "nb_Total_Rep_int" => $nb_Total_Rep_int,
+            "nb_Total_Rep_ext" => $nb_Total_Rep_ext,
+            "nb_Total_devis" => $nb_Total_devis,
+            "nb_Total_BC" => $nb_Total_BC,
+            "nb_Total_BS" => $nb_Total_BS,
+            "nb_Total_BL" => $nb_Total_BL,
+            "nb_Total_Fact" => $nb_Total_Factures,
+            //devis->bon de comande->bon de sortie->bon de livraison->facture
+            "nb_Rep_int_Incomp" => $nb_Rep_int_Incomp,
+            "nb_Rep_Ext_Incomp" => $nb_Rep_Ext_Incomp,
+
+            //////sans
+            "equips_sans_bc" => $equips_sans_bc,
+            "equips_sans_bs" => $equips_sans_bs,
+            "equips_sans_bl" => $equips_sans_bl,
+            "equips_sans_fact" => $equips_sans_fact,
+            "Reparation_ext_ann" => $Reparation_ext_ann
+        ];
+
+        return ($Resault);
+    }
+
+    public function AddEquipementReform($equipement)
+    {   
+        $verifReforme=Reform::where('equipement',$equipement)->first();     
+        if(!isset($verifReforme))
+        {
+            $reforme= new Reform ();
+            $reforme->equipement=$equipement;
+            $reforme->save();
+        }
+         
+
+    }
+
+    public function EquipementReformeId($id)
+    {
+        $equipement=Equipement::where('id',$id)->where('etat','Reforme')->first();
+        return (isset($equipement));
+    }
+
+    public function EquipementReformeReference($reference)
+    {
+        $equipement=Equipement::where('reference',$reference)->where('etat','Reforme')->first();
+        return (isset($equipement));
+    }
 }

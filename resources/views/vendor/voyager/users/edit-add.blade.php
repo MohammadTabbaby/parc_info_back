@@ -12,7 +12,9 @@
         {{ __('voyager::generic.'.(isset($dataTypeContent->id) ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular') }}
     </h1>
 @stop
-
+<?php
+    use App\Service;
+?>
 @section('content')
     <div class="page-content container-fluid">
         <form class="form-edit-add" role="form"
@@ -88,27 +90,21 @@
                             }
 
                             @endphp
-                            <div class="form-group">
-                                <label for="locale">{{ __('voyager::generic.locale') }}</label>
-                                <select class="form-control select2" id="locale" name="locale">
-                                    @foreach (Voyager::getLocales() as $locale)
-                                    <option value="{{ $locale }}"
-                                    {{ ($locale == $selected_locale ? 'selected' : '') }}>{{ $locale }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <?php
-                                use App\Service;
-
-                                $services = Service::all(); //select * from servcies
-                            ?>
-                            <div class="form-group">
-                                <select class="form-control select2" id="id_service" name="id_service">
-                                   @foreach($services as $service)
-                                        <option value="{{$service->id}}">{{$service->nom_service}}</option>
-                                   @endforeach
-                                </select>
-                            </div>
+                            
+                            @if($dataTypeContent->getKey() != App\Http\Controllers\WebController::getIdConnectedUser())
+                                <?php
+                                    $services = Service::all(); //select * from servcies
+                                ?>
+                                <div class="form-group">
+                                    <select class="form-control select2" id="id_service" name="id_service">
+                                        @foreach($services as $service)
+                                                <option value="{{$service->id}}">{{$service->nom_service}}</option>
+                                        @endforeach                                    
+                                    </select>
+                                </div>
+                            
+                            @endif
+                            
                         </div>
                     </div>
                 </div>

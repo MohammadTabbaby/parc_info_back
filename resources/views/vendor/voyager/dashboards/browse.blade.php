@@ -58,16 +58,16 @@
                                     <div class="flex flex-wrap">
                                         
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                            <!--Metric Card-->
+                                            <!--équipements Card-->
                                             <div class="bg-gradient-to-b from-green-200 to-green-100 border-b-4 border-green-600 rounded-lg shadow-xl p-5">
-                                                <div class="flex flex-row items-center">
+                                                <div class="flex flex-row items-center" style="border-style: none;">
                                                     <div class="flex-shrink pr-4">
                                                         <div class="rounded-full p-5 bg-green-600"><i class="fa fa-desktop fa-2x fa-inverse"></i>
                                                         </div> 
                                                     </div>
+                                                    <h2 style="font-size:20px; color:#059669" class="font-bold uppercase text-gray-600">équipements</h2>
                                                     <div class="flex-1 text-right md:text-center">
-                                                        <h2 style="font-size:20px" class="font-bold uppercase text-gray-600">équipements</h2>
-                                                       <p class="font-bold text-3xl"> 
+                                                       <p class="font-bold text-6xl" style="color: #059669;">  
                                                            <?php
                                                                  $tab = App\Http\Controllers\WebController::run();
                                                                  echo $tab['nombre_equipements'];
@@ -90,20 +90,20 @@
                 
                                       
                                             </div>
-                                            <!--/Metric Card-->
+                                            <!--/équipements Card-->
                                         </div>
 
                                         
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                            <!--Metric Card-->
+                                            <!--Interne Card-->
                                             <div class="bg-gradient-to-b from-red-200 to-red-100 border-b-4 border-red-500 rounded-lg shadow-xl p-5">
-                                                <div class="flex flex-row items-center">
+                                                <div class="flex flex-row items-center" style="border-style: none;">
                                                     <div class="flex-shrink pr-4">
                                                         <div class="rounded-full p-5 bg-red-600"><i class="fas fa-inbox fa-2x fa-inverse"></i></div>
                                                     </div>
+                                                    <h2 style="font-size:20px; color:#DC2626" class="font-bold uppercase text-gray-600">Reparations Interne</h2>
                                                     <div class="flex-1 text-right md:text-center">
-                                                        <h2 style="font-size:20px" class="font-bold uppercase text-gray-600">Reparations Interne</h2>
-                                                        <p class="font-bold text-3xl">
+                                                         <p class="font-bold text-6xl" style="color:#DC2626"> 
                                                                 <?php
                                                                 $tab = App\Http\Controllers\WebController::run();
                                                                 echo $tab['nombre_RI'];
@@ -119,51 +119,60 @@
                                                 <br>
                                          
                                             </div>
-                                            <!--/Metric Card-->
+                                            <!--/Interne Card-->
                                         </div>
                                         
 
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                            <!--Metric Card-->
+                                            <!--Externe Card-->
                                             <div class="bg-gradient-to-b from-indigo-200 to-indigo-100 border-b-4 border-indigo-500 rounded-lg shadow-xl p-5">
-                                                <div class="flex flex-row items-center">
+                                                <div class="flex flex-row items-center" style="border-style: none;">
                                                     <div class="flex-shrink pr-4">
                                                         <div class="rounded-full p-5 bg-indigo-600"><i class="fas fa-tasks fa-2x fa-inverse"></i></div>
                                                     </div>
+                                                    <h2 style="font-size:20px ; color:#4F46E5" class="font-bold uppercase text-gray-600">Reparations Externe</h2>
                                                     <div class="flex-1 text-right md:text-center">
-                                                        <h2 style="font-size:20px" class="font-bold uppercase text-gray-600">Reparations Externe</h2>
-                                                        <p class="font-bold text-3xl">
+                                                         <p class="font-bold text-6xl" style="color: #4F46E5;"> 
                                                             <?php
-                                                            $tab = App\Http\Controllers\WebController::run();
-                                                            echo $tab['nombre_RE'];
+                                                            $Resault = App\Http\Controllers\WebController::dashReparartions();
+                                                            echo $Resault['nb_Total_Rep_ext'];
                                                             ?>
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <br>
-                                                <br>
-                                                <br>
-                                                <br>
-                                                <br>
+                                                <ul>
+                                                    <?php
+                                                    $Resault = App\Http\Controllers\WebController::dashReparartions();
+
+                
+                                                    echo ("<li class='font-bold uppercase text-gray-800'> n'a pas encore un Bon de commande : ".$Resault['equips_sans_bc']."</li>
+                                                    <li class='font-bold uppercase text-gray-800'> n'a pas encore un Bon de Sortie : ".$Resault['equips_sans_bs']."</li>
+                                                    <li class='font-bold uppercase text-gray-800'> n'a pas encore un Bon de Livraison : ".$Resault['equips_sans_bl']."</li>
+                                                    <li class='font-bold uppercase text-gray-800'> n'a pas encore une Facture : ".$Resault['equips_sans_fact']."</li>
+                                                    ");
+                                                    
+                                                    ?>
+                                                </ul>
                                             
                                             </div>
-                                            <!--/Metric Card-->
+                                            <!--/Externe Card-->
                                         </div>
 
 
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                            <!--Metric Card-->
-                                            <div class="bg-gradient-to-b from-pink-200 to-pink-100 border-b-4 border-pink-500 rounded-lg shadow-xl p-5">
-                                                <div class="flex flex-row items-center">
+                                            <!--Pièces Card-->
+                                            <div class="bg-gradient-to-b from-pink-200 to-pink-100 border-b-4 border-pink-900 rounded-lg shadow-xl p-5">
+                                                <div class="flex flex-row items-center" style="border-style: none;">
                                                     <div class="flex-shrink pr-4">
-                                                        <div class="rounded-full p-5 bg-pink-600"><i class="fas fa-cogs fa-2x fa-inverse"></i></div>
+                                                        <div class="rounded-full p-5 bg-pink-900"><i class="fas fa-cogs fa-2x fa-inverse"></i></div>
                                                     </div> 
                     
                                         
                                                     </ul>
+                                                    <h2 style="font-size:20px; color:#5E0035" class="font-bold uppercase text-gray-600">Pièces de rechange</h2>
                                                     <div class="flex-1 text-right md:text-center">
-                                                        <h2 style="font-size:20px" class="font-bold uppercase text-gray-600">Pièces de rechange</h2>
-                                                        <p class="font-bold text-3xl"> 
+                                                         <p class="font-bold text-6xl" style="color: #5E0035;">  
                                                             <?php
                                                                   $tab = App\Http\Controllers\WebController::run();
                                                                   echo $tab['nombre_PR'];
@@ -175,34 +184,32 @@
                                                 </div>
                                                 <br>
                                                <br>
-                                               <br>
-                                               <br>
                                                
                                                 
                                                 <?php
                                                     $Result = App\Http\Controllers\WebController::getUsedPiece();
-                                                    echo ("<h2 style='font-size:25px' class='font-bold uppercase text-gray-800'>Disponibles : ".$Result."</h2>");
+                                                    echo ("<h2 style='font-size:25px; color: #5E0035;' class='font-bold uppercase' >Disponibles : ".$Result."</h2>");
                                                 ?>
                                                 
                                             </div>
-                                            <!--/Metric Card-->
+                                            <!--/Pièces Card-->
                                         </div>
 
 
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                            <!--Metric Card-->
+                                            <!--Reclamations Card-->
                                             <div class="bg-gradient-to-b from-yellow-200 to-yellow-100 border-b-4 border-yellow-600 rounded-lg shadow-xl p-5">
-                                                <div class="flex flex-row items-center">
+                                                <div class="flex flex-row items-center" style="border-style: none;">
                                                     <div class="flex-shrink pr-4">
                                                         <div class="rounded-full p-5 bg-yellow-600"><i class="fas fa-envelope fa-2x fa-inverse"></i>
                                                         </div>
                                                     </div>
                                                     <br>
-                                                    <h2 style="font-size:20px" class="font-bold uppercase text-gray-800">Reclamation</h2>
+                                                    <h2 style="font-size:20px; color:#D97706" class="font-bold uppercase text-gray-800">Reclamation</h2>
                                                         
                                                     <div class="flex-1 text-right md:text-center">
                                                     
-                                                        <p class="font-bold text-3xl"> 
+                                                         <p class="font-bold text-6xl" style="color: #D97706;">  
                                                             <?php
                                                                   $tab = App\Http\Controllers\WebController::run();
                                                                   echo $tab['nombre_reclamation'];
@@ -213,33 +220,32 @@
                                                 </div>
                                                 <br>
                                                 <br>
-                                                <br>
-                                                <br>
+                                          
                                                 
 
                                                 <?php
                                                 $tab = App\Http\Controllers\WebController::getReclamationsEnattente();
-                                                echo ("<h2  style='font-size:25px' class='font-bold uppercase text-gray-800'>En Attente : ". $tab['Reclamations_En_Attente']."</h2>");
+                                                echo ("<h2  style='font-size:25px;color: #D97706;' class='font-bold uppercase text-gray-800'>En Attente : ". $tab['Reclamations_En_Attente']."</h2>");
                                                 ?>
                                             </div>
-                                            <!--/Metric Card-->
+                                            <!--/Reclamations Card-->
                                         </div>
 
 
                                         <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                            <!--Metric Card-->
-                                            <div class="bg-gradient-to-b from-blue-200 to-blue-100 border-b-4 border-blue-600 rounded-lg shadow-xl p-5">
-                                                <div class="flex flex-row items-center">
+                                            <!--Besoins Card-->
+                                            <div class="bg-gradient-to-b from-blue-200 to-blue-100 border-b-4 border-blue-600 rounded-lg shadow-xl p-5" style="background-image: linear-gradient(#725ab4, #d8cdf6);">
+                                                <div class="flex flex-row items-center" style="border-style: none;">
                                                     <div class="flex-shrink pr-4">
-                                                        <div class="rounded-full p-5 bg-blue-600"><i class="fas fa-shopping-cart fa-2x fa-inverse"></i>
+                                                        <div class="rounded-full p-5" style="background-color: #160F29;"><i class="fas fa-shopping-cart fa-2x fa-inverse"></i>
                                                         </div>
                                                     </div>
                                                     <br>
-                                                    <h2 style="font-size:20px" class="font-bold uppercase text-gray-800">Besoins </h2>
+                                                    <h2 style="font-size:20px; color:#160F29" class="font-bold uppercase text-gray-800">Besoins </h2>
                                                         
                                                     <div class="flex-1 text-right md:text-center">
                                                     
-                                                        <p class="font-bold text-3xl"> 
+                                                         <p class="font-bold text-6xl" style="color: #160F29;">  
                                                             <?php
                                                                   $tab = App\Http\Controllers\WebController::run();
                                                                   echo $tab['nombre_besoin'];
@@ -250,15 +256,13 @@
                                                     
                                                <br>
                                                <br>
-                                               <br>
-                                               <br>
-                                                
+                                 
                                                 <?php
                                                     $tab = App\Http\Controllers\WebController::getBesoinsEnattente();
-                                                    echo ("<h2 style='font-size:25px' class='font-bold uppercase text-gray-800'>En Attente : ". $tab['DemandeAchats_En_Attente']."</h2>");
+                                                    echo ("<h2 style='font-size:25px; color: #160F29;' class='font-bold uppercase text-gray-800'>En Attente : ". $tab['DemandeAchats_En_Attente']."</h2>");
                                                 ?>
                                              </div>
-                                            <!--/Metric Card-->
+                                            <!--/Besoins Card-->
                                             </div>
 
                                         </div>
@@ -269,63 +273,75 @@
 
 
                                     <div class="w-full md:w-1/2 xl:w-1/3 p-6">
-                                        <!--Graph Card-->
+                                        <!--table rep ex Card-->
                                         <div class="bg-white border-transparent rounded-lg shadow-xl">
                                             <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                <h2 class="font-bold uppercase text-gray-600">Graph</h2>
+                                                <h2 class="font-bold uppercase text-gray-600">Réparations Externes <?php echo(date("Y"))?></h2>
                                             </div>
                                             <div class="p-5">
                                                 <canvas id="chartjs-1" class="chartjs" width="undefined" height="undefined"></canvas>
+                                                <?php
+                                                $Resault = App\Http\Controllers\WebController::dashReparartions();
+                                                echo("
                                                 <script>
-                                                    new Chart(document.getElementById("chartjs-1"), {
-                                                        "type": "bar",
-                                                        "data": {
-                                                            "labels": ["January", "February", "March", "April", "May", "June", "July"],
-                                                            "datasets": [{
-                                                                "label": "Likes",
-                                                                "data": [65, 59, 80, 81, 56, 55, 40],
-                                                                "fill": false,
-                                                                "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
-                                                                "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
-                                                                "borderWidth": 1
+                                                    new Chart(document.getElementById('chartjs-1'), {
+                                                        'type': 'bar',
+                                                        'data': {
+                                                            'labels': ['janv', 'févr', 'mars', 'avril', 'mai', 'juin', 'juill', 'août', 'sept', 'oct', 'nov', 'déc'],
+                                                            'datasets': [{
+                                                                'label': 'Rép Ext',
+                                                                'data': [".$Resault['Reparation_ext_ann'][0].",".$Resault['Reparation_ext_ann'][1].",".$Resault['Reparation_ext_ann'][2].",".$Resault['Reparation_ext_ann'][3].",".$Resault['Reparation_ext_ann'][4].",".$Resault['Reparation_ext_ann'][5].",".$Resault['Reparation_ext_ann'][6].",".$Resault['Reparation_ext_ann'][7].",".$Resault['Reparation_ext_ann'][8].",".$Resault['Reparation_ext_ann'][9].",".$Resault['Reparation_ext_ann'][10].",".$Resault['Reparation_ext_ann'][11].",],
+                                                                'fill': false,
+                                                                'backgroundColor': ['#b30000', '#7c1158', '#424242', '#3d2460', '#06127e', '#45d5f4', '#5ad45a', '#3f110d', '#ebdc78','#ff0080','#ff8000','#9ba5fa'],
+                                                                'borderColor': ['#b30000', '#7c1158', '#424242', '#3d2460', '#06127e', '#45d5f4', '#5ad45a', '#3f110d', '#ebdc78','#ff0080','#ff8000','#9ba5fa'],
+                                                                'borderWidth': 1
                                                             }]
                                                         },
-                                                        "options": {
-                                                            "scales": {
-                                                                "yAxes": [{
-                                                                    "ticks": {
-                                                                        "beginAtZero": true
+                                                        'options': {
+                                                            'scales': {
+                                                                'yAxes': [{
+                                                                    'ticks': {
+                                                                        'beginAtZero': true
                                                                     }
                                                                 }]
                                                             }
                                                         }
                                                     });
-                                                </script>
+                                                </script>");
+
+                                                ?>
                                             </div>
                                         </div>
-                                        <!--/Graph Card-->
+                                        <!--/table rep ex Card-->
                                     </div>
                     
                                     <div class="w-full md:w-1/2 xl:w-1/3 p-6">
                                         <!--Graph Card-->
                                         <div class="bg-white border-transparent rounded-lg shadow-xl">
                                             <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                <h5 class="font-bold uppercase text-gray-600">Graph</h5>
+                                                <h5 class="font-bold uppercase text-gray-600">Réparations Internes </h5>
                                             </div>
                                             <div class="p-5"><canvas id="chartjs-4" class="chartjs" width="undefined" height="undefined"></canvas>
-                                                <script>
-                                                    new Chart(document.getElementById("chartjs-4"), {
-                                                        "type": "doughnut",
-                                                        "data": {
-                                                            "labels": ["P1", "P2", "P3"],
-                                                            "datasets": [{
-                                                                "label": "Issues",
-                                                                "data": [300, 50, 100],
-                                                                "backgroundColor": ["rgb(255, 99, 132)", "rgb(54, 162, 235)", "rgb(255, 205, 86)"]
+                                            
+                                            <?php
+                                                    $Resault = App\Http\Controllers\WebController::dashReparartions();
+                                                    echo ("<script>
+                                                    new Chart(document.getElementById('chartjs-4'), {
+                                                        'type': 'doughnut',
+                                                        'data': {
+                                                            'labels': ['complétés', 'inaccomplis'],
+                                                            'datasets': [{
+                                                                'label': 'Réparations Internes',
+                                                                'data': [".($Resault['nb_Total_Rep_int']-$Resault['nb_Rep_int_Incomp']).", ".$Resault['nb_Rep_int_Incomp']."],
+                                                                'backgroundColor': ['rgb(102, 255, 0)', 'rgb(255, 0, 0)']
                                                             }]
                                                         }
                                                     });
-                                                </script>
+
+                                                </script>");
+                                             
+                                                
+                                                ?>
                                             </div>
                                         </div>
                                         <!--/Graph Card-->
@@ -335,33 +351,41 @@
                                         <!--Graph Card-->
                                         <div class="bg-white border-transparent rounded-lg shadow-xl">
                                             <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                <h5 class="font-bold uppercase text-gray-600">Graph</h5>
+                                                <h5 class="font-bold uppercase text-gray-600">Réparations Externes</h5>
                                             </div>
-                                            <div class="p-5"><canvas id="chartjs-4" class="chartjs" width="undefined" height="undefined"></canvas>
-                                                <script>
-                                                    new Chart(document.getElementById("chartjs-4"), {
-                                                        "type": "doughnut",
-                                                        "data": {
-                                                            "labels": ["P1", "P2", "P3"],
-                                                            "datasets": [{
-                                                                "label": "Issues",
-                                                                "data": [300, 50, 100],
-                                                                "backgroundColor": ["rgb(255, 99, 132)", "rgb(54, 162, 235)", "rgb(255, 205, 86)"]
+                                            <div class="p-5"><canvas id="chartjs-2" class="chartjs" width="undefined" height="undefined"></canvas>
+                                            <?php
+                                                    $Resault = App\Http\Controllers\WebController::dashReparartions();
+                                                    echo ("<script>
+                                                    new Chart(document.getElementById('chartjs-2'), {
+                                                        'type': 'doughnut',
+                                                        'data': {
+                                                            'labels': ['complétés', 'inaccomplis'],
+                                                            'datasets': [{
+                                                                'label': 'Réparations Externes',
+                                                                'data': [".($Resault['nb_Total_Rep_ext']-$Resault['nb_Rep_Ext_Incomp']).", ".$Resault['nb_Rep_Ext_Incomp']."],
+                                                                'backgroundColor': ['rgb(0, 0, 102)', 'rgb(255, 255, 0)']
                                                             }]
                                                         }
                                                     });
-                                                </script>
+
+                                                </script>");
+                                             
+                                                
+                                                ?>
                                             </div>
                                         </div>
                                         <!--/Graph Card-->
                                     </div>
+
+                                    
                                      <!--Services-->
                                     <div class="flex flex-row flex-wrap flex-grow mt-2">
                                         <div style="width:100%">
                                             <!--Graph Card-->
                                             <div class="bg-white border-transparent rounded-lg shadow-xl">
                                                 <div class="bg-gradient-to-b from-gray-300 to-gray-100 uppercase text-gray-800 border-b-2 border-gray-300 rounded-tl-lg rounded-tr-lg p-2">
-                                                    <h1 class="font-bold uppercase text-gray-600">Services</h1>
+                                                    <h1 class="font-bold uppercase text-gray-600">Equipements et Taux par Service</h1>
                                                 </div>
                                                 <div class="table-responsive">
                                                     <table class="table table-hover mb-0">
@@ -386,8 +410,8 @@
                                                                    }
                                                            
     
-                                                            echo ("</td><td> <span class='badge badge-info badge-pill float-left mt-3'>" 
-                                                            .(($tab['taux_dammort'][$i])*100)." % </span></td></tr>");
+                                                            echo "</td><td> <span class='badge badge-info badge-pill float-left mt-3'>" 
+                                                            .round($tab['taux_dammort'][$i]*100,2)." % </span></td></tr>";
                                                             }
                                                             ?>
                                                             <!--"Total = ".$tab['nb_equipements_pcs'][$i].-->                                                
@@ -468,7 +492,7 @@
     <script>
         $(document).ready(function () {
             @if (!$dataType->server_side)
-                var table = $('#dataTable').DataTable({!! json_encode(
+                var table = $('#dataTable').DataTable({!!json_encode(
                     array_merge([
                         "order" => $orderColumn,
                         "language" => __('voyager::datatable'),
