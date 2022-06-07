@@ -146,10 +146,10 @@
                                                     $Resault = App\Http\Controllers\WebController::dashReparartions();
 
                 
-                                                    echo ("<li class='font-bold uppercase text-gray-800'> n'a pas encore un Bon de commande : ".$Resault['equips_sans_bc']."</li>
-                                                    <li class='font-bold uppercase text-gray-800'> n'a pas encore un Bon de Sortie : ".$Resault['equips_sans_bs']."</li>
-                                                    <li class='font-bold uppercase text-gray-800'> n'a pas encore un Bon de Livraison : ".$Resault['equips_sans_bl']."</li>
-                                                    <li class='font-bold uppercase text-gray-800'> n'a pas encore une Facture : ".$Resault['equips_sans_fact']."</li>
+                                                    echo ("<li class='font-bold uppercase text-gray-800'> avec Devis : ".$Resault['equips_avec_devis']."</li>
+                                                    <li class='font-bold uppercase text-gray-800'> avec Bon de commande : ".$Resault['equips_avec_bc']."</li>
+                                                    <li class='font-bold uppercase text-gray-800'>  avec Bon de Sortie : ".$Resault['equips_avec_bs']."</li>
+                                                    <li class='font-bold uppercase text-gray-800'> avec Bon de Livraison : ".$Resault['equips_avec_bl']."</li>
                                                     ");
                                                     
                                                     ?>

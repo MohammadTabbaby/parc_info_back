@@ -53,8 +53,7 @@ class WebController extends Controller
     public function verifReferenceReparationExterne(Request $request)
     {
         try {
-            if ($this->EquipementReformeReference($request->id_equipement))
-            {
+            if ($this->EquipementReformeReference($request->id_equipement)) {
                 return response()->json(
                     [
                         "code" => 0,
@@ -129,8 +128,7 @@ class WebController extends Controller
     public function verifReferenceReparationInterne(Request $request)
     {
         try {
-            if ($this->EquipementReformeId($request->id_equipement))
-            {
+            if ($this->EquipementReformeId($request->id_equipement)) {
                 return response()->json(
                     [
                         "code" => 0,
@@ -225,15 +223,13 @@ class WebController extends Controller
                         ]
                     );
                 }
-            } 
-            else {
+            } else {
                 $r = Equipement::where('reference', $request->reference)->where('id', $request->id)->first();
                 if (isset($r)) {
                     //******Insert Reform*********//
-                    if (isset($request->etat))
-                    {   
-                        if($request->etat=='Reforme')
-                             $this->AddEquipementReform($r->id);
+                    if (isset($request->etat)) {
+                        if ($request->etat == 'Reforme')
+                            $this->AddEquipementReform($r->id);
                     }
                     return response()->json(
                         [
@@ -1716,6 +1712,10 @@ class WebController extends Controller
         $nb_Total_BS = \App\FicheSorty::count();
         $nb_Total_BL = \App\BondeLivraison::count();
         $nb_Total_Factures = \App\Facture::count();
+        $equips_avec_devis = 0;
+        $equips_avec_bc = 0;
+        $equips_avec_bs = 0;
+        $equips_avec_bl = 0;
         ///////////////////////////////////////////////details
         $nb_Rep_int_Incomp = 0;
         $nb_Rep_Ext_Incomp = 0;
@@ -1748,10 +1748,28 @@ class WebController extends Controller
             }
         }
 
-        $equips_sans_bc = $nb_Total_devis - $nb_Total_BC;
-        $equips_sans_bs = $nb_Total_BC - $nb_Total_BS;
-        $equips_sans_bl = $nb_Total_BS - $nb_Total_BL;
-        $equips_sans_fact = $nb_Total_BL - $nb_Total_Factures;
+        foreach ($Tous_rep_Ext as $rep_ext) {
+            if ($rep_ext['etat'] == 25) {
+                $equips_avec_devis++;
+            }
+            if ($rep_ext['etat'] == 50) {
+                $equips_avec_devis++;
+                $equips_avec_bc++;
+            }
+            if ($rep_ext['etat'] == 75) {
+                $equips_avec_devis++;
+                $equips_avec_bc++;
+                $equips_avec_bs++;
+            }
+            if ($rep_ext['etat'] == 100) {
+                $equips_avec_devis++;
+                $equips_avec_bc++;
+                $equips_avec_bs++;
+                $equips_avec_bl++;
+            }
+        }
+
+
 
         foreach ($Tous_rep_Ext as $e) {
             if (substr($e->date_reparation, 0, 4) == date("Y")) {
@@ -1809,10 +1827,10 @@ class WebController extends Controller
             "nb_Rep_Ext_Incomp" => $nb_Rep_Ext_Incomp,
 
             //////sans
-            "equips_sans_bc" => $equips_sans_bc,
-            "equips_sans_bs" => $equips_sans_bs,
-            "equips_sans_bl" => $equips_sans_bl,
-            "equips_sans_fact" => $equips_sans_fact,
+            "equips_avec_devis" => $equips_avec_devis,
+            "equips_avec_bc" => $equips_avec_bc,
+            "equips_avec_bs" => $equips_avec_bs,
+            "equips_avec_bl" => $equips_avec_bl,
             "Reparation_ext_ann" => $Reparation_ext_ann
         ];
 
@@ -1820,27 +1838,24 @@ class WebController extends Controller
     }
 
     public function AddEquipementReform($equipement)
-    {   
-        $verifReforme=Reform::where('equipement',$equipement)->first();     
-        if(!isset($verifReforme))
-        {
-            $reforme= new Reform ();
-            $reforme->equipement=$equipement;
+    {
+        $verifReforme = Reform::where('equipement', $equipement)->first();
+        if (!isset($verifReforme)) {
+            $reforme = new Reform();
+            $reforme->equipement = $equipement;
             $reforme->save();
         }
-         
-
     }
 
     public function EquipementReformeId($id)
     {
-        $equipement=Equipement::where('id',$id)->where('etat','Reforme')->first();
+        $equipement = Equipement::where('id', $id)->where('etat', 'Reforme')->first();
         return (isset($equipement));
     }
 
     public function EquipementReformeReference($reference)
     {
-        $equipement=Equipement::where('reference',$reference)->where('etat','Reforme')->first();
+        $equipement = Equipement::where('reference', $reference)->where('etat', 'Reforme')->first();
         return (isset($equipement));
     }
 }
