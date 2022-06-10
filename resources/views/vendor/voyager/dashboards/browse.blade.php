@@ -83,7 +83,7 @@
                                                     $tab = App\Http\Controllers\WebController::getCountForEachCategorie();
                                                     foreach($tab as $key => $item){
                 
-                                                    echo ("<li class='font-bold uppercase text-gray-800'>".$key .":".$item."</li>");
+                                                    echo ("<li class='font-bold uppercase text-gray-800'>".$key ." : ".$item."</li>");
                                                     }
                                                     ?>
                                                 </ul>
@@ -106,16 +106,22 @@
                                                          <p class="font-bold text-6xl" style="color:#DC2626"> 
                                                                 <?php
                                                                 $tab = App\Http\Controllers\WebController::run();
-                                                                echo $tab['nombre_RI'];
+                                                                echo ($tab['nombre_RI']);
                                                                 ?>
-                                                            
-                                                                
-                                                    </div>
+                                                         </p>
+                                                       
+                                                </div>
+                                               
                                                 </div>
                                                 <br>
+                                                <ul>
+                                                <?php
+                                                echo("<li class='font-bold uppercase text-gray-800'>Equipements Reforme : ".$tab['count_RF']."</li>");                                                                                                                            
+                                                ?>
+                                                </ul>
                                                 <br>
                                                 <br>
-                                                <br>
+                                         
                                                 <br>
                                          
                                             </div>

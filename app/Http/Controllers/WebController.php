@@ -694,11 +694,12 @@ class WebController extends Controller
                 if ($eq->meta[$i]['key'] == 'date_affectation') {
                     $p = substr($eq->meta[$i]['old'], 0, 10);
                     $p2 = substr($eq->meta[$i]['new'], 0, 10);
-                    $affectation[] = $p;
+              $affectation[] = $p;
+
                 }
             }
         }
-
+     
         for ($i = 0; $i < count($affectation) - 1; $i++) {
             if ($affectation[$i] === $affectation[$i + 1]) {
                 array_splice($affectation, $i + 1, 1);
@@ -711,6 +712,12 @@ class WebController extends Controller
             }
         }
 
+        for ($i = 0; $i < count($Service) - 1; $i++) {
+            if ($Service[$i] == $Service[$i + 1]) {
+                array_splice($Service, $i + 1, 1);
+            }
+        }
+        //return ($Service);
         if (count($Service) != count($post_agent)) {
             for ($i = 0; $i < count($post_agent); $i++) {
                 array_push($Service, $equipement_fichedevie[0]['id_service']);
@@ -728,8 +735,6 @@ class WebController extends Controller
                 }
             }
         }
-
-        //return ($affectation);
 
         $n_post_agent = count($post_agent);
         $n_Service = count($Service);
@@ -792,7 +797,7 @@ class WebController extends Controller
         foreach ($equipements_reparé as $er) {
             array_push($references_factures, $er['reference_facture']);
             array_push($Pannes, $er['panne']);
-            array_push($Couts, $er['prix_HT'] * $er['tva']);
+            array_push($Couts, $er['prix_HT'] + ($er['prix_HT'] * $er['tva']));
             array_push($Dates, substr($er['created_at'], 0, 10));
             $counter++;
         }
@@ -1207,34 +1212,21 @@ class WebController extends Controller
             // return($equipement);
             $equipements = [];
             foreach ($equipement as $value) {
-                # code...
-                //return($equipement);
+
                 $categorie = Category::find($value->id_categorie);
                 $modele = Modele::find($value->id_modele);
                 $equipement->cout_initiale = $value->cout_initiale;
-                //return($equipement->cout_initiale);
                 $equipement->date_premier_utilisation = $value->date_premier_utilisation;
-                //return($value->date_premier_utilisation);
-                //$equipement->amortie_sur=$value->amortie_sur;
-                //return $equipement->amortie_sur;
                 $taux_dammortissement = 1 / $Nombres_Annee[0]['Value'];
-                //return($taux_dammortissement);
                 $date = date("Y/m/d");
                 $date1 = strtotime($date);
                 $date2 = strtotime($value->date_premier_utilisation);
-                //return $date;
                 $nb_jours_utilisation = ($date1 - $date2) / 86400;
-                //return($nb_jours_utilisation);
                 $mountant_a_amortir = $value->cout_initiale * $taux_dammortissement; //kol 3am 9adeh yon9es VCN
-                //return $mountant_a_amortir;
-                $X = ((($mountant_a_amortir * $nb_jours_utilisation) / 360) / 1000);
-                // return $X;
-                $VCN_Equipement = round(($value->cout_initiale - ($value->cout_initiale * $X)), 2); //VCN de chaque equipement
-                // return  $VCN_Equipement;
-                $Y = round((1 - $X), 2);
-                //return $Y;
-                //$equipements[]=$equipement;
-                // return[];
+                $X = (($mountant_a_amortir * $nb_jours_utilisation / 360));
+                $VCN_Equipement = round(($value->cout_initiale - $X), 1); //VCN de chaque equipement
+                $Y = round(1 - (($taux_dammortissement * $nb_jours_utilisation / 360)), 1);
+
                 $equipements[] =
                     [
                         "reference" => $value->reference,
@@ -1247,14 +1239,14 @@ class WebController extends Controller
                     ];
 
                 // return['equipements'=>$equipements, 'VCN'=>$VCN_Equipement , 'Taux Amortissement'=>$Y];
-                $total_VCN += round($VCN_Equipement, 2);
-                $total_tauxAmort += $Y;
+                $total_VCN += round($VCN_Equipement, 1);
+                $total_tauxAmort += round($Y, 1);
                 $total_coutachat += $value->cout_initiale;
             }
             $total_tauxAmort = $total_tauxAmort / $nb_equipements;
             $total_VCN = $total_VCN / $nb_equipements;
 
-            return ['equipements' => $equipements, 'total_VCN' => round($total_VCN, 2), 'taux_amortissement' => round($total_tauxAmort, 2), 'cout_achat' => $total_coutachat];
+            return ['equipements' => $equipements, 'total_VCN' => round($total_VCN, 1), 'taux_amortissement' => round($total_tauxAmort, 1), 'cout_achat' => $total_coutachat];
         } catch (Exception $e) {
             return ['equipements' => [], 'total_VCN' => 0, 'taux_amortissement' => 0, 'cout_achat' => 0];
         }
@@ -1508,6 +1500,7 @@ class WebController extends Controller
         $count_Besoin = \App\DemandeAchat::count();
         $count_RE = \App\ReparationsExterne::count();
         $count_RI = \App\ReparationsInterne::count();
+        $count_RF = \App\Reform::count();
 
 
         $tab =
@@ -1519,6 +1512,7 @@ class WebController extends Controller
                 "nombre_besoin" => $count_Besoin,
                 "nombre_RE" => $count_RE,
                 "nombre_RI" => $count_RI,
+                "count_RF" => $count_RF
             ];
 
         return ($tab);
@@ -1603,6 +1597,10 @@ class WebController extends Controller
             $equipement = Equipement::where('id_service', $i)->get();
             $tab_ids = [];
             foreach ($equipement as $e) {
+                if ($e->etat == 'Reforme') {
+                    break;
+                }
+
                 array_push($tab_ids, $e->id_categorie);
             }
             $noms_categories = [];
@@ -1627,6 +1625,10 @@ class WebController extends Controller
 
             $equipements = [];
             foreach ($equipement as $value) {
+                if ($value->etat == 'Reforme') {
+                    break;
+                }
+
                 $categorie = Category::find($value->id_categorie);
                 $modele = Modele::find($value->id_modele);
                 $equipement->cout_initiale = $value->cout_initiale;
@@ -1637,9 +1639,10 @@ class WebController extends Controller
                 $date2 = strtotime($value->date_premier_utilisation);
                 $nb_jours_utilisation = ($date1 - $date2) / 86400;
                 $mountant_a_amortir = $value->cout_initiale * $taux_dammortissement; //kol 3am 9adeh yon9es VCN
-                $X = ((($mountant_a_amortir * $nb_jours_utilisation) / 360) / 1000);
-                $VCN_Equipement = round(($value->cout_initiale - ($value->cout_initiale * $X)), 2); //VCN de chaque equipement
-                $Y = round((1 - $X), 2);
+                $X = (($mountant_a_amortir * $nb_jours_utilisation / 360));
+                $VCN_Equipement = round(($value->cout_initiale - $X), 1); //VCN de chaque equipement
+                $Y = round(1 - (($taux_dammortissement * $nb_jours_utilisation / 360)), 1);
+
 
                 $equipements[] =
                     [
@@ -1652,8 +1655,8 @@ class WebController extends Controller
                         'date_premier_utilisation' => $value->date_premier_utilisation
                     ];
 
-                $total_VCN += round($VCN_Equipement, 2);
-                $total_tauxAmort += $Y;
+                $total_VCN += round($VCN_Equipement, 1);
+                $total_tauxAmort += round($Y, 1);
                 $total_coutachat += $value->cout_initiale;
             }
 
@@ -1685,6 +1688,10 @@ class WebController extends Controller
         $Equipements = Equipement::all();
         $tab_ids = [];
         foreach ($Equipements as $e) {
+            if ($e->etat == 'Reforme') {
+                break;
+            }
+
             array_push($tab_ids, $e->id_categorie);
         }
         $noms_categories = [];
