@@ -358,6 +358,8 @@
                                        <th>Date Récalamation</th>
                                        <th>Descriptrion</th>
                                        <th>Intervention</th>
+                                       <th style="text-align:center;">Action</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -370,6 +372,14 @@
                                         <td>{{$v['date_reclamation']}}</td>
                                         <td>{{$v['description']}}</td>
                                         <td>{{$v['intervention']}}</td>
+                                        <td>
+                                            <?php
+                                                $id = $v['id'];
+                                                $url=URL::asset('/admin/demande-achats/'.$id);
+                                            ?>
+                                        
+                                            <a style="width:100%;" href="{{$url}}" title="View" class="btn btn-sm btn-warning pull-right view">View</a>
+                                        </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

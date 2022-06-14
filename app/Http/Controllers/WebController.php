@@ -650,15 +650,26 @@ class WebController extends Controller
         /*********************************************** */
         $id_categorie = ($equipement_fichedevie[0]['id_categorie']);
         $categorie = Category::find($id_categorie);
-        $nom_categorie = $categorie['nom_categorie'];
+        if(isset($categorie))
+            $nom_categorie = $categorie['nom_categorie'];
+        else
+            $nom_categorie = "";
 
         $id_fournisseur = ($equipement_fichedevie[0]['id_fournisseur']);
 
         //recherche fournisseur w ili tal9ah t7otou fi array
         $id_modele = ($equipement_fichedevie[0]['id_modele']);
         $modele = Modele::find($id_modele);
-        $nom_modele = $modele['nom_modele'];
-        $marque = $modele['marque'];
+        if(isset($modele))
+        {
+            $nom_modele = $modele['nom_modele'];
+            $marque = $modele['marque'];
+        }
+        else
+        {
+            $nom_modele = "";
+            $marque = "";
+        }
 
 
         /////////////////////////////////////////// affectation/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -866,13 +877,22 @@ class WebController extends Controller
             $equipement = Equipement::where('reference', $re->id_equipement)->first();
             //$tabEquipement[] = $equipement; //insert equipement dans le tableau tabEquipement
             $categorie = Category::find($equipement->id_categorie);
+            if (isset($categorie))
+                $nom_categorie=$categorie->nom_categorie;
+            else
+               $nom_categorie="";
+
             $modele = Modele::find($equipement->id_modele);
+            if(isset($modele))
+                $nom_modele = $modele->nom_modele;
+            else
+                $nom_modele = "";
             $service = Service::find($equipement->id_service);
             $tabEquipement[] =
                 [
                     "reference" => $equipement->reference,
                     "categorie" => $categorie->nom_categorie,
-                    "modele" => $modele->nom_modele,
+                    "modele" =>  $nom_modele,
                     "service" => $equipement->id_service,
                     "cout" => $v->cout
                 ];
@@ -1418,13 +1438,14 @@ class WebController extends Controller
         try {
             $user = User::find($idUser);
             if ($user->role_id != 1) {
-                $reclamation = Reclamation::select('created_at', 'equipement', 'description', 'etat')
+                $reclamation = Reclamation::select('id','created_at', 'equipement', 'description', 'etat')
                     ->where('user', $idUser)->get();
                 $tab = [];
                 foreach ($reclamation as $v) {
                     $e = Equipement::find($v->equipement);
                     $tab[] =
                         [
+                            "id" => $v->id,
                             "date_reclamation" => $v->created_at,
                             "equipement" => $e->reference,
                             "description" => $v->description,
@@ -1443,7 +1464,7 @@ class WebController extends Controller
         try {
             $user = User::find($idUser);
             if ($user->role_id != 1) {
-                $demande = demandeAchat::select('created_at', 'categorie', 'description', 'intervention')
+                $demande = demandeAchat::select('id','created_at', 'categorie', 'description', 'intervention')
                     ->where('user', $idUser)->get();
                 //return $demande;
                 $tab = [];
@@ -1451,6 +1472,7 @@ class WebController extends Controller
                     $e = Category::find($v->categorie);
                     $tab[] =
                         [
+                            "id"=>$v->id,
                             "date_reclamation" => $v->created_at,
                             "categorie" => $e->nom_categorie,
                             "description" => $v->description,
